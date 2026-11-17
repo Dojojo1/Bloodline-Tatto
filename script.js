@@ -226,13 +226,48 @@ function applySiteContent(content) {
 
 applySiteContent(siteContent);
 
-// The configurable section order is applied after the browser first sees the
-// fragment. Align direct links again once images and fonts have settled.
+function scrollToProject(behavior = 'smooth') {
+  const grid = document.querySelector('#sur-mesure .project-grid');
+  const header = document.querySelector('.site-header');
+  if (!grid || !header) return;
+  const gap = window.matchMedia('(max-width: 900px)').matches ? 24 : 25;
+  const top = window.scrollY + grid.getBoundingClientRect().top - header.getBoundingClientRect().bottom - gap;
+  window.scrollTo({ top, behavior });
+  document.querySelectorAll('.primary-nav a').forEach((link) => {
+    const selected = link.getAttribute('href') === '#sur-mesure';
+    link.classList.toggle('is-current', selected);
+    if (selected) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+}
+
+// Keep the URL fragment while aligning the actual content beneath the fixed menu.
+document.addEventListener('click', (event) => {
+  const link = event.target instanceof Element ? event.target.closest('a[href="#sur-mesure"]') : null;
+  if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  if (window.location.hash !== '#sur-mesure') window.history.pushState(null, '', '#sur-mesure');
+  scrollToProject(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth');
+});
+
+// The configurable section order is applied before load. Correct direct links
+// once images and fonts have settled so the title and form land together.
 window.addEventListener('load', () => {
   if (!window.location.hash) return;
   const id = decodeURIComponent(window.location.hash.slice(1));
+  if (id === 'sur-mesure') {
+    window.requestAnimationFrame(() => scrollToProject('instant'));
+    window.setTimeout(() => {
+      if (window.location.hash === '#sur-mesure') scrollToProject('instant');
+    }, 180);
+    return;
+  }
   const target = document.getElementById(id);
   if (target) window.requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+});
+
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#sur-mesure') scrollToProject('instant');
 });
 
 const menuToggle = document.querySelector('.menu-toggle');

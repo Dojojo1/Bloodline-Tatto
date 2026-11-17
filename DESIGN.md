@@ -6,6 +6,8 @@ La [maquette](./reference/maquette.png) fournie par le propriétaire est la réf
 
 L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les projets pro / entreprise sont intégrés à « Sur-mesure ». Le pied de page porte un accès « Gestion » en attente du futur panneau.
 
+Le lien « Sur-mesure » cadre directement le titre et le formulaire sous le menu fixe. Sur un écran de 1600 × 768, les deux blocs commencent à environ 84 px du haut et le formulaire entier tient dans la fenêtre, conformément à la capture fournie.
+
 ## Système appliqué
 
 - Palette : noir presque absolu, argent et bronze vieillis, rouge profond. Les fonds restent sombres, les textes principaux ivoire.

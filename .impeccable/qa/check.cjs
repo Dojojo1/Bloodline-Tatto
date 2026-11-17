@@ -1,6 +1,7 @@
 const { chromium } = require('playwright-core');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
+const os = require('node:os');
 const siteUrl = pathToFileURL(path.resolve(__dirname, '..', '..', 'index.html')).href;
 
 async function inspect(page, width, height, name) {
@@ -100,20 +101,28 @@ async function inspect(page, width, height, name) {
     imageTransform: getComputedStyle(card.querySelector('.gateway-image')).transform,
     imageFilter: getComputedStyle(card.querySelector('.gateway-image')).filter
   }));
-  const anchorPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const anchorPage = await browser.newPage({ viewport: { width: 1600, height: 768 } });
+  await anchorPage.emulateMedia({ reducedMotion: 'reduce' });
   await anchorPage.goto(`${siteUrl}#sur-mesure`, { waitUntil: 'load' });
-  await anchorPage.waitForTimeout(650);
+  await anchorPage.waitForTimeout(150);
   const deepLink = await anchorPage.evaluate(() => ({
-    targetTop: Math.round(document.querySelector('#sur-mesure').getBoundingClientRect().top),
-    headerTop: Math.round(document.querySelector('.site-header').getBoundingClientRect().top),
-    headerPosition: getComputedStyle(document.querySelector('.site-header')).position
+    labelTop: Math.round(document.querySelector('#sur-mesure .section-label').getBoundingClientRect().top),
+    formTop: Math.round(document.querySelector('#project-form').getBoundingClientRect().top),
+    formBottom: Math.round(document.querySelector('#project-form').getBoundingClientRect().bottom)
   }));
-  await anchorPage.evaluate(() => { window.scrollTo(0, 0); document.querySelector('.primary-nav a[href="#sur-mesure"]').click(); });
-  await anchorPage.waitForTimeout(650);
+  await anchorPage.evaluate(() => { window.scrollTo({ top: 0, behavior: 'instant' }); document.querySelector('.primary-nav a[href="#sur-mesure"]').click(); });
+  await anchorPage.waitForTimeout(150);
   const menuLink = await anchorPage.evaluate(() => ({
-    targetTop: Math.round(document.querySelector('#sur-mesure').getBoundingClientRect().top),
-    headerTop: Math.round(document.querySelector('.site-header').getBoundingClientRect().top)
+    labelTop: Math.round(document.querySelector('#sur-mesure .section-label').getBoundingClientRect().top),
+    formTop: Math.round(document.querySelector('#project-form').getBoundingClientRect().top),
+    formBottom: Math.round(document.querySelector('#project-form').getBoundingClientRect().bottom),
+    headerBottom: Math.round(document.querySelector('.site-header').getBoundingClientRect().bottom),
+    activeNav: document.querySelector('.primary-nav .is-current')?.textContent.trim()
   }));
+  await anchorPage.screenshot({ path: path.join(os.tmpdir(), 'bloodline-sur-mesure-1600.png') });
+  if (Math.abs(deepLink.labelTop - 84) > 10 || Math.abs(menuLink.labelTop - 84) > 10 || menuLink.formBottom > 768) {
+    throw new Error('Sur-mesure does not match the requested 1600×768 landing position');
+  }
   console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, errors }, null, 2));
   await browser.close();
 })().catch((error) => { console.error(error); process.exitCode = 1; });
