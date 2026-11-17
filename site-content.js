@@ -113,6 +113,7 @@ window.BLOODLINE_CONTENT = {
     intro: 'Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.',
     labels: {
       name: 'Votre nom',
+      phone: 'Votre numéro',
       projectType: 'Type de projet',
       participants: 'Nombre de personnes',
       creation: 'Quel type de création souhaitez-vous ?',
@@ -122,6 +123,7 @@ window.BLOODLINE_CONTENT = {
     },
     placeholders: {
       name: 'Votre nom',
+      phone: 'Votre numéro',
       participants: 'Ex. 3',
       idea: 'Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous.',
       placement: 'Ex. avant-bras',
@@ -145,6 +147,7 @@ window.BLOODLINE_CONTENT = {
     summaryTitle: 'Demande de rendez-vous — Bloodline Tattoo',
     summaryLabels: {
       name: 'Nom',
+      phone: 'Numéro',
       projectType: 'Type',
       participants: 'Nombre de personnes',
       creation: 'Création souhaitée',

@@ -43,6 +43,7 @@ async function inspect(page, width, height, name) {
   const menuClosed = await page.locator('.menu-toggle').getAttribute('aria-expanded');
   const backgroundRestored = await page.locator('main').evaluate((element) => !element.inert);
   await page.locator('#customer-name').fill('Alex Moreau');
+  await page.locator('#customer-phone').fill('555 123');
   await page.locator('#project-type').selectOption('Projet de groupe');
   const groupVisible = await page.locator('#group-size-field').isVisible();
   await page.locator('#group-size').fill('3');

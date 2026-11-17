@@ -209,7 +209,7 @@ function applySiteContent(content) {
 
   const form = content.form;
   setText('.form-intro', form.intro);
-  const fieldIds = { name: 'customer-name', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', availability: 'appointment-availability' };
+  const fieldIds = { name: 'customer-name', phone: 'customer-phone', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', availability: 'appointment-availability' };
   Object.entries(fieldIds).forEach(([key, id]) => {
     setLeadingText(`label[for="${id}"]`, form.labels[key]);
     const field = document.getElementById(id);
@@ -402,6 +402,7 @@ projectForm.addEventListener('submit', async (event) => {
   const brief = [
     formContent?.summaryTitle || 'Demande de rendez-vous — Bloodline Tattoo',
     `${labels.name || 'Nom'} : ${String(data.get('nom')).trim()}`,
+    `${labels.phone || 'Numéro'} : ${String(data.get('numero')).trim()}`,
     `${labels.projectType || 'Type'} : ${data.get('type')}`,
     ...(needsParticipantCount() ? [`${labels.participants || 'Nombre de personnes'} : ${data.get('participants')}`] : []),
     `${labels.creation || 'Création souhaitée'} : ${data.get('creation')}`,
