@@ -77,7 +77,7 @@ window.BLOODLINE_CONTENT = {
       label: 'Nos artistes',
       heading: 'Une rencontre avant',
       emphasis: 'la première ligne.',
-      description: 'Voici cinq emplacements pour présenter les artistes du salon. Les photos, les noms et les mots de chacun seront ajoutés ici.',
+      description: 'Découvrez les artistes du salon. Leurs photos, noms et présentations seront ajoutés ici.',
       action: 'Décrire mon idée',
       actionTarget: 'sur-mesure',
       imageAlt: 'Illustration de l’univers graphique Bloodline Tattoo',

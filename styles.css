@@ -124,7 +124,7 @@ p { text-wrap: pretty; }
 .section-visual { min-height: 480px; border: 1px solid rgba(193,157,139,.48); outline: 1px solid rgba(255,255,255,.09); outline-offset: -8px; box-shadow: 0 32px 60px rgba(0,0,0,.35); }
 .salon-section { background: #0c0908; }
 .salon-visual { background: linear-gradient(90deg, transparent, rgba(0,0,0,.15)), var(--salon-art, url("assets/hero-art.png")) 90% 45% / auto 132% no-repeat; }
-.artists-section { padding-block: 70px; background: #130b0b; }
+.artists-section { padding: 24px 0 55px; background: #130b0b; }
 .artists-heading { max-width: 850px; }
 .artists-heading > p:not(.section-label) { max-width: 66ch; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .artists-list { display: grid; grid-template-columns: 1fr; margin-top: 40px; }
@@ -189,7 +189,7 @@ p { text-wrap: pretty; }
   .gateway-card { min-height: 150px; }
   .gateway-title { font-size: 21px; }
   .content-section { padding-block: 100px; }
-  .artists-section { padding-block: 65px; }
+  .artists-section { padding: 22px 0 50px; }
   .style-panel-art { min-height: 190px; }
 }
 
@@ -223,7 +223,7 @@ p { text-wrap: pretty; }
   .reverse-grid .section-visual { order: 2; }
   .section-visual { min-height: 400px; }
   .content-section { padding-block: 82px; }
-  .artists-section { padding-block: 55px; }
+  .artists-section { padding: 20px 0 40px; }
   .artists-list { margin-top: 32px; }
   .styles-grid { grid-template-columns: 1fr 1fr; }
   .style-panel:nth-child(3):last-child { grid-column: 1 / -1; }

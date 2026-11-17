@@ -8,7 +8,7 @@ L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les proje
 
 Les liens du menu placent la ligne de séparation de chaque section juste sous la barre de navigation fixe. Le formulaire conserve ses dimensions et sa place dans « Sur-mesure ». Un rafraîchissement remet la page en haut de l’accueil.
 
-« Nos artistes » présente cinq lignes verticales avec un emplacement photo, un nom et une phrase modifiables dans `site-content.js`. Les portraits et identités restent à renseigner. L’ancienne illustration de cette section figure désormais dans « Sur-mesure », dans un cadre à côté du formulaire.
+« Nos artistes » commence juste sous la séparation de section et présente une ligne par profil configuré dans `site-content.js`. La hauteur du fond rouge suit automatiquement le nombre de profils ; chacun possède un emplacement photo, un nom et une phrase modifiables. Les portraits et identités restent à renseigner. L’ancienne illustration de cette section figure désormais dans « Sur-mesure », dans un cadre à côté du formulaire.
 
 ## Système appliqué
 
