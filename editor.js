@@ -191,13 +191,17 @@ function bytesToBase64(bytes) {
 }
 
 async function github(path, options = {}) {
+  const action = options.method === 'PUT' ? 'écrire' : 'lire';
   const response = await fetch(`https://api.github.com/repos/${REPOSITORY}/contents/${path}`, {
     ...options,
     headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28', ...options.headers }
   });
   if (!response.ok) {
     const message = await response.json().catch(() => ({}));
-    throw new Error(message.message || `GitHub a répondu ${response.status}`);
+    if (response.status === 403 && /Resource not accessible by personal access token/i.test(message.message || '')) {
+      throw new Error(`la clé GitHub ne peut pas ${action} ${path}. Vérifie le propriétaire, le dépôt et « Contents : Read and write », ou utilise « Copier les réglages »`);
+    }
+    throw new Error(`${action} ${path} : ${message.message || `GitHub a répondu ${response.status}`}`);
   }
   return response.json();
 }
@@ -287,6 +291,16 @@ document.querySelector('#reset-element').addEventListener('click', () => { if (!
 document.querySelector('#save-draft').addEventListener('click', () => { saveDraft(); status('Brouillon gardé sur cet appareil.'); });
 document.querySelector('#restore-draft').addEventListener('click', () => { try { settings = JSON.parse(localStorage.getItem(DRAFT_KEY)); baseRevision = settings.revision || 0; refreshPreview(); status('Brouillon restauré.'); } catch { status('Brouillon illisible.', true); } });
 document.querySelector('#publish').addEventListener('click', publish);
+document.querySelector('#copy-settings').addEventListener('click', async () => {
+  try {
+    settings.revision = Date.now();
+    saveDraft();
+    await navigator.clipboard.writeText(`${JSON.stringify(settings, null, 2)}\n`);
+    status('Réglages copiés. Ouvre le fichier sur GitHub, remplace son contenu par ce texte, puis clique sur « Commit changes ».');
+  } catch {
+    status('Copie impossible dans ce navigateur. Garde le brouillon, puis réessaie depuis la version en ligne.', true);
+  }
+});
 document.querySelector('#upload-image').addEventListener('change', (event) => uploadImage(event.target.files[0]));
 document.querySelector('#connect').addEventListener('click', async () => {
   const candidate = tokenInput.value.trim();
@@ -297,10 +311,11 @@ document.querySelector('#connect').addEventListener('click', async () => {
     const user = await fetch('https://api.github.com/user', { headers }).then((res) => res.ok ? res.json() : Promise.reject(new Error('Clé non reconnue')));
     const repo = await fetch(`https://api.github.com/repos/${REPOSITORY}`, { headers }).then((res) => res.ok ? res.json() : Promise.reject(new Error('Accès au dépôt refusé')));
     if (!repo.permissions?.push) throw new Error('Ce compte ne peut pas publier dans le dépôt');
+    await github('design-settings.json');
     connectedUser = user.login;
     tokenInput.value = '';
     document.querySelector('#publish').disabled = false;
-    status(`Accès vérifié pour ${connectedUser}. Tu peux publier tes réglages.`);
+    status(`Accès à la lecture vérifié pour ${connectedUser}. L’écriture sera vérifiée au moment de publier.`);
   } catch (error) { token = ''; status(error.message, true); }
 });
 

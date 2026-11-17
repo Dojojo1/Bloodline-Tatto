@@ -7,7 +7,7 @@
     <title>Atelier visuel — Bloodline Tattoo</title>
     <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
     <link rel="stylesheet" href="editor.css?v=20261117-3">
-    <script src="editor.js?v=20261117-3" defer></script>
+    <script src="editor.js?v=20261117-4" defer></script>
   </head>
   <body>
     <header class="editor-header">
@@ -17,6 +17,7 @@
         <button type="button" id="save-draft">Garder un brouillon</button>
         <button type="button" id="restore-draft" hidden>Reprendre le brouillon</button>
         <button type="button" id="publish" class="primary" disabled>Publier en ligne</button>
+        <button type="button" id="copy-settings">Copier les réglages</button>
       </div>
     </header>
 
@@ -76,11 +77,13 @@
         </div>
         <div class="editor-auth">
           <h2>Accès à la publication</h2>
-          <p>Chaque membre autorisé utilise sa propre clé GitHub limitée à ce dépôt. La clé reste dans cette fenêtre et n’est pas enregistrée.</p>
+          <p>Le propriétaire peut utiliser une clé GitHub limitée à ce dépôt. La clé reste dans cette fenêtre et n’est pas enregistrée.</p>
           <label>Clé GitHub <input id="github-token" type="password" autocomplete="off" placeholder="Coller la clé ici"></label>
           <button type="button" id="connect">Vérifier mon accès</button>
           <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Créer une clé pour ce dépôt ↗</a>
-          <p class="field-note">Choisir uniquement « Bloodline-Tatto » et l’autorisation « Contents : Read and write ». Le propriétaire doit d’abord inviter les autres membres sur GitHub.</p>
+          <p class="field-note">Pour une clé fine-grained : propriétaire « Dojojo1 », dépôt « Bloodline-Tatto », autorisation « Contents : Read and write ». Les collaborateurs d’un dépôt personnel peuvent devoir utiliser une clé GitHub classique avec l’autorisation « public_repo ».</p>
+          <p class="field-note">Si GitHub refuse la clé, clique sur « Copier les réglages », ouvre le fichier ci-dessous sur GitHub, colle le texte copié et valide la modification.</p>
+          <a href="https://github.com/Dojojo1/Bloodline-Tatto/edit/main/design-settings.json" target="_blank" rel="noopener noreferrer">Ouvrir le fichier de réglages sur GitHub ↗</a>
         </div>
       </aside>
     </main>
