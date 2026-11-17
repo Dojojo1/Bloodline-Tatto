@@ -219,6 +219,15 @@ function applySiteContent(content) {
 
 applySiteContent(siteContent);
 
+// The configurable section order is applied after the browser first sees the
+// fragment. Align direct links again once images and fonts have settled.
+window.addEventListener('load', () => {
+  if (!window.location.hash) return;
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  const target = document.getElementById(id);
+  if (target) window.requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+});
+
 const menuToggle = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('.primary-nav');
 const navLinks = [...navigation.querySelectorAll('a')];

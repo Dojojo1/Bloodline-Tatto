@@ -1,9 +1,11 @@
 const { chromium } = require('playwright-core');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
+const siteUrl = pathToFileURL(path.resolve(__dirname, '..', '..', 'index.html')).href;
 
 async function inspect(page, width, height, name) {
   await page.setViewportSize({ width, height });
-  await page.goto('file:///C:/Users/Dojojo/Desktop/lucia/index.html', { waitUntil: 'domcontentloaded' });
+  await page.goto(siteUrl, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1500);
   await page.screenshot({ path: path.join(__dirname, '..', 'review', `${name}-viewport.png`) });
   await page.screenshot({ path: path.join(__dirname, '..', 'review', `${name}.png`), fullPage: true });
@@ -71,7 +73,7 @@ async function inspect(page, width, height, name) {
       get() { return this.configuredContent; }
     });
   });
-  await configuredPage.goto('file:///C:/Users/Dojojo/Desktop/lucia/index.html', { waitUntil: 'domcontentloaded' });
+  await configuredPage.goto(siteUrl, { waitUntil: 'domcontentloaded' });
   const contentConfigurationWorks = await configuredPage.evaluate(() => ({
     hero: document.querySelector('.hero-brand').textContent,
     nav: document.querySelector('.primary-nav a:nth-child(2)').textContent,
@@ -79,6 +81,20 @@ async function inspect(page, width, height, name) {
     firstStyle: document.querySelector('.style-panel h3').textContent,
     accent: document.documentElement.style.getPropertyValue('--red-bright')
   }));
-  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, errors }, null, 2));
+  const anchorPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await anchorPage.goto(`${siteUrl}#sur-mesure`, { waitUntil: 'load' });
+  await anchorPage.waitForTimeout(650);
+  const deepLink = await anchorPage.evaluate(() => ({
+    targetTop: Math.round(document.querySelector('#sur-mesure').getBoundingClientRect().top),
+    headerTop: Math.round(document.querySelector('.site-header').getBoundingClientRect().top),
+    headerPosition: getComputedStyle(document.querySelector('.site-header')).position
+  }));
+  await anchorPage.evaluate(() => { window.scrollTo(0, 0); document.querySelector('.primary-nav a[href="#sur-mesure"]').click(); });
+  await anchorPage.waitForTimeout(650);
+  const menuLink = await anchorPage.evaluate(() => ({
+    targetTop: Math.round(document.querySelector('#sur-mesure').getBoundingClientRect().top),
+    headerTop: Math.round(document.querySelector('.site-header').getBoundingClientRect().top)
+  }));
+  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, deepLink, menuLink, errors }, null, 2));
   await browser.close();
 })().catch((error) => { console.error(error); process.exitCode = 1; });

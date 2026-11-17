@@ -42,7 +42,7 @@ p { text-wrap: pretty; }
 .skip-link:focus { top: 12px; }
 
 /* The supplied mockup sets the header's restrained, engraved tone. */
-.site-header { position: absolute; z-index: 20; top: 0; left: 0; width: 100%; min-height: 58px; background: linear-gradient(180deg, rgba(4, 3, 3, .94), rgba(6, 4, 4, .76)); border-bottom: 1px solid rgba(180, 144, 126, .35); }
+.site-header { position: fixed; z-index: 20; top: 0; left: 0; width: 100%; min-height: 58px; background: linear-gradient(180deg, rgba(4, 3, 3, .97), rgba(6, 4, 4, .91)); border-bottom: 1px solid rgba(180, 144, 126, .35); }
 .primary-nav { display: flex; align-items: center; justify-content: center; gap: clamp(20px, 3.1vw, 54px); min-height: 58px; padding: 0 24px; }
 .primary-nav a { position: relative; display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; font: 500 clamp(10px, .9vw, 13px)/1 var(--display); letter-spacing: .025em; color: #eee5db; transition: color .2s ease; }
 .primary-nav a::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: 6px; height: 1px; background: var(--red-bright); transition: left .25s ease, right .25s ease; }
@@ -187,7 +187,7 @@ p { text-wrap: pretty; }
 @media (max-width: 900px) {
   :root { --wrap: calc(100% - 36px); }
   html { scroll-padding-top: 70px; }
-  .site-header { position: absolute; height: 62px; }
+  .site-header { height: 62px; }
   .mobile-brand { display: flex; align-items: center; position: absolute; left: 18px; top: 7px; min-height: 46px; font: 600 18px/1 var(--display); letter-spacing: -.04em; text-transform: uppercase; }
   .menu-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; position: absolute; z-index: 22; right: 16px; top: 7px; width: 48px; height: 48px; padding: 12px; border: 0; background: transparent; color: white; cursor: pointer; }
   .menu-toggle span { display: block; width: 100%; height: 1px; background: currentColor; transition: transform .25s ease, opacity .25s ease; }
