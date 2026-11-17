@@ -4,7 +4,9 @@
 
 La [maquette](./reference/maquette.png) fournie par le propriétaire est la référence de composition de l'accueil : navigation centrée, scène gothique sombre, grand logo central, titre à gauche et quatre accès illustrés en pied d'écran.
 
-L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les projets pro / entreprise sont intégrés à « Sur-mesure ». Le pied de page porte un accès « Gestion » en attente du futur panneau.
+L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les projets pro / entreprise sont intégrés à « Sur-mesure ». Le pied de page ouvre l’atelier visuel de mise en page.
+
+L’atelier présente la vitrine dans un aperçu sélectionnable, des tailles d’écran à gauche et des réglages chiffrés à droite. Sa palette et ses filets reprennent le site, avec des contrôles plus sobres pour un travail précis. Chaque taille d’écran garde ses propres réglages ; la publication écrit un fichier de configuration relu par la vitrine.
 
 Les liens du menu placent les sections sous la barre de navigation fixe. « Sur-mesure » commence avec 20 px d’espace avant son libellé, sans bande vide au-dessus du fond rouge. Le formulaire compact inclut un numéro libre ; l’illustration tient entièrement dans un cadre de ratio 2:1. Un rafraîchissement remet la page en haut de l’accueil.
 

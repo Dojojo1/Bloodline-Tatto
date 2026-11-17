@@ -1,0 +1,63 @@
+@font-face { font-family: Cinzel; src: url('assets/fonts/cinzel.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: Manrope; src: url('assets/fonts/manrope.woff2') format('woff2'); font-display: swap; }
+:root { color-scheme: dark; --ink: #eee2d4; --muted: #baa99e; --line: #59443c; --panel: #130d0c; --panel-deep: #0c0808; --red: #d63145; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #090707; color: var(--ink); font: 13px/1.5 Manrope, Arial, sans-serif; }
+button, input, textarea, select { font: inherit; }
+button, .upload-button { cursor: pointer; }
+button { min-height: 40px; padding: 9px 13px; border: 1px solid #806658; border-radius: 0; background: #201412; color: var(--ink); transition: background .16s ease, border-color .16s ease; }
+button:hover:not(:disabled), .upload-button:hover { background: #30201d; border-color: #bd927f; }
+button:disabled { opacity: .44; cursor: not-allowed; }
+button:active:not(:disabled) { background: #3c2524; }
+button.primary { background: #8f1728; border-color: #b73545; color: white; }
+button.primary:hover:not(:disabled) { background: #a92235; }
+a { color: #e5c7b6; }
+:focus-visible { outline: 2px solid #f15b6c; outline-offset: 3px; }
+.editor-header { display: flex; align-items: center; gap: 25px; min-height: 76px; padding: 12px 20px; border-bottom: 1px solid var(--line); background: #0b0707; }
+.editor-brand { min-width: 160px; color: #f1e8df; font: 600 20px/.95 Cinzel, Georgia, serif; text-decoration: none; text-transform: uppercase; }
+.editor-brand span { display: block; font-size: 10px; letter-spacing: .38em; }
+.editor-heading { margin-right: auto; }
+.editor-heading p { margin: 0; color: #bd887e; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+.editor-heading h1 { margin: 2px 0 0; font: 500 23px/1.1 Cinzel, Georgia, serif; }
+.editor-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.editor-layout { display: grid; grid-template-columns: 185px minmax(0, 1fr) 298px; height: calc(100dvh - 113px); min-height: 620px; overflow: hidden; }
+.editor-navigation, .editor-inspector { overflow-y: auto; background: var(--panel); }
+.editor-navigation { border-right: 1px solid var(--line); }
+.editor-inspector { border-left: 1px solid var(--line); }
+.panel-heading { padding: 22px 18px 18px; border-bottom: 1px solid #352824; }
+.panel-heading h2, .editor-auth h2 { margin: 0 0 7px; font: 600 14px/1.35 Cinzel, Georgia, serif; }
+.panel-heading p, .editor-auth p, .editor-help p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+#section-list { display: grid; gap: 2px; padding: 12px 8px; }
+#section-list button { width: 100%; min-height: 42px; border-color: transparent; background: transparent; text-align: left; }
+#section-list button:hover, #section-list button.is-active { background: #2d1a19; border-color: #754345; }
+.editor-help { margin: 18px 18px 28px; padding-top: 16px; border-top: 1px solid var(--line); }
+.editor-help strong { font: 600 12px Cinzel, Georgia, serif; }
+.editor-help p { margin-top: 8px; }
+.editor-workspace { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #201d1c; }
+.editor-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 58px; padding: 8px 18px; border-bottom: 1px solid #423633; background: #151110; }
+.device-switch { display: flex; gap: 4px; }
+.device-switch button { min-height: 34px; border-color: transparent; background: transparent; color: var(--muted); }
+.device-switch button[aria-pressed='true'] { border-color: #a55c5d; background: #371b20; color: white; }
+#preview-size { color: var(--muted); font-size: 12px; }
+.preview-width-control { display: flex; align-items: center; gap: 6px; margin-left: auto; color: var(--muted); font-size: 12px; }
+.preview-width-control input { width: 70px; min-height: 33px; padding: 5px 7px; border: 1px solid #665047; background: #090707; color: var(--ink); }
+.preview-stage { flex: 1; min-height: 0; overflow: auto; padding: 26px; }
+.preview-paper { position: relative; margin: 0 auto; background: #090707; box-shadow: 0 15px 45px rgba(0,0,0,.4); }
+#preview { display: block; border: 0; background: #090707; transform-origin: top left; }
+.editor-inspector fieldset { display: grid; gap: 13px; margin: 0; padding: 20px 18px; border: 0; border-bottom: 1px solid #352824; }
+.editor-inspector legend { float: left; width: 100%; margin-bottom: 12px; color: #e6d7cb; font: 600 11px Cinzel, Georgia, serif; }
+.editor-inspector label { display: grid; gap: 6px; color: #e4d2c3; font-size: 12px; }
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.editor-inspector input:not([type='file']), .editor-inspector textarea, .editor-inspector select { width: 100%; min-height: 39px; padding: 8px 9px; border: 1px solid #665047; border-radius: 0; background: #090707; color: #f3e9e1; }
+.editor-inspector textarea { min-height: 74px; resize: vertical; }
+.editor-inspector input[type='color'] { padding: 3px; }
+.field-note { margin: 0; color: #baa99e; font-size: 12px; line-height: 1.5; }
+.upload-button { display: block !important; padding: 10px 12px; border: 1px solid #806658; text-align: center; }
+.upload-button input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.reset-button { margin: 17px 18px; }
+.editor-auth { display: grid; gap: 12px; padding: 22px 18px; border-top: 1px solid #5d3938; }
+.editor-auth label { gap: 6px; }
+.editor-auth a { font-size: 12px; text-underline-offset: 3px; }
+.editor-status { min-height: 37px; margin: 0; padding: 10px 18px; border-top: 1px solid var(--line); background: #100b0b; color: #d7c2b4; font-size: 12px; }
+@media (max-width: 1040px) { .editor-layout { grid-template-columns: 150px minmax(0,1fr) 260px; } .editor-brand { min-width: 120px; font-size: 15px; } .editor-header { gap: 12px; } }
+@media (max-width: 760px) { .editor-layout { grid-template-columns: minmax(0,1fr); height: auto; } .editor-navigation { border: 0; } .editor-navigation .panel-heading, .editor-help { display: none; } #section-list { display: flex; overflow-x: auto; } #section-list button { white-space: nowrap; } .editor-workspace { height: 65dvh; min-height: 420px; } .editor-inspector { border: 0; border-top: 1px solid var(--line); } .editor-header { flex-wrap: wrap; } .editor-heading { margin-right: 0; } .editor-header-actions { width: 100%; } }

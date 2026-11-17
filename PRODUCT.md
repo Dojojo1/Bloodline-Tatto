@@ -24,7 +24,8 @@ Présenter Bloodline Tattoo et donner envie d'explorer le salon, les artistes, l
 - Le formulaire demande un numéro libre pour préparer le contact avec le client ; à ce stade, il copie seulement la demande sur l'appareil.
 - Pro / entreprise et sur-mesure utilisent le même parcours ; aucun service professionnel séparé n'est présumé.
 - Textes, menus, ordre des sections, visuels, artistes, réalisations, choix du formulaire, liens de contact et couleurs principales sont définis dans `site-content.js` pour le futur panneau de gestion.
-- Le bouton « Gestion » est visible, mais le panneau, son authentification et la persistance des modifications restent à construire.
+- Le bouton « Gestion » ouvre l'atelier visuel. Les membres ayant un compte GitHub autorisé sur le dépôt peuvent publier les réglages de mise en page ; leur clé de publication reste uniquement en mémoire dans l'onglet.
+- La gestion des rendez-vous, ventes, prestations, accès détaillés et comptabilité reste à construire séparément.
 - Projet personnel ou de groupe : le visiteur peut proposer un motif personnel, demander une création unique au tatoueur, et préciser taille et emplacement. Ces choix sont discutés avec le tatoueur pendant le rendez-vous.
 - Phase future : gestion des clients et des demandes. Chaque rendez-vous aura sa propre fiche liée à sa demande, au client et à l'artiste, avec date, statut, notes et vente éventuelle.
 - Aucune ville, adresse ou coordonnée de contact n'a encore été fournie. Le site ne doit pas simuler l'envoi d'une demande.

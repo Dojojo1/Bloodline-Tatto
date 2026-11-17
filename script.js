@@ -58,7 +58,6 @@ function applySiteContent(content) {
   setText('.footer-content > p', content.brand.footerTagline);
   setText('.back-to-top', content.footer.backToTop);
   setText('#management-button', content.management.button);
-  setText('#management-status', content.management.message);
 
   const logo = document.querySelector('.hero-logo');
   if (assetUrl(content.brand.logo)) logo.src = content.brand.logo;
@@ -373,14 +372,6 @@ const projectType = document.querySelector('#project-type');
 const groupSizeField = document.querySelector('#group-size-field');
 const groupSizeInput = document.querySelector('#group-size');
 const formContent = siteContent?.form;
-const managementButton = document.querySelector('#management-button');
-const managementStatus = document.querySelector('#management-status');
-
-managementButton.addEventListener('click', () => {
-  const willShow = managementStatus.hidden;
-  managementStatus.hidden = !willShow;
-  managementButton.setAttribute('aria-expanded', String(willShow));
-});
 
 function needsParticipantCount() {
   return projectType.selectedOptions[0]?.dataset.needsParticipantCount === 'true' || projectType.value === 'Projet de groupe';

@@ -57,8 +57,7 @@ async function inspect(page, width, height, name) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.reload({ waitUntil: 'domcontentloaded' });
   const reducedMotionVisible = await page.locator('.hero-logo').isVisible();
-  await page.locator('#management-button').click();
-  const managementMessageVisible = await page.locator('#management-status').isVisible();
+  const editorLinkVisible = await page.locator('#management-button[href="editor.html"]').isVisible();
 
   const configuredPage = await browser.newPage();
   await configuredPage.addInitScript(() => {
@@ -138,6 +137,6 @@ async function inspect(page, width, height, name) {
   if (refreshedFromProject.hash || refreshedFromProject.scrollY !== 0 || refreshedFromBottom.scrollY !== 0) {
     throw new Error('Refreshing does not return to the top of the site');
   }
-  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, refreshedFromProject, refreshedFromBottom, errors }, null, 2));
+  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, editorLinkVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, refreshedFromProject, refreshedFromBottom, errors }, null, 2));
   await browser.close();
 })().catch((error) => { console.error(error); process.exitCode = 1; });

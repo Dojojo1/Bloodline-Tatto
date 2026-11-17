@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Atelier visuel — Bloodline Tattoo</title>
+    <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
+    <link rel="stylesheet" href="editor.css?v=20261117-3">
+    <script src="editor.js?v=20261117-3" defer></script>
+  </head>
+  <body>
+    <header class="editor-header">
+      <a class="editor-brand" href="index.html">Bloodline <span>Tattoo</span></a>
+      <div class="editor-heading"><p>Gestion / Apparence</p><h1>Atelier visuel</h1></div>
+      <div class="editor-header-actions">
+        <button type="button" id="save-draft">Garder un brouillon</button>
+        <button type="button" id="restore-draft" hidden>Reprendre le brouillon</button>
+        <button type="button" id="publish" class="primary" disabled>Publier en ligne</button>
+      </div>
+    </header>
+
+    <main class="editor-layout">
+      <aside class="editor-navigation" aria-label="Zones du site">
+        <div class="panel-heading"><h2>Zones du site</h2><p>Choisis une zone, puis clique sur un élément.</p></div>
+        <nav id="section-list" aria-label="Sections de la vitrine"></nav>
+        <div class="editor-help"><strong>Déplacer</strong><p>Clique sur un élément dans l’aperçu, puis utilise la poignée rouge ou les chiffres à droite.</p></div>
+      </aside>
+
+      <section class="editor-workspace" aria-label="Aperçu modifiable">
+        <div class="editor-toolbar">
+          <div class="device-switch" role="group" aria-label="Taille de l’écran">
+            <button type="button" data-device="desktop" aria-pressed="true">Ordinateur</button>
+            <button type="button" data-device="tablet" aria-pressed="false">Tablette</button>
+            <button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
+          </div>
+          <label class="preview-width-control">Largeur de l’écran <input id="preview-width" type="number" min="320" max="2560" step="10" value="1100"> px</label>
+          <span id="preview-size">1100 px</span>
+        </div>
+        <div class="preview-stage" id="preview-stage"><div class="preview-paper" id="preview-paper"><iframe id="preview" title="Aperçu du site Bloodline Tattoo" src="index.html?atelier=1"></iframe></div></div>
+      </section>
+
+      <aside class="editor-inspector" aria-label="Réglages de l’élément">
+        <div class="panel-heading"><h2>Réglages</h2><p id="selected-name">Clique sur un élément dans l’aperçu.</p></div>
+        <div id="inspector-fields" hidden>
+          <fieldset><legend>Position et dimensions</legend>
+            <div class="input-grid">
+              <label>Décalage X <input type="number" data-prop="x" step="1"></label>
+              <label>Décalage Y <input type="number" data-prop="y" step="1"></label>
+              <label>Largeur <input type="number" data-prop="width" min="1" step="1"></label>
+              <label>Hauteur <input type="number" data-prop="height" min="1" step="1"></label>
+            </div>
+            <p class="field-note">Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.</p>
+          </fieldset>
+          <fieldset><legend>Texte</legend>
+            <label>Contenu <textarea id="text-value" rows="3"></textarea></label>
+            <div class="input-grid">
+              <label>Taille <input type="number" data-prop="fontSize" min="8" step="1"></label>
+              <label>Couleur <input type="color" data-prop="color" value="#eee2d4"></label>
+            </div>
+            <p class="field-note" id="text-hint">Sélectionne une ligne de texte pour changer son contenu.</p>
+          </fieldset>
+          <fieldset><legend>Fond et image</legend>
+            <label>Couleur du fond <input type="color" data-prop="backgroundColor" value="#110b0a"></label>
+            <label>Chemin de l’image <input type="text" data-prop="image" placeholder="assets/mon-image.png"></label>
+            <label>Affichage <select data-prop="fit"><option value="">Valeur d’origine</option><option value="cover">Remplir le cadre</option><option value="contain">Voir l’image entière</option><option value="auto">Taille d’origine</option></select></label>
+            <div class="input-grid">
+              <label>Image X (%) <input type="number" data-prop="backgroundX" min="0" max="100" step="1"></label>
+              <label>Image Y (%) <input type="number" data-prop="backgroundY" min="0" max="100" step="1"></label>
+            </div>
+            <label>Zoom de l’image (%) <input type="number" data-prop="backgroundScale" min="20" max="400" step="5"></label>
+            <label class="upload-button">Choisir une image <input type="file" id="upload-image" accept="image/png,image/jpeg,image/webp,image/avif"></label>
+            <p class="field-note">L’image choisie est publiée avec les réglages. Une connexion GitHub est nécessaire.</p>
+          </fieldset>
+          <button type="button" id="reset-element" class="reset-button">Réinitialiser cet élément</button>
+        </div>
+        <div class="editor-auth">
+          <h2>Accès à la publication</h2>
+          <p>Chaque membre autorisé utilise sa propre clé GitHub limitée à ce dépôt. La clé reste dans cette fenêtre et n’est pas enregistrée.</p>
+          <label>Clé GitHub <input id="github-token" type="password" autocomplete="off" placeholder="Coller la clé ici"></label>
+          <button type="button" id="connect">Vérifier mon accès</button>
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Créer une clé pour ce dépôt ↗</a>
+          <p class="field-note">Choisir uniquement « Bloodline-Tatto » et l’autorisation « Contents : Read and write ». Le propriétaire doit d’abord inviter les autres membres sur GitHub.</p>
+        </div>
+      </aside>
+    </main>
+    <p class="editor-status" id="editor-status" role="status" aria-live="polite">Chargement de l’aperçu…</p>
+  </body>
+</html>
