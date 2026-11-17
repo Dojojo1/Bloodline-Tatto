@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "revision": 0,
-  "desktop": {},
+  "revision": 1794951198353,
+  "desktop": {
+    "haut/nav:2/a:0": {},
+    "sur-mesure": {
+      "width": 1090,
+      "height": 664,
+      "x": 8,
+      "y": -81
+    },
+    "sur-mesure/div:0/div:0/div:5": {
+      "width": 350,
+      "height": 262
+    }
+  },
   "tablet": {},
   "mobile": {}
 }
