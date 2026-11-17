@@ -120,9 +120,23 @@ async function inspect(page, width, height, name) {
     activeNav: document.querySelector('.primary-nav .is-current')?.textContent.trim()
   }));
   await anchorPage.screenshot({ path: path.join(os.tmpdir(), 'bloodline-sur-mesure-1600.png') });
-  if (Math.abs(deepLink.labelTop - 84) > 10 || Math.abs(menuLink.labelTop - 84) > 10 || menuLink.formBottom > 768) {
+  await anchorPage.reload({ waitUntil: 'load' });
+  await anchorPage.waitForTimeout(350);
+  const refreshedFromProject = await anchorPage.evaluate(() => ({
+    hash: location.hash,
+    scrollY: Math.round(scrollY),
+    nav: document.querySelector('.primary-nav .is-current')?.textContent.trim()
+  }));
+  await anchorPage.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+  await anchorPage.reload({ waitUntil: 'load' });
+  await anchorPage.waitForTimeout(350);
+  const refreshedFromBottom = await anchorPage.evaluate(() => ({ hash: location.hash, scrollY: Math.round(scrollY) }));
+  if (Math.abs(deepLink.labelTop - 103) > 10 || Math.abs(menuLink.labelTop - 103) > 10 || menuLink.formBottom > 768) {
     throw new Error('Sur-mesure does not match the requested 1600×768 landing position');
   }
-  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, errors }, null, 2));
+  if (refreshedFromProject.hash || refreshedFromProject.scrollY !== 0 || refreshedFromBottom.scrollY !== 0) {
+    throw new Error('Refreshing does not return to the top of the site');
+  }
+  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, refreshedFromProject, refreshedFromBottom, errors }, null, 2));
   await browser.close();
 })().catch((error) => { console.error(error); process.exitCode = 1; });

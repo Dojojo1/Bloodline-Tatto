@@ -226,11 +226,17 @@ function applySiteContent(content) {
 
 applySiteContent(siteContent);
 
+const isReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
+if (isReload) {
+  history.scrollRestoration = 'manual';
+  if (window.location.hash) history.replaceState(history.state, '', window.location.href.split('#')[0]);
+}
+
 function scrollToProject(behavior = 'smooth') {
   const grid = document.querySelector('#sur-mesure .project-grid');
   const header = document.querySelector('.site-header');
   if (!grid || !header) return;
-  const gap = window.matchMedia('(max-width: 900px)').matches ? 24 : 25;
+  const gap = window.matchMedia('(max-width: 900px)').matches ? 43 : 44;
   const top = window.scrollY + grid.getBoundingClientRect().top - header.getBoundingClientRect().bottom - gap;
   window.scrollTo({ top, behavior });
   document.querySelectorAll('.primary-nav a').forEach((link) => {
@@ -253,6 +259,13 @@ document.addEventListener('click', (event) => {
 // The configurable section order is applied before load. Correct direct links
 // once images and fonts have settled so the title and form land together.
 window.addEventListener('load', () => {
+  if (isReload) {
+    const returnToTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+    returnToTop();
+    window.requestAnimationFrame(returnToTop);
+    window.setTimeout(returnToTop, 180);
+    return;
+  }
   if (!window.location.hash) return;
   const id = decodeURIComponent(window.location.hash.slice(1));
   if (id === 'sur-mesure') {
