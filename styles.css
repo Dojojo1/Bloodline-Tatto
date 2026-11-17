@@ -21,7 +21,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 74px; }
+html { scroll-behavior: smooth; scroll-padding-top: 58px; }
 body { margin: 0; min-width: 320px; background: var(--black); color: var(--cream); font-family: var(--body); -webkit-font-smoothing: antialiased; }
 body.menu-open { overflow: hidden; }
 ::selection { color: #fff; background: #8f1726; }
@@ -190,7 +190,7 @@ p { text-wrap: pretty; }
 
 @media (max-width: 900px) {
   :root { --wrap: calc(100% - 36px); }
-  html { scroll-padding-top: 70px; }
+  html { scroll-padding-top: 62px; }
   .site-header { height: 62px; }
   .mobile-brand { display: flex; align-items: center; position: absolute; left: 18px; top: 7px; min-height: 46px; font: 600 18px/1 var(--display); letter-spacing: -.04em; text-transform: uppercase; }
   .menu-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; position: absolute; z-index: 22; right: 16px; top: 7px; width: 48px; height: 48px; padding: 12px; border: 0; background: transparent; color: white; cursor: pointer; }

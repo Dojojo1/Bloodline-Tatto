@@ -233,11 +233,10 @@ if (isReload) {
 }
 
 function scrollToProject(behavior = 'smooth') {
-  const grid = document.querySelector('#sur-mesure .project-grid');
+  const section = document.querySelector('#sur-mesure');
   const header = document.querySelector('.site-header');
-  if (!grid || !header) return;
-  const gap = window.matchMedia('(max-width: 900px)').matches ? 43 : 44;
-  const top = window.scrollY + grid.getBoundingClientRect().top - header.getBoundingClientRect().bottom - gap;
+  if (!section || !header) return;
+  const top = window.scrollY + section.getBoundingClientRect().top - header.getBoundingClientRect().bottom;
   window.scrollTo({ top, behavior });
   document.querySelectorAll('.primary-nav a').forEach((link) => {
     const selected = link.getAttribute('href') === '#sur-mesure';
