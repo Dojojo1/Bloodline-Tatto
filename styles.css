@@ -127,10 +127,10 @@ p { text-wrap: pretty; }
 .artists-section { background: #130b0b; }
 .artists-visual { background: linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1)), var(--artists-art, url("assets/hero-art.png")) 3% 43% / auto 120% no-repeat; }
 .artists-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 52px; }
-.artist-profile { border: 1px solid rgba(177,139,122,.45); background: #110b0b; }
+.artist-profile { min-height: 170px; padding: 23px 25px 26px; border-top: 1px solid rgba(177,139,122,.45); }
 .artist-profile img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.artist-profile h3 { margin: 23px 24px 8px; font: 600 28px/1 var(--editorial); }
-.artist-profile p { margin: 0 24px 26px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.artist-profile h3 { margin: 0 0 14px; font: 600 28px/1 var(--editorial); }
+.artist-profile p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .reverse-grid { grid-template-columns: 1fr 1fr; }
 .reverse-grid .section-copy { padding-left: 5%; }
 .work-section { background: #0a0707; }

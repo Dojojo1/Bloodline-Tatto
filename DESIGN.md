@@ -8,6 +8,8 @@ L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les proje
 
 Les liens du menu placent la ligne de séparation de chaque section juste sous la barre de navigation fixe. Le formulaire conserve ses dimensions et sa place dans « Sur-mesure ». Un rafraîchissement remet la page en haut de l’accueil.
 
+La zone rouge « Nos artistes » s’étend avec cinq emplacements de présentation. L’illustration garde sa taille et son cadrage. Les noms et phrases actuels sont des exemples modifiables dans `site-content.js` ; aucun portrait ni spécialité n’est attribué à une personne réelle.
+
 ## Système appliqué
 
 - Palette : noir presque absolu, argent et bronze vieillis, rouge profond. Les fonds restent sombres, les textes principaux ivoire.
