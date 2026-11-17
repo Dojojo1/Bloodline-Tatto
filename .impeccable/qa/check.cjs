@@ -131,8 +131,8 @@ async function inspect(page, width, height, name) {
   await anchorPage.reload({ waitUntil: 'load' });
   await anchorPage.waitForTimeout(350);
   const refreshedFromBottom = await anchorPage.evaluate(() => ({ hash: location.hash, scrollY: Math.round(scrollY) }));
-  if (Math.abs(menuLink.formTop - menuLink.headerBottom - 17) > 10 || Math.abs(deepLink.formTop - menuLink.formTop) > 10) {
-    throw new Error('Sur-mesure does not align its red background beneath the fixed menu');
+  if (Math.abs(menuLink.formTop - menuLink.headerBottom - 20) > 10 || Math.abs(deepLink.formTop - menuLink.formTop) > 10) {
+    throw new Error('Sur-mesure does not start beneath the fixed menu');
   }
   if (refreshedFromProject.hash || refreshedFromProject.scrollY !== 0 || refreshedFromBottom.scrollY !== 0) {
     throw new Error('Refreshing does not return to the top of the site');

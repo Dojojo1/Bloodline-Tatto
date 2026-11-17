@@ -209,7 +209,7 @@ function applySiteContent(content) {
 
   const form = content.form;
   setText('.form-intro', form.intro);
-  const fieldIds = { name: 'customer-name', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', size: 'project-size', availability: 'appointment-availability' };
+  const fieldIds = { name: 'customer-name', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', availability: 'appointment-availability' };
   Object.entries(fieldIds).forEach(([key, id]) => {
     setLeadingText(`label[for="${id}"]`, form.labels[key]);
     const field = document.getElementById(id);
@@ -247,8 +247,7 @@ function scrollToProject(behavior = 'smooth') {
   const section = document.querySelector('#sur-mesure');
   const header = document.querySelector('.site-header');
   if (!section || !header) return;
-  const backgroundStart = parseFloat(getComputedStyle(section).getPropertyValue('--project-background-start')) || 0;
-  const top = window.scrollY + section.getBoundingClientRect().top + backgroundStart - header.getBoundingClientRect().bottom;
+  const top = window.scrollY + section.getBoundingClientRect().top - header.getBoundingClientRect().bottom;
   window.scrollTo({ top, behavior });
   document.querySelectorAll('.primary-nav a').forEach((link) => {
     const selected = link.getAttribute('href') === '#sur-mesure';
@@ -408,7 +407,6 @@ projectForm.addEventListener('submit', async (event) => {
     `${labels.creation || 'Création souhaitée'} : ${data.get('creation')}`,
     `${labels.idea || 'Motif ou idée'} : ${String(data.get('idee')).trim() || formContent?.undefinedIdea || 'À discuter avec le tatoueur'}`,
     `${labels.placement || 'Emplacement'} : ${String(data.get('emplacement')).trim() || formContent?.undefinedDetail || 'À discuter pendant le rendez-vous'}`,
-    `${labels.size || 'Taille'} : ${String(data.get('taille')).trim() || formContent?.undefinedDetail || 'À discuter pendant le rendez-vous'}`,
     `${labels.availability || 'Disponibilités'} : ${String(data.get('disponibilites')).trim() || formContent?.undefinedAvailability || 'À convenir'}`,
     formContent?.summaryNote || 'Les détails du tatouage seront discutés pendant le rendez-vous.'
   ].join('\n');

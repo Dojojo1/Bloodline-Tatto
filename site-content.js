@@ -118,7 +118,6 @@ window.BLOODLINE_CONTENT = {
       creation: 'Quel type de création souhaitez-vous ?',
       idea: 'Motif ou idée de départ',
       placement: 'Emplacement',
-      size: 'Taille approximative',
       availability: 'Vos disponibilités'
     },
     placeholders: {
@@ -126,7 +125,6 @@ window.BLOODLINE_CONTENT = {
       participants: 'Ex. 3',
       idea: 'Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous.',
       placement: 'Ex. avant-bras',
-      size: 'Ex. 10 × 15 cm',
       availability: 'Ex. vendredi soir, après 20 h'
     },
     projectTypes: [
@@ -152,7 +150,6 @@ window.BLOODLINE_CONTENT = {
       creation: 'Création souhaitée',
       idea: 'Motif ou idée',
       placement: 'Emplacement',
-      size: 'Taille',
       availability: 'Disponibilités'
     },
     undefinedIdea: 'À discuter avec le tatoueur',

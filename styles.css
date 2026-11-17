@@ -137,7 +137,7 @@ p { text-wrap: pretty; }
 .artist-profile p { max-width: 60ch; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .reverse-grid { grid-template-columns: 1fr 1fr; }
 .reverse-grid .section-copy { padding-left: 5%; }
-.work-section { border-bottom: 0; background: #0a0707; }
+.work-section { background: #0a0707; }
 .work-heading { text-align: center; }
 .work-heading > p:not(.section-label) { margin-inline: auto; }
 .work-gallery { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; margin-top: 48px; }
@@ -146,8 +146,7 @@ p { text-wrap: pretty; }
 .work-image-two { background-position: center, 83% 50%; }
 .work-image-three { background-position: center, 100% 70%; }
 .work-image span { position: absolute; bottom: 21px; left: 22px; font: 500 22px/1 var(--editorial); text-transform: uppercase; }
-.project-section { --project-background-start: 108px; background: linear-gradient(to bottom, #0a0707 0 var(--project-background-start), #110b0a var(--project-background-start) 100%); }
-.project-section::before { content: ""; position: absolute; top: var(--project-background-start); right: 0; left: 0; height: 1px; background: rgba(151, 117, 99, .2); pointer-events: none; }
+.content-section.project-section { padding-top: 20px; background: #110b0a; }
 .project-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(50px, 8vw, 130px); }
 .project-grid .ornament { margin-left: 0; }
 .project-visual { min-height: 330px; margin-top: 38px; background: linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1)), var(--project-art, url("assets/hero-art.png")) 3% 43% / cover no-repeat; }
@@ -192,7 +191,6 @@ p { text-wrap: pretty; }
   .gateway-title { font-size: 21px; }
   .content-section { padding-block: 100px; }
   .artists-section { padding: 16px 0 50px; }
-  .project-section { --project-background-start: 83px; }
   .style-panel-art { min-height: 190px; }
 }
 
@@ -228,7 +226,6 @@ p { text-wrap: pretty; }
   .content-section { padding-block: 82px; }
   .artists-section { padding: 16px 0 40px; }
   .artists-list { margin-top: 26px; }
-  .project-section { --project-background-start: 65px; }
   .styles-grid { grid-template-columns: 1fr 1fr; }
   .style-panel:nth-child(3):last-child { grid-column: 1 / -1; }
   .work-gallery { grid-template-columns: 1fr 1fr; }
