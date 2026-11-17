@@ -129,7 +129,8 @@ function updateValue(key, value) {
   if (key === 'text') selected.textContent = value;
   else if (value !== '' && value != null) frame.contentWindow.BLOODLINE_DESIGN.applyOne(selected, ['x', 'y', 'fit', 'backgroundScale', 'backgroundX', 'backgroundY'].includes(key) ? item : { [key]: value });
   else {
-    if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity' || key === 'paddingTop' || key === 'paddingBottom') selected.style[key] = '';
+    if (key === 'width' && selected.classList.contains('project-visual')) selected.style.removeProperty('--project-visual-width');
+    else if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity' || key === 'paddingTop' || key === 'paddingBottom') selected.style[key] = '';
     if (key === 'x' || key === 'y') selected.style.translate = `${item.x || 0}px ${item.y || 0}px`;
     if (key === 'backgroundColor' || key === 'color' || key === 'image') selected.style[key === 'image' ? 'backgroundImage' : key] = '';
     if (key === 'fit' || key === 'backgroundScale') selected.style.backgroundSize = '';
