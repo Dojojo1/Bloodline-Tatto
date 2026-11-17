@@ -86,25 +86,32 @@ function applySiteContent(content) {
   separator.setAttribute('aria-hidden', 'true');
   separator.textContent = '·';
   lead.replaceChildren(document.createTextNode(`${content.hero.leadFirst} `), separator, document.createTextNode(` ${content.hero.leadSecond}`), document.createElement('br'), document.createTextNode(content.hero.leadLast));
-  setAction('.button-hero', content.hero.action, content.hero.actionTarget);
-
   const gateway = document.querySelector('.gateway');
   gateway.replaceChildren(...content.gateway.filter((card) => document.getElementById(card.target)).map((card) => {
     const anchor = document.createElement('a');
     anchor.href = `#${card.target}`;
     anchor.className = 'gateway-card';
     if (/^[a-z-]+$/.test(card.id)) anchor.classList.add(`gateway-${card.id}`);
-    anchor.style.backgroundPosition = `center, ${card.artPosition}`;
+    anchor.style.setProperty('--card-position', card.artPosition);
+    const image = document.createElement('span');
+    image.className = 'gateway-image';
+    image.setAttribute('aria-hidden', 'true');
+    const frame = document.createElement('span');
+    frame.className = 'gateway-frame';
+    frame.setAttribute('aria-hidden', 'true');
     const title = document.createElement('span');
     title.className = 'gateway-title';
-    const strong = document.createElement('strong');
-    strong.textContent = card.strong;
-    title.append(document.createTextNode(card.first), document.createElement('br'), strong);
+    title.append(document.createTextNode(card.first));
+    if (card.strong) {
+      const strong = document.createElement('strong');
+      strong.textContent = card.strong;
+      title.append(document.createElement('br'), strong);
+    }
     const rule = document.createElement('span');
     rule.className = 'gateway-rule';
     rule.setAttribute('aria-hidden', 'true');
     rule.textContent = '✦';
-    anchor.append(title, rule);
+    anchor.append(image, frame, title, rule);
     return anchor;
   }));
 
@@ -191,7 +198,7 @@ function applySiteContent(content) {
 
   const form = content.form;
   setText('.form-intro', form.intro);
-  const fieldIds = { rpName: 'rp-name', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', size: 'project-size', availability: 'rp-availability' };
+  const fieldIds = { name: 'customer-name', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', size: 'project-size', availability: 'appointment-availability' };
   Object.entries(fieldIds).forEach(([key, id]) => {
     setLeadingText(`label[for="${id}"]`, form.labels[key]);
     const field = document.getElementById(id);
@@ -231,7 +238,15 @@ window.addEventListener('load', () => {
 const menuToggle = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('.primary-nav');
 const navLinks = [...navigation.querySelectorAll('a')];
+const siteHeader = document.querySelector('.site-header');
 const backgroundWhileMenuOpen = [document.querySelector('.skip-link'), document.querySelector('.mobile-brand'), document.querySelector('main'), document.querySelector('footer')];
+
+function syncHeaderPosition() {
+  siteHeader.classList.toggle('is-scrolled', window.scrollY > 16);
+}
+
+window.addEventListener('scroll', syncHeaderPosition, { passive: true });
+syncHeaderPosition();
 
 function closeMenu() {
   navigation.classList.remove('is-open');
@@ -327,21 +342,21 @@ projectForm.addEventListener('submit', async (event) => {
   const data = new FormData(projectForm);
   const labels = formContent?.summaryLabels || {};
   const brief = [
-    formContent?.summaryTitle || 'Demande de rendez-vous RP — Bloodline Tattoo',
-    `${labels.rpName || 'Nom RP'} : ${String(data.get('nom_rp')).trim()}`,
+    formContent?.summaryTitle || 'Demande de rendez-vous — Bloodline Tattoo',
+    `${labels.name || 'Nom'} : ${String(data.get('nom')).trim()}`,
     `${labels.projectType || 'Type'} : ${data.get('type')}`,
     ...(needsParticipantCount() ? [`${labels.participants || 'Nombre de personnes'} : ${data.get('participants')}`] : []),
     `${labels.creation || 'Création souhaitée'} : ${data.get('creation')}`,
-    `${labels.idea || 'Motif ou idée'} : ${String(data.get('idee')).trim() || formContent?.undefinedIdea || 'À discuter avec le tatoueur en RP'}`,
-    `${labels.placement || 'Emplacement'} : ${String(data.get('emplacement')).trim() || formContent?.undefinedDetail || 'À discuter en RP'}`,
-    `${labels.size || 'Taille'} : ${String(data.get('taille')).trim() || formContent?.undefinedDetail || 'À discuter en RP'}`,
-    `${labels.availability || 'Disponibilités RP'} : ${String(data.get('disponibilites')).trim() || formContent?.undefinedAvailability || 'À convenir'}`,
-    formContent?.summaryNote || 'Les détails du tatouage seront discutés pendant le rendez-vous RP.'
+    `${labels.idea || 'Motif ou idée'} : ${String(data.get('idee')).trim() || formContent?.undefinedIdea || 'À discuter avec le tatoueur'}`,
+    `${labels.placement || 'Emplacement'} : ${String(data.get('emplacement')).trim() || formContent?.undefinedDetail || 'À discuter pendant le rendez-vous'}`,
+    `${labels.size || 'Taille'} : ${String(data.get('taille')).trim() || formContent?.undefinedDetail || 'À discuter pendant le rendez-vous'}`,
+    `${labels.availability || 'Disponibilités'} : ${String(data.get('disponibilites')).trim() || formContent?.undefinedAvailability || 'À convenir'}`,
+    formContent?.summaryNote || 'Les détails du tatouage seront discutés pendant le rendez-vous.'
   ].join('\n');
 
   try {
     await navigator.clipboard.writeText(brief);
-    formStatus.textContent = formContent?.success || 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé en RP.';
+    formStatus.textContent = formContent?.success || 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé avec le tatoueur.';
     formStatus.className = 'form-status is-success';
   } catch {
     formStatus.textContent = formContent?.copyError || 'La copie automatique est indisponible. Sélectionnez et copiez votre texte ci-dessous.';
@@ -350,7 +365,7 @@ projectForm.addEventListener('submit', async (event) => {
     if (!fallback) {
       fallback = document.createElement('textarea');
       fallback.id = 'brief-fallback';
-      fallback.setAttribute('aria-label', 'Demande de rendez-vous RP à copier');
+      fallback.setAttribute('aria-label', 'Demande de rendez-vous à copier');
       fallback.readOnly = true;
       projectForm.append(fallback);
     }

@@ -42,7 +42,6 @@
             <h1 id="hero-title">L’art du tatouage <em>sur-mesure</em></h1>
             <div class="ornament ornament-red" aria-hidden="true"><span></span></div>
             <p class="hero-lead">Créations uniques <span aria-hidden="true">·</span> Projet personnalisé<br>Particulier &amp; professionnel</p>
-            <a class="button button-hero" href="#sur-mesure">Démarrer mon projet <span aria-hidden="true">↗</span></a>
           </div>
           <div class="hero-logo-frame">
             <img class="hero-logo" src="assets/bloodline-logo.png" alt="Bloodline Tattoo" width="768" height="768" fetchpriority="high">
@@ -51,19 +50,27 @@
 
         <div class="gateway wrap" aria-label="Explorer Bloodline Tattoo">
           <a class="gateway-card gateway-styles" href="#styles">
+            <span class="gateway-image" aria-hidden="true"></span>
+            <span class="gateway-frame" aria-hidden="true"></span>
             <span class="gateway-title">Nos<br><strong>styles</strong></span>
             <span class="gateway-rule" aria-hidden="true">✦</span>
           </a>
           <a class="gateway-card gateway-salon" href="#salon">
+            <span class="gateway-image" aria-hidden="true"></span>
+            <span class="gateway-frame" aria-hidden="true"></span>
             <span class="gateway-title">Le<br><strong>salon</strong></span>
             <span class="gateway-rule" aria-hidden="true">✦</span>
           </a>
           <a class="gateway-card gateway-create" href="#sur-mesure">
+            <span class="gateway-image" aria-hidden="true"></span>
+            <span class="gateway-frame" aria-hidden="true"></span>
             <span class="gateway-title">Création<br><strong>sur-mesure</strong></span>
             <span class="gateway-rule" aria-hidden="true">✦</span>
           </a>
           <a class="gateway-card gateway-rdv" href="#sur-mesure">
-            <span class="gateway-title">Rendez-vous<br><strong>RP</strong></span>
+            <span class="gateway-image" aria-hidden="true"></span>
+            <span class="gateway-frame" aria-hidden="true"></span>
+            <span class="gateway-title">Rendez-vous</span>
             <span class="gateway-rule" aria-hidden="true">✦</span>
           </a>
         </div>
@@ -74,12 +81,12 @@
         <div class="wrap styles-heading">
           <p class="section-label">Nos styles</p>
           <h2 id="styles-title">Une direction, <em>votre empreinte.</em></h2>
-          <p>Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous RP.</p>
+          <p>Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous.</p>
         </div>
         <div class="wrap styles-grid">
           <article class="style-panel"><div class="style-panel-art style-art-personal" aria-hidden="true"></div><h3>Votre motif</h3><p>Partez d’un dessin ou d’une idée que vous apportez.</p></article>
           <article class="style-panel"><div class="style-panel-art style-art-artist" aria-hidden="true"></div><h3>Création unique</h3><p>Laissez le tatoueur vous proposer une pièce originale.</p></article>
-          <article class="style-panel"><div class="style-panel-art style-art-together" aria-hidden="true"></div><h3>À imaginer ensemble</h3><p>Affinez le motif, l’emplacement et la taille en RP.</p></article>
+          <article class="style-panel"><div class="style-panel-art style-art-together" aria-hidden="true"></div><h3>À imaginer ensemble</h3><p>Affinez le motif, l’emplacement et la taille avec le tatoueur.</p></article>
         </div>
       </section>
 
@@ -124,16 +131,16 @@
       <section class="content-section project-section" id="sur-mesure" aria-labelledby="project-title">
         <div class="wrap project-grid">
           <div class="section-copy">
-            <p class="section-label">Rendez-vous RP</p>
+            <p class="section-label">Rendez-vous</p>
             <h2 id="project-title">Votre tatouage, <em>votre choix.</em></h2>
             <p>Pour un projet personnel, de groupe ou d’entreprise, vous pouvez choisir la taille, l’emplacement et le motif. Apportez votre propre idée de tatouage ou laissez le tatoueur vous proposer une création unique.</p>
-            <p>Ce formulaire prépare le rendez-vous. Vous discuterez des détails et des possibilités avec le tatoueur pendant le rendez-vous RP.</p>
+            <p>Ce formulaire prépare le rendez-vous. Vous discuterez des détails et des possibilités avec le tatoueur pendant le rendez-vous.</p>
             <div class="ornament" aria-hidden="true"><span></span></div>
           </div>
           <form class="project-form" id="project-form">
-            <p class="form-intro">Préparez votre demande de rendez-vous RP. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.</p>
+            <p class="form-intro">Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.</p>
             <div class="form-row">
-              <div><label for="rp-name">Votre nom RP</label><input id="rp-name" name="nom_rp" type="text" autocomplete="nickname" placeholder="Votre nom en RP" required></div>
+              <div><label for="customer-name">Votre nom</label><input id="customer-name" name="nom" type="text" autocomplete="name" placeholder="Votre nom" required></div>
               <div>
                 <label for="project-type">Type de projet</label>
                 <select id="project-type" name="type" required>
@@ -153,18 +160,18 @@
               <option value="">Choisir une option</option>
               <option value="Mon propre tatouage / motif">Mon propre tatouage ou motif</option>
               <option value="Création unique proposée par le tatoueur">Une création unique proposée par le tatoueur</option>
-              <option value="À décider avec le tatoueur en RP">À décider avec le tatoueur en RP</option>
+              <option value="À décider avec le tatoueur">À décider avec le tatoueur</option>
             </select>
 
             <label for="project-idea">Motif ou idée de départ <span class="optional">(facultatif)</span></label>
-            <textarea id="project-idea" name="idee" rows="4" placeholder="Décrivez votre idée si vous en avez une ; sinon, vous en parlerez en RP."></textarea>
+            <textarea id="project-idea" name="idee" rows="4" placeholder="Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous."></textarea>
 
             <div class="form-row">
               <div><label for="project-placement">Emplacement</label><input id="project-placement" name="emplacement" type="text" placeholder="Ex. avant-bras"></div>
               <div><label for="project-size">Taille approximative</label><input id="project-size" name="taille" type="text" placeholder="Ex. 10 × 15 cm"></div>
             </div>
-            <label for="rp-availability">Vos disponibilités RP <span class="optional">(facultatif)</span></label>
-            <input id="rp-availability" name="disponibilites" type="text" placeholder="Ex. vendredi soir, après 20 h">
+            <label for="appointment-availability">Vos disponibilités <span class="optional">(facultatif)</span></label>
+            <input id="appointment-availability" name="disponibilites" type="text" placeholder="Ex. vendredi soir, après 20 h">
 
             <button class="button form-button" type="submit">Copier ma demande de rendez-vous <span aria-hidden="true">↗</span></button>
             <p class="form-status" id="form-status" role="status" aria-live="polite">La demande est préparée sur votre appareil : aucun rendez-vous n’est réservé ni confirmé ici.</p>

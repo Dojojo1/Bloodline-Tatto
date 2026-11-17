@@ -41,7 +41,7 @@ async function inspect(page, width, height, name) {
   await page.locator('.primary-nav a[href="#sur-mesure"]').click();
   const menuClosed = await page.locator('.menu-toggle').getAttribute('aria-expanded');
   const backgroundRestored = await page.locator('main').evaluate((element) => !element.inert);
-  await page.locator('#rp-name').fill('Alex Moreau');
+  await page.locator('#customer-name').fill('Alex Moreau');
   await page.locator('#project-type').selectOption('Projet de groupe');
   const groupVisible = await page.locator('#group-size-field').isVisible();
   await page.locator('#group-size').fill('3');
@@ -81,6 +81,25 @@ async function inspect(page, width, height, name) {
     firstStyle: document.querySelector('.style-panel h3').textContent,
     accent: document.documentElement.style.getPropertyValue('--red-bright')
   }));
+  const hoverPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await hoverPage.emulateMedia({ reducedMotion: 'no-preference' });
+  await hoverPage.goto(siteUrl, { waitUntil: 'domcontentloaded' });
+  await hoverPage.waitForTimeout(1500);
+  await hoverPage.locator('.gateway-salon').hover({ force: true });
+  await hoverPage.waitForTimeout(720);
+  const standardHover = await hoverPage.locator('.gateway-salon').evaluate((card) => ({
+    cardDuration: getComputedStyle(card).transitionDuration,
+    imageDuration: getComputedStyle(card.querySelector('.gateway-image')).transitionDuration,
+    imageTransform: getComputedStyle(card.querySelector('.gateway-image')).transform
+  }));
+  await hoverPage.emulateMedia({ reducedMotion: 'reduce' });
+  await hoverPage.waitForTimeout(380);
+  const reducedHover = await hoverPage.locator('.gateway-salon').evaluate((card) => ({
+    cardDuration: getComputedStyle(card).transitionDuration,
+    imageDuration: getComputedStyle(card.querySelector('.gateway-image')).transitionDuration,
+    imageTransform: getComputedStyle(card.querySelector('.gateway-image')).transform,
+    imageFilter: getComputedStyle(card.querySelector('.gateway-image')).filter
+  }));
   const anchorPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await anchorPage.goto(`${siteUrl}#sur-mesure`, { waitUntil: 'load' });
   await anchorPage.waitForTimeout(650);
@@ -95,6 +114,6 @@ async function inspect(page, width, height, name) {
     targetTop: Math.round(document.querySelector('#sur-mesure').getBoundingClientRect().top),
     headerTop: Math.round(document.querySelector('.site-header').getBoundingClientRect().top)
   }));
-  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, deepLink, menuLink, errors }, null, 2));
+  console.log(JSON.stringify({ desktop, tablet, mobile, menuOpen, firstMenuLinkFocused, backgroundInert, focusWrappedToMenuButton, menuClosed, backgroundRestored, groupVisible, groupHiddenForPersonal, status, copiedRequest, reducedMotionVisible, managementMessageVisible, contentConfigurationWorks, standardHover, reducedHover, deepLink, menuLink, errors }, null, 2));
   await browser.close();
 })().catch((error) => { console.error(error); process.exitCode = 1; });

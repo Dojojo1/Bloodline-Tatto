@@ -42,7 +42,8 @@ p { text-wrap: pretty; }
 .skip-link:focus { top: 12px; }
 
 /* The supplied mockup sets the header's restrained, engraved tone. */
-.site-header { position: fixed; z-index: 20; top: 0; left: 0; width: 100%; min-height: 58px; background: linear-gradient(180deg, rgba(4, 3, 3, .97), rgba(6, 4, 4, .91)); border-bottom: 1px solid rgba(180, 144, 126, .35); }
+.site-header { position: fixed; z-index: 20; top: 0; left: 0; width: 100%; min-height: 58px; background: linear-gradient(180deg, rgba(4, 3, 3, .97), rgba(6, 4, 4, .91)); border-bottom: 1px solid rgba(180, 144, 126, .35); transition: border-color .2s ease, box-shadow .2s ease; }
+.site-header.is-scrolled { border-color: rgba(180, 144, 126, .58); box-shadow: 0 9px 24px rgba(0, 0, 0, .42); }
 .primary-nav { display: flex; align-items: center; justify-content: center; gap: clamp(20px, 3.1vw, 54px); min-height: 58px; padding: 0 24px; }
 .primary-nav a { position: relative; display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; font: 500 clamp(10px, .9vw, 13px)/1 var(--display); letter-spacing: .025em; color: #eee5db; transition: color .2s ease; }
 .primary-nav a::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: 6px; height: 1px; background: var(--red-bright); transition: left .25s ease, right .25s ease; }
@@ -74,19 +75,22 @@ p { text-wrap: pretty; }
 .hero-logo { width: clamp(310px, 36.5vw, 510px); height: auto; mix-blend-mode: screen; filter: drop-shadow(0 15px 18px rgba(0,0,0,.66)); }
 
 .gateway { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding-inline: 20px; }
-.gateway-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 178px; overflow: hidden; padding: 22px 12px 13px; border: 1px solid #826b5e; background-image: linear-gradient(180deg, rgba(10, 6, 6, .08), rgba(6, 4, 4, .72) 65%, rgba(3,2,2,.92)), var(--gateway-art, url("assets/gateway-art.png")); background-repeat: no-repeat; background-size: cover, 200% auto; color: #f1e7dd; text-align: center; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.42), 0 12px 28px rgba(0,0,0,.5); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.gateway-card::before, .gateway-card::after { content: "❧"; position: absolute; top: 1px; color: #c5ad9e; font: 24px/1 var(--editorial); text-shadow: 0 1px #000; }
+.gateway-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 178px; overflow: hidden; padding: 22px 12px 13px; border: 1px solid #826b5e; background: #0d0908; color: #f1e7dd; text-align: center; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.42), 0 12px 28px rgba(0,0,0,.5); transition: transform .42s cubic-bezier(.2, .8, .2, 1), border-color .42s ease, box-shadow .42s ease; }
+.gateway-image { position: absolute; inset: 0; background-image: linear-gradient(180deg, rgba(10, 6, 6, .08), rgba(6, 4, 4, .72) 65%, rgba(3,2,2,.92)), var(--gateway-art, url("assets/gateway-art.png")); background-repeat: no-repeat; background-size: cover, 200% auto; background-position: center, var(--card-position, 0 14%); transform: scale(1); transition: transform .65s cubic-bezier(.2, .8, .2, 1); }
+.gateway-frame { position: absolute; z-index: 1; inset: 5px; border: 1px solid rgba(196,159,138,.42); pointer-events: none; }
+.gateway-card::before, .gateway-card::after { content: "❧"; position: absolute; z-index: 2; top: 1px; color: #c5ad9e; font: 24px/1 var(--editorial); text-shadow: 0 1px #000; }
 .gateway-card::before { left: 7px; transform: rotate(-45deg); }
 .gateway-card::after { right: 7px; transform: scaleX(-1) rotate(-45deg); }
 .gateway-card:hover { transform: translateY(-3px); border-color: #c1a290; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.58), 0 17px 32px rgba(0,0,0,.56); }
-.gateway-card:active { transform: scale(.98); }
-.gateway-create { background-position: center, 0 14%; }
-.gateway-styles { background-position: center, 100% 14%; }
-.gateway-salon { background-position: center, 0 86%; }
-.gateway-rdv { background-position: center, 100% 86%; }
-.gateway-title { position: relative; z-index: 1; font: 500 24px/.85 var(--editorial); text-transform: uppercase; text-shadow: 0 2px 7px #000, 0 0 15px #000; }
+.gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: scale(1.03); }
+.gateway-card:active { transform: scale(.96); transition-duration: .12s; }
+.gateway-create { --card-position: 0 14%; }
+.gateway-styles { --card-position: 100% 14%; }
+.gateway-salon { --card-position: 0 86%; }
+.gateway-rdv { --card-position: 100% 86%; }
+.gateway-title { position: relative; z-index: 2; font: 500 24px/.85 var(--editorial); text-transform: uppercase; text-shadow: 0 2px 7px #000, 0 0 15px #000; }
 .gateway-title strong { font-weight: 600; font-size: 1.12em; }
-.gateway-rule { position: relative; display: block; width: 66%; margin-top: 10px; color: #c2182c; font-size: 15px; line-height: 1; }
+.gateway-rule { position: relative; z-index: 2; display: block; width: 66%; margin-top: 10px; color: #c2182c; font-size: 15px; line-height: 1; }
 .gateway-rule::before, .gateway-rule::after { content: ""; position: absolute; top: 7px; width: 42%; height: 1px; background: linear-gradient(90deg, transparent, #b11a2c); }
 .gateway-rule::before { left: 0; }
 .gateway-rule::after { right: 0; transform: rotate(180deg); }
@@ -233,7 +237,6 @@ p { text-wrap: pretty; }
   .hero-copy { margin-top: -8px; }
   .hero h1 { font-size: 36px; }
   .hero-lead { font-size: 18px; }
-  .button-hero { width: 100%; }
   .gateway { gap: 10px; margin-top: 33px; }
   .gateway-card { min-height: 143px; padding-inline: 5px; }
   .gateway-title { font-size: 19px; }
@@ -253,4 +256,8 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  .gateway-card { transition-property: border-color, box-shadow; transition-duration: .32s !important; }
+  .gateway-card:hover, .gateway-card:active { transform: none; }
+  .gateway-image { transition-property: filter; transition-duration: .32s !important; }
+  .gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: none; filter: brightness(1.12); }
 }

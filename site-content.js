@@ -42,15 +42,13 @@ window.BLOODLINE_CONTENT = {
     emphasis: 'sur-mesure',
     leadFirst: 'Créations uniques',
     leadSecond: 'Projet personnalisé',
-    leadLast: 'Particulier & professionnel',
-    action: 'Démarrer mon projet',
-    actionTarget: 'sur-mesure'
+    leadLast: 'Particulier & professionnel'
   },
   gateway: [
     { id: 'styles', first: 'Nos', strong: 'styles', target: 'styles', artPosition: '100% 14%' },
     { id: 'salon', first: 'Le', strong: 'salon', target: 'salon', artPosition: '0 86%' },
     { id: 'create', first: 'Création', strong: 'sur-mesure', target: 'sur-mesure', artPosition: '0 14%' },
-    { id: 'rdv', first: 'Rendez-vous', strong: 'RP', target: 'sur-mesure', artPosition: '100% 86%' }
+    { id: 'rdv', first: 'Rendez-vous', strong: '', target: 'sur-mesure', artPosition: '100% 86%' }
   ],
   sectionOrder: ['styles', 'salon', 'artistes', 'realisations', 'sur-mesure'],
   sections: {
@@ -58,11 +56,11 @@ window.BLOODLINE_CONTENT = {
       label: 'Nos styles',
       heading: 'Une direction,',
       emphasis: 'votre empreinte.',
-      description: 'Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous RP.',
+      description: 'Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous.',
       items: [
         { title: 'Votre motif', description: 'Partez d’un dessin ou d’une idée que vous apportez.', image: 'assets/gateway-art.png', artPosition: '0 14%' },
         { title: 'Création unique', description: 'Laissez le tatoueur vous proposer une pièce originale.', image: 'assets/gateway-art.png', artPosition: '100% 14%' },
-        { title: 'À imaginer ensemble', description: 'Affinez le motif, l’emplacement et la taille en RP.', image: 'assets/gateway-art.png', artPosition: '100% 86%' }
+        { title: 'À imaginer ensemble', description: 'Affinez le motif, l’emplacement et la taille avec le tatoueur.', image: 'assets/gateway-art.png', artPosition: '100% 86%' }
       ]
     },
     salon: {
@@ -103,26 +101,26 @@ window.BLOODLINE_CONTENT = {
       emphasis: 'votre choix.',
       paragraphs: [
         'Pour un projet personnel, de groupe ou d’entreprise, vous pouvez choisir la taille, l’emplacement et le motif. Apportez votre propre idée de tatouage ou laissez le tatoueur vous proposer une création unique.',
-        'Le parcours sur mesure est le même pour les particuliers et les professionnels. Les détails et les possibilités se discutent avec le tatoueur pendant le rendez-vous RP.'
+        'Le parcours sur mesure est le même pour les particuliers et les professionnels. Les détails et les possibilités se discutent avec le tatoueur pendant le rendez-vous.'
       ]
     }
   },
   form: {
-    intro: 'Préparez votre demande de rendez-vous RP. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.',
+    intro: 'Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.',
     labels: {
-      rpName: 'Votre nom RP',
+      name: 'Votre nom',
       projectType: 'Type de projet',
       participants: 'Nombre de personnes',
       creation: 'Quel type de création souhaitez-vous ?',
       idea: 'Motif ou idée de départ',
       placement: 'Emplacement',
       size: 'Taille approximative',
-      availability: 'Vos disponibilités RP'
+      availability: 'Vos disponibilités'
     },
     placeholders: {
-      rpName: 'Votre nom en RP',
+      name: 'Votre nom',
       participants: 'Ex. 3',
-      idea: 'Décrivez votre idée si vous en avez une ; sinon, vous en parlerez en RP.',
+      idea: 'Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous.',
       placement: 'Ex. avant-bras',
       size: 'Ex. 10 × 15 cm',
       availability: 'Ex. vendredi soir, après 20 h'
@@ -136,27 +134,27 @@ window.BLOODLINE_CONTENT = {
       { value: '', label: 'Choisir une option' },
       { value: 'Mon propre tatouage / motif', label: 'Mon propre tatouage ou motif' },
       { value: 'Création unique proposée par le tatoueur', label: 'Une création unique proposée par le tatoueur' },
-      { value: 'À décider avec le tatoueur en RP', label: 'À décider avec le tatoueur en RP' }
+      { value: 'À décider avec le tatoueur', label: 'À décider avec le tatoueur' }
     ],
     action: 'Copier ma demande de rendez-vous',
     idle: 'La demande est préparée sur votre appareil : aucun rendez-vous n’est réservé ni confirmé ici.',
-    success: 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé en RP.',
+    success: 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé avec le tatoueur.',
     copyError: 'La copie automatique est indisponible. Sélectionnez et copiez votre texte ci-dessous.',
-    summaryTitle: 'Demande de rendez-vous RP — Bloodline Tattoo',
+    summaryTitle: 'Demande de rendez-vous — Bloodline Tattoo',
     summaryLabels: {
-      rpName: 'Nom RP',
+      name: 'Nom',
       projectType: 'Type',
       participants: 'Nombre de personnes',
       creation: 'Création souhaitée',
       idea: 'Motif ou idée',
       placement: 'Emplacement',
       size: 'Taille',
-      availability: 'Disponibilités RP'
+      availability: 'Disponibilités'
     },
-    undefinedIdea: 'À discuter avec le tatoueur en RP',
-    undefinedDetail: 'À discuter en RP',
+    undefinedIdea: 'À discuter avec le tatoueur',
+    undefinedDetail: 'À discuter pendant le rendez-vous',
     undefinedAvailability: 'À convenir',
-    summaryNote: 'Les détails du tatouage seront discutés pendant le rendez-vous RP.'
+    summaryNote: 'Les détails du tatouage seront discutés pendant le rendez-vous.'
   },
   footer: {
     backToTop: 'Retour en haut ↑',
