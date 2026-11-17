@@ -26,9 +26,6 @@ function normalizeSettings() {
   for (const device of ['desktop', 'tablet', 'mobile']) {
     settings[device] ||= {};
     for (const [id, values] of Object.entries(settings[device])) {
-      if (SECTIONS.some(([section]) => section === id)) {
-        for (const key of ['x', 'y', 'width', 'height']) delete values[key];
-      }
       if (id.endsWith('/div:5') && id.startsWith('sur-mesure/')) delete values.height;
       if (!Object.keys(values).length) delete settings[device][id];
     }
@@ -73,8 +70,9 @@ function resizePreview() {
 
 function positionOutline() {
   if (!selected || !outline || !selected.isConnected) return;
-  outline.querySelectorAll('button').forEach((button) => { button.hidden = selected.matches('main > section'); });
-  const rect = selected.getBoundingClientRect();
+  const target = selected.matches('main > section') ? selected.querySelector(':scope > .wrap') || selected : selected;
+  outline.querySelectorAll('button').forEach((button) => { button.hidden = false; });
+  const rect = target.getBoundingClientRect();
   const win = frame.contentWindow;
   Object.assign(outline.style, {
     left: `${rect.left + win.scrollX}px`, top: `${rect.top + win.scrollY}px`,
@@ -97,11 +95,11 @@ function fillInspector() {
   fields.hidden = false;
   fields.querySelectorAll('[data-prop]').forEach((input) => {
     const key = input.dataset.prop;
-    input.disabled = isSection ? ['x', 'y', 'width', 'height'].includes(key) : ['paddingTop', 'paddingBottom'].includes(key) || (isProjectVisual && key === 'height');
+    input.disabled = !isSection && (['paddingTop', 'paddingBottom'].includes(key) || (isProjectVisual && key === 'height'));
     input.value = item[key] ?? (input.type === 'color' ? key === 'color' ? '#eee2d4' : '#110b0a' : '');
   });
   document.querySelector('#dimension-hint').textContent = isSection
-    ? 'Le fond garde toute la largeur du site. Règle les espaces au-dessus et au-dessous ; clique sur un élément à l’intérieur pour le déplacer.'
+    ? 'X, Y et largeur règlent le contenu. La hauteur est un minimum : le fond suit toujours les éléments et garde toute la largeur de l’écran.'
     : isProjectVisual ? 'La hauteur suit la largeur pour afficher l’image entière.'
       : 'Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.';
   const textInput = document.querySelector('#text-value');
@@ -119,7 +117,6 @@ function selectElement(element) {
 }
 
 function updateValue(key, value) {
-  if (selected?.matches('main > section') && ['x', 'y', 'width', 'height'].includes(key)) return;
   if (selected?.classList.contains('project-visual') && key === 'height') return;
   const item = itemForSelected();
   if (!item) return;
@@ -129,9 +126,16 @@ function updateValue(key, value) {
   if (key === 'text') selected.textContent = value;
   else if (value !== '' && value != null) frame.contentWindow.BLOODLINE_DESIGN.applyOne(selected, ['x', 'y', 'fit', 'backgroundScale', 'backgroundX', 'backgroundY'].includes(key) ? item : { [key]: value });
   else {
-    if (key === 'width' && selected.classList.contains('project-visual')) selected.style.removeProperty('--project-visual-width');
-    else if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity' || key === 'paddingTop' || key === 'paddingBottom') selected.style[key] = '';
-    if (key === 'x' || key === 'y') selected.style.translate = `${item.x || 0}px ${item.y || 0}px`;
+    if (selected.matches('main > section')) {
+      const content = selected.querySelector(':scope > .wrap');
+      if (key === 'width' && content) content.style.width = '';
+      if ((key === 'x' || key === 'y') && content) content.style.translate = `${item.x || 0}px ${item.y || 0}px`;
+      if (key === 'height') selected.style.minHeight = '';
+    } else {
+      if (key === 'width' && selected.classList.contains('project-visual')) selected.style.removeProperty('--project-visual-width');
+      else if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity') selected.style[key] = '';
+      if (key === 'x' || key === 'y') selected.style.translate = `${item.x || 0}px ${item.y || 0}px`;
+    }
     if (key === 'backgroundColor' || key === 'color' || key === 'image') selected.style[key === 'image' ? 'backgroundImage' : key] = '';
     if (key === 'fit' || key === 'backgroundScale') selected.style.backgroundSize = '';
     if (key === 'backgroundX' || key === 'backgroundY') selected.style.backgroundPosition = `${item.backgroundX ?? 50}% ${item.backgroundY ?? 50}%`;
@@ -144,12 +148,11 @@ function updateValue(key, value) {
 
 function startDrag(event, kind) {
   if (!selected) return;
-  if (selected.matches('main > section')) { status('Pour déplacer le contenu, sélectionne un élément à l’intérieur de la section. Le fond reste sur toute la largeur.'); return; }
   event.preventDefault();
   event.stopPropagation();
   const handle = event.currentTarget;
   handle.setPointerCapture(event.pointerId);
-  const rect = selected.getBoundingClientRect();
+  const rect = (selected.matches('main > section') ? selected.querySelector(':scope > .wrap') || selected : selected).getBoundingClientRect();
   const item = itemForSelected();
   const start = { x: event.clientX, y: event.clientY, offsetX: safeNumber(item.x), offsetY: safeNumber(item.y), width: rect.width, height: rect.height };
   const move = (pointer) => {

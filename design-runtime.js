@@ -32,7 +32,12 @@
     const safe = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, cleanValue(key, value)]));
     const isSection = element.matches('main > section');
     const isProjectVisual = element.classList.contains('project-visual');
-    if (!isSection && (safe.x != null || safe.y != null)) element.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
+    if (isSection) {
+      const content = element.querySelector(':scope > .wrap');
+      if (content && (safe.x != null || safe.y != null)) content.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
+      if (content && safe.width != null) content.style.width = `min(100%, ${Math.max(1, safe.width)}px)`;
+      if (safe.height != null) element.style.minHeight = `${Math.max(1, safe.height)}px`;
+    } else if (safe.x != null || safe.y != null) element.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
     if (isProjectVisual && safe.width != null) element.style.setProperty('--project-visual-width', `${Math.max(1, safe.width)}px`);
     else if (!isSection && safe.width != null) element.style.width = `${Math.max(1, safe.width)}px`;
     if (!isSection && !isProjectVisual && safe.height != null) element.style.height = `${Math.max(1, safe.height)}px`;
