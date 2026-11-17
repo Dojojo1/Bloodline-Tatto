@@ -6,7 +6,7 @@ La [maquette](./reference/maquette.png) fournie par le propriétaire est la réf
 
 L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les projets pro / entreprise sont intégrés à « Sur-mesure ». Le pied de page porte un accès « Gestion » en attente du futur panneau.
 
-Le lien « Sur-mesure » cadre directement le titre et le formulaire sous le menu fixe. Sur un écran de 1600 × 768, les deux blocs commencent à environ 103 px du haut, soit 19 px plus bas que la première version, et le formulaire tient dans la fenêtre. Un rafraîchissement remet la page en haut de l’accueil.
+Le lien « Sur-mesure » règle seulement la position d'arrivée du défilement : le titre et le formulaire commencent environ 19 px plus bas qu'avant, sans modifier leurs dimensions ni leur disposition. Un rafraîchissement remet la page en haut de l’accueil.
 
 ## Système appliqué
 

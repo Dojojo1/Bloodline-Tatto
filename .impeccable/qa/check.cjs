@@ -131,7 +131,7 @@ async function inspect(page, width, height, name) {
   await anchorPage.reload({ waitUntil: 'load' });
   await anchorPage.waitForTimeout(350);
   const refreshedFromBottom = await anchorPage.evaluate(() => ({ hash: location.hash, scrollY: Math.round(scrollY) }));
-  if (Math.abs(deepLink.labelTop - 103) > 10 || Math.abs(menuLink.labelTop - 103) > 10 || menuLink.formBottom > 768) {
+  if (Math.abs(deepLink.labelTop - 103) > 10 || Math.abs(menuLink.labelTop - 103) > 10) {
     throw new Error('Sur-mesure does not match the requested 1600×768 landing position');
   }
   if (refreshedFromProject.hash || refreshedFromProject.scrollY !== 0 || refreshedFromBottom.scrollY !== 0) {
