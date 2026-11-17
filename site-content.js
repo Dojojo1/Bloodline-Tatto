@@ -78,8 +78,6 @@ window.BLOODLINE_CONTENT = {
       heading: 'Une rencontre avant',
       emphasis: 'la première ligne.',
       description: 'Découvrez les artistes du salon. Leurs photos, noms et présentations seront ajoutés ici.',
-      action: 'Décrire mon idée',
-      actionTarget: 'sur-mesure',
       imageAlt: 'Illustration de l’univers graphique Bloodline Tattoo',
       profiles: [
         { name: 'Prénom Nom', description: '« Chaque idée mérite qu’on prenne le temps de l’écouter. »', image: '' },

@@ -6,9 +6,9 @@ La [maquette](./reference/maquette.png) fournie par le propriétaire est la réf
 
 L'ordre actuel place « Nos styles » immédiatement après l'accueil. Les projets pro / entreprise sont intégrés à « Sur-mesure ». Le pied de page porte un accès « Gestion » en attente du futur panneau.
 
-Les liens du menu placent la ligne de séparation de chaque section juste sous la barre de navigation fixe. Le formulaire conserve ses dimensions et sa place dans « Sur-mesure ». Un rafraîchissement remet la page en haut de l’accueil.
+Les liens du menu placent les sections sous la barre de navigation fixe. Pour « Sur-mesure », le fond rouge commence juste au-dessus du libellé et le clic du menu aligne ce nouveau bord sous la barre. Le formulaire conserve ses dimensions. Un rafraîchissement remet la page en haut de l’accueil.
 
-« Nos artistes » commence juste sous la séparation de section et présente une ligne par profil configuré dans `site-content.js`. La hauteur du fond rouge suit automatiquement le nombre de profils ; chacun possède un emplacement photo, un nom et une phrase modifiables. Les portraits et identités restent à renseigner. L’ancienne illustration de cette section figure désormais dans « Sur-mesure », dans un cadre à côté du formulaire.
+« Nos artistes » commence juste sous la séparation de section, avec le titre aligné à gauche et sans lien d’action. Une ligne est affichée par profil configuré dans `site-content.js`. La hauteur du fond rouge suit automatiquement le nombre de profils ; chacun possède un emplacement photo, un nom et une phrase modifiables. Les portraits et identités restent à renseigner. L’ancienne illustration de cette section figure désormais dans « Sur-mesure », dans un cadre à côté du formulaire.
 
 ## Système appliqué
 

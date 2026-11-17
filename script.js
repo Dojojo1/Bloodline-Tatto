@@ -247,7 +247,8 @@ function scrollToProject(behavior = 'smooth') {
   const section = document.querySelector('#sur-mesure');
   const header = document.querySelector('.site-header');
   if (!section || !header) return;
-  const top = window.scrollY + section.getBoundingClientRect().top - header.getBoundingClientRect().bottom;
+  const backgroundStart = parseFloat(getComputedStyle(section).getPropertyValue('--project-background-start')) || 0;
+  const top = window.scrollY + section.getBoundingClientRect().top + backgroundStart - header.getBoundingClientRect().bottom;
   window.scrollTo({ top, behavior });
   document.querySelectorAll('.primary-nav a').forEach((link) => {
     const selected = link.getAttribute('href') === '#sur-mesure';
