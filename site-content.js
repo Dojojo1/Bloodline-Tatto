@@ -77,16 +77,16 @@ window.BLOODLINE_CONTENT = {
       label: 'Nos artistes',
       heading: 'Une rencontre avant',
       emphasis: 'la première ligne.',
-      description: 'Découvrez ci-dessous des exemples de présentations pour les futurs artistes du salon. Leurs noms, portraits et mots personnels seront ajoutés ici.',
+      description: 'Voici cinq emplacements pour présenter les artistes du salon. Les photos, les noms et les mots de chacun seront ajoutés ici.',
       action: 'Décrire mon idée',
       actionTarget: 'sur-mesure',
       imageAlt: 'Illustration de l’univers graphique Bloodline Tattoo',
       profiles: [
-        { name: 'Artiste 01', description: '« Chaque idée mérite qu’on prenne le temps de l’écouter. »' },
-        { name: 'Artiste 02', description: '« Un motif personnel commence par une vraie rencontre. »' },
-        { name: 'Artiste 03', description: '« Le détail qui compte pour vous guide la création. »' },
-        { name: 'Artiste 04', description: '« Une pièce unique se construit à deux. »' },
-        { name: 'Artiste 05', description: '« De la première idée à la dernière ligne. »' }
+        { name: 'Prénom Nom', description: '« Chaque idée mérite qu’on prenne le temps de l’écouter. »', image: '' },
+        { name: 'Prénom Nom', description: '« Un motif personnel commence par une vraie rencontre. »', image: '' },
+        { name: 'Prénom Nom', description: '« Le détail qui compte pour vous guide la création. »', image: '' },
+        { name: 'Prénom Nom', description: '« Une pièce unique se construit à deux. »', image: '' },
+        { name: 'Prénom Nom', description: '« De la première idée à la dernière ligne. »', image: '' }
       ]
     },
     realisations: {

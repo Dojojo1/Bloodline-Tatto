@@ -69,7 +69,7 @@ function applySiteContent(content) {
   setAssetVariable('--hero-art', content.assets.hero);
   setAssetVariable('--gateway-art', content.assets.cards);
   setAssetVariable('--salon-art', content.assets.salon);
-  setAssetVariable('--artists-art', content.assets.artists);
+  setAssetVariable('--project-art', content.assets.artists);
 
   const navigation = document.querySelector('.primary-nav');
   navigation.replaceChildren(...content.navigation.filter((item) => document.getElementById(item.target)).map((item, index) => {
@@ -156,7 +156,8 @@ function applySiteContent(content) {
     } else {
       setText(`#${id} .section-copy > p:not(.section-label), #${id} .work-heading > p:not(.section-label)`, section.description);
       setAction(`#${id} .text-link`, section.action, section.actionTarget);
-      if (section.imageAlt) root.querySelector('.section-visual').setAttribute('aria-label', section.imageAlt);
+      const visual = id === 'artistes' ? document.querySelector('.project-visual') : root.querySelector('.section-visual');
+      if (section.imageAlt && visual) visual.setAttribute('aria-label', section.imageAlt);
     }
   }
 
@@ -172,12 +173,22 @@ function applySiteContent(content) {
       portrait.alt = profile.imageAlt || `Portrait de ${profile.name}`;
       portrait.loading = 'lazy';
       article.append(portrait);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'artist-photo-placeholder';
+      placeholder.setAttribute('role', 'img');
+      placeholder.setAttribute('aria-label', 'Photo à venir');
+      placeholder.textContent = 'Photo à venir';
+      article.append(placeholder);
     }
+    const details = document.createElement('div');
+    details.className = 'artist-details';
     const name = document.createElement('h3');
     name.textContent = profile.name;
     const description = document.createElement('p');
     description.textContent = profile.description;
-    article.append(name, description);
+    details.append(name, description);
+    article.append(details);
     return article;
   }));
 
