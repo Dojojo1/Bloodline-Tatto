@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "revision": 1794952551292,
+  "revision": 1794955268139,
   "desktop": {
     "sur-mesure/div:0/div:0/div:5": {
-      "width": 350
+      "width": 490
     },
     "sur-mesure/div:0": {
-      "width": 1047,
-      "height": 657
+      "width": 1062,
+      "height": 772
     }
   },
   "tablet": {},
