@@ -1,6 +1,6 @@
 (function () {
   const MODES = ['desktop', 'tablet', 'mobile'];
-  const NUMERIC = new Set(['x', 'y', 'width', 'height', 'fontSize', 'opacity', 'backgroundX', 'backgroundY', 'backgroundScale']);
+  const NUMERIC = new Set(['x', 'y', 'width', 'height', 'paddingTop', 'paddingBottom', 'fontSize', 'opacity', 'backgroundX', 'backgroundY', 'backgroundScale']);
 
   function assignIds(doc = document) {
     const roots = [doc.querySelector('.site-header'), ...doc.querySelectorAll('main > section'), doc.querySelector('.site-footer')].filter(Boolean);
@@ -30,9 +30,13 @@
   function applyOne(element, values) {
     if (!values || typeof values !== 'object') return;
     const safe = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, cleanValue(key, value)]));
-    if (safe.x != null || safe.y != null) element.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
-    if (safe.width != null) element.style.width = `${Math.max(1, safe.width)}px`;
-    if (safe.height != null) element.style.height = `${Math.max(1, safe.height)}px`;
+    const isSection = element.matches('main > section');
+    const isProjectVisual = element.classList.contains('project-visual');
+    if (!isSection && (safe.x != null || safe.y != null)) element.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
+    if (!isSection && safe.width != null) element.style.width = `${Math.max(1, safe.width)}px`;
+    if (!isSection && !isProjectVisual && safe.height != null) element.style.height = `${Math.max(1, safe.height)}px`;
+    if (isSection && safe.paddingTop != null) element.style.paddingTop = `${Math.max(0, safe.paddingTop)}px`;
+    if (isSection && safe.paddingBottom != null) element.style.paddingBottom = `${Math.max(0, safe.paddingBottom)}px`;
     if (safe.fontSize != null) element.style.fontSize = `${Math.max(8, safe.fontSize)}px`;
     if (safe.opacity != null) element.style.opacity = String(safe.opacity);
     if (safe.backgroundColor) element.style.backgroundColor = safe.backgroundColor;

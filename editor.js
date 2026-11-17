@@ -22,6 +22,19 @@ let outline = null;
 let token = '';
 let connectedUser = '';
 
+function normalizeSettings() {
+  for (const device of ['desktop', 'tablet', 'mobile']) {
+    settings[device] ||= {};
+    for (const [id, values] of Object.entries(settings[device])) {
+      if (SECTIONS.some(([section]) => section === id)) {
+        for (const key of ['x', 'y', 'width', 'height']) delete values[key];
+      }
+      if (id.endsWith('/div:5') && id.startsWith('sur-mesure/')) delete values.height;
+      if (!Object.keys(values).length) delete settings[device][id];
+    }
+  }
+}
+
 function status(message, error = false) {
   statusLine.textContent = message;
   statusLine.style.color = error ? '#ff9a9f' : '';
@@ -60,6 +73,7 @@ function resizePreview() {
 
 function positionOutline() {
   if (!selected || !outline || !selected.isConnected) return;
+  outline.querySelectorAll('button').forEach((button) => { button.hidden = selected.matches('main > section'); });
   const rect = selected.getBoundingClientRect();
   const win = frame.contentWindow;
   Object.assign(outline.style, {
@@ -77,12 +91,19 @@ function labelFor(element) {
 function fillInspector() {
   if (!selected) return;
   const item = settings[mode][selected.dataset.designId] || {};
+  const isSection = selected.matches('main > section');
+  const isProjectVisual = selected.classList.contains('project-visual');
   selectedName.textContent = labelFor(selected);
   fields.hidden = false;
   fields.querySelectorAll('[data-prop]').forEach((input) => {
     const key = input.dataset.prop;
+    input.disabled = isSection ? ['x', 'y', 'width', 'height'].includes(key) : ['paddingTop', 'paddingBottom'].includes(key) || (isProjectVisual && key === 'height');
     input.value = item[key] ?? (input.type === 'color' ? key === 'color' ? '#eee2d4' : '#110b0a' : '');
   });
+  document.querySelector('#dimension-hint').textContent = isSection
+    ? 'Le fond garde toute la largeur du site. Règle les espaces au-dessus et au-dessous ; clique sur un élément à l’intérieur pour le déplacer.'
+    : isProjectVisual ? 'La hauteur suit la largeur pour afficher l’image entière.'
+      : 'Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.';
   const textInput = document.querySelector('#text-value');
   const leaf = selected.children.length === 0;
   textInput.disabled = !leaf;
@@ -98,6 +119,8 @@ function selectElement(element) {
 }
 
 function updateValue(key, value) {
+  if (selected?.matches('main > section') && ['x', 'y', 'width', 'height'].includes(key)) return;
+  if (selected?.classList.contains('project-visual') && key === 'height') return;
   const item = itemForSelected();
   if (!item) return;
   if (key === 'text') item.text = String(value);
@@ -106,7 +129,7 @@ function updateValue(key, value) {
   if (key === 'text') selected.textContent = value;
   else if (value !== '' && value != null) frame.contentWindow.BLOODLINE_DESIGN.applyOne(selected, ['x', 'y', 'fit', 'backgroundScale', 'backgroundX', 'backgroundY'].includes(key) ? item : { [key]: value });
   else {
-    if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity') selected.style[key] = '';
+    if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity' || key === 'paddingTop' || key === 'paddingBottom') selected.style[key] = '';
     if (key === 'x' || key === 'y') selected.style.translate = `${item.x || 0}px ${item.y || 0}px`;
     if (key === 'backgroundColor' || key === 'color' || key === 'image') selected.style[key === 'image' ? 'backgroundImage' : key] = '';
     if (key === 'fit' || key === 'backgroundScale') selected.style.backgroundSize = '';
@@ -120,6 +143,7 @@ function updateValue(key, value) {
 
 function startDrag(event, kind) {
   if (!selected) return;
+  if (selected.matches('main > section')) { status('Pour déplacer le contenu, sélectionne un élément à l’intérieur de la section. Le fond reste sur toute la largeur.'); return; }
   event.preventDefault();
   event.stopPropagation();
   const handle = event.currentTarget;
@@ -135,7 +159,7 @@ function startDrag(event, kind) {
       updateValue('y', start.offsetY + dy);
     } else {
       updateValue('width', Math.max(20, Math.round(start.width + dx)));
-      updateValue('height', Math.max(20, Math.round(start.height + dy)));
+      if (!selected.classList.contains('project-visual')) updateValue('height', Math.max(20, Math.round(start.height + dy)));
     }
     fillInspector();
   };
@@ -152,7 +176,7 @@ function installSelection() {
   runtime.assignIds(doc);
   runtime.applyAll(settings, mode, doc);
   const style = doc.createElement('style');
-  style.textContent = '#bloodline-design-outline{position:absolute;z-index:2147483646;border:2px solid #f04b60;box-shadow:0 0 0 1px #090707;pointer-events:none;box-sizing:border-box}#bloodline-design-outline button{position:absolute;z-index:1;width:26px;height:26px;border:1px solid #ffe1df;background:#a52236;color:white;font:600 14px Arial;pointer-events:auto;cursor:move}#bloodline-design-outline .move{top:-28px;left:-2px}#bloodline-design-outline .resize{right:-14px;bottom:-14px;cursor:nwse-resize}';
+  style.textContent = '#bloodline-design-outline{position:absolute;z-index:2147483646;border:2px solid #f04b60;box-shadow:0 0 0 1px #090707;pointer-events:none;box-sizing:border-box}#bloodline-design-outline button{position:absolute;z-index:1;width:26px;height:26px;border:1px solid #ffe1df;background:#a52236;color:white;font:600 14px Arial;pointer-events:auto;cursor:move}#bloodline-design-outline button[hidden]{display:none!important}#bloodline-design-outline .move{top:-28px;left:-2px}#bloodline-design-outline .resize{right:-14px;bottom:-14px;cursor:nwse-resize}';
   doc.head.append(style);
   outline = doc.createElement('div');
   outline.id = 'bloodline-design-outline';
@@ -289,7 +313,7 @@ document.querySelectorAll('[data-prop]').forEach((input) => input.addEventListen
 document.querySelector('#text-value').addEventListener('input', (event) => updateValue('text', event.target.value));
 document.querySelector('#reset-element').addEventListener('click', () => { if (!selected) return; delete settings[mode][selected.dataset.designId]; saveDraft(); refreshPreview(); status('Élément réinitialisé dans le brouillon.'); });
 document.querySelector('#save-draft').addEventListener('click', () => { saveDraft(); status('Brouillon gardé sur cet appareil.'); });
-document.querySelector('#restore-draft').addEventListener('click', () => { try { settings = JSON.parse(localStorage.getItem(DRAFT_KEY)); baseRevision = settings.revision || 0; refreshPreview(); status('Brouillon restauré.'); } catch { status('Brouillon illisible.', true); } });
+document.querySelector('#restore-draft').addEventListener('click', () => { try { settings = JSON.parse(localStorage.getItem(DRAFT_KEY)); normalizeSettings(); baseRevision = settings.revision || 0; saveDraft(); refreshPreview(); status('Brouillon restauré.'); } catch { status('Brouillon illisible.', true); } });
 document.querySelector('#publish').addEventListener('click', publish);
 document.querySelector('#copy-settings').addEventListener('click', async () => {
   try {
@@ -321,6 +345,6 @@ document.querySelector('#connect').addEventListener('click', async () => {
 
 if (localStorage.getItem(DRAFT_KEY)) document.querySelector('#restore-draft').hidden = false;
 fetch(`design-settings.json?fresh=${Date.now()}`, { cache: 'no-store' }).then((response) => response.ok ? response.json() : null).then((data) => {
-  if (data?.version === 1) { settings = data; baseRevision = data.revision || 0; }
+  if (data?.version === 1) { settings = data; normalizeSettings(); baseRevision = data.revision || 0; }
   if (frame.contentDocument?.readyState === 'complete') installSelection();
 }).catch(() => { if (frame.contentDocument?.readyState === 'complete') installSelection(); });
