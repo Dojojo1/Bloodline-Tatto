@@ -1,6 +1,6 @@
 (() => {
   const $ = (selector) => document.querySelector(selector);
-  const apiOrigin = 'https://dojojoserv.tail95e116.ts.net';
+  const apiBase = 'https://unabashed-tackle-claw.ngrok-free.dev/bloodline-api';
   const tokenKey = 'bloodline-management-session';
   const show = (id) => { for (const panel of ['setup-panel', 'login-panel', 'activate-panel', 'shift-panel']) $(`#${panel}`).hidden = panel !== id; };
   const status = (message) => { $('#status').textContent = message; };
@@ -19,8 +19,8 @@
   let pendingActivation = null;
 
   async function request(path, options = {}) {
-    const headers = { 'Content-Type': 'application/json', ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}), ...options.headers };
-    const response = await fetch(`${apiOrigin}/api${path}`, { ...options, credentials: 'omit', cache: 'no-store', headers });
+    const headers = { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true', ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}), ...options.headers };
+    const response = await fetch(`${apiBase}/api${path}`, { ...options, credentials: 'omit', cache: 'no-store', headers });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       const error = new Error(data.detail || 'La requête a échoué.');
@@ -122,7 +122,7 @@
     button.disabled = false;
   });
 
-  fetch(`${apiOrigin}/api/health`, { credentials: 'omit', cache: 'no-store' }).then((response) => {
+  fetch(`${apiBase}/api/health`, { credentials: 'omit', cache: 'no-store', headers: { 'ngrok-skip-browser-warning': 'true' } }).then((response) => {
     if (!response.ok) throw new Error();
     if (sessionToken) return refresh();
     show('login-panel');
