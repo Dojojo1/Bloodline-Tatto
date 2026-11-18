@@ -292,11 +292,8 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
-  .gateway-card, .style-panel, .work-image { transition-property: opacity, border-color, box-shadow; transition-duration: .55s !important; }
-  .gateway-card:hover, .gateway-card:active { transform: none; }
-  .gateway-image { transition-property: filter; transition-duration: .32s !important; }
-  .gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: none; filter: brightness(1.12); }
-  .style-panel:hover .style-panel-art { transform: none; filter: none; }
-  .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { transform: none; }
+  .gateway-card, .style-panel, .work-image { transition-property: transform, opacity, border-color, box-shadow; transition-duration: 1.5s, .55s, .55s, .55s !important; }
+  .gateway-image, .style-panel-art { transition-property: transform, filter; transition-duration: 1.5s, .55s !important; }
+  .gateway-card:active { transform: scale(.99); }
   .gateway-frame::after, .style-panel-art::after, .work-image::after { transition-duration: .55s !important; }
 }
