@@ -124,7 +124,7 @@ p { text-wrap: pretty; }
 .section-visual { min-height: 480px; border: 1px solid rgba(193,157,139,.48); outline: 1px solid rgba(255,255,255,.09); outline-offset: -8px; box-shadow: 0 32px 60px rgba(0,0,0,.35); }
 .salon-section { background: #0c0908; }
 .salon-section, .work-section { display: flex; align-items: center; min-height: calc(100svh - 58px); }
-.salon-visual { background: linear-gradient(90deg, transparent, rgba(0,0,0,.15)), var(--salon-art, url("assets/hero-art.png")) 90% 45% / auto 132% no-repeat; }
+.salon-visual { background: var(--salon-art, url("assets/salon-book.png")) center / cover no-repeat; }
 .artists-section { padding: 16px 0 55px; background: #130b0b; }
 .artists-heading { max-width: none; }
 .artists-heading h2 { max-width: 850px; }

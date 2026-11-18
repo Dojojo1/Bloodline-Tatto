@@ -25,7 +25,7 @@ window.BLOODLINE_CONTENT = {
   assets: {
     hero: 'assets/hero-art.png',
     cards: 'assets/gateway-art.png',
-    salon: 'assets/hero-art.png',
+    salon: 'assets/salon-book.png',
     project: 'assets/gateway-art.png'
   },
   navigation: [

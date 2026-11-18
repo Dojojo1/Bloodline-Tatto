@@ -23,6 +23,7 @@ Les liens du menu placent les sections sous la barre de navigation fixe. « Sur-
 ## Provenance des visuels
 
 - `assets/bloodline-logo.png` : image fournie par le propriétaire ; fichier laissé intact.
+- `assets/salon-book.png` : image du livre Bloodline Tattoo fournie par le propriétaire pour le cadre « Le salon ».
 - `reference/maquette.png` : image fournie par le propriétaire ; référence de travail.
 - `assets/hero-art.png` : image générée avec l'outil intégré ImageGen à partir de la maquette. Elle sert de décor illustratif et ne prétend pas représenter le vrai salon.
 - `assets/gateway-art.png` : planche de quatre images illustratives, générée avec l'outil intégré ImageGen à partir de la maquette pour différencier les quatre cartes.
