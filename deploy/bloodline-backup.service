@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup Bloodline management database
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/dojojo/Documents/bloodline
+EnvironmentFile=/home/dojojo/Documents/bloodline/.env
+ExecStart=/home/dojojo/Documents/bloodline/.venv/bin/python -m scripts.backup_gestion
+UMask=0077
