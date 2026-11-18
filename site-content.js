@@ -93,9 +93,9 @@ window.BLOODLINE_CONTENT = {
       description: 'Cette section accueillera les photographies des tatouages réalisés au salon. Les visuels ci-dessous présentent uniquement la direction artistique du site.',
       galleryLabel: 'Aperçu de la direction artistique',
       gallery: [
-        { label: 'Univers Bloodline', image: 'assets/hero-art.png', position: '4% 42%' },
+        { label: 'Univers Bloodline', image: 'assets/tattoo-book-open.png', position: '50% 50%' },
         { label: 'Le salon', image: 'assets/hero-art.png', position: '83% 50%' },
-        { label: 'L’encre et le geste', image: 'assets/hero-art.png', position: '100% 70%' }
+        { label: 'L’encre et le geste', image: 'assets/hero-art.png', position: '4% 42%' }
       ]
     },
     'sur-mesure': {
