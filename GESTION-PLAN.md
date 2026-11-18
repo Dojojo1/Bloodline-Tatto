@@ -1,6 +1,6 @@
 # Plan de reprise — gestion Bloodline Tattoo
 
-État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page, pas la gestion métier. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Aucun client, rendez-vous, paiement ou compte d'équipe n'est encore stocké. Ce document prépare la réalisation ; il ne prétend pas que ces fonctions existent.
+État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Le premier module de gestion est préparé dans `gestion.html` et `supabase/migrations/202611180001_staff_time.sql` : connexion et pointage personnel. Il ne fonctionne en ligne qu'après création d'un projet Supabase, application de la migration et configuration des deux comptes. Aucun client, rendez-vous ou paiement n'est encore stocké.
 
 ## Décisions déjà prises avec le propriétaire
 
