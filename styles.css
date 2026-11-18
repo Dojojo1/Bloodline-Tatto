@@ -81,8 +81,8 @@ p { text-wrap: pretty; }
 .gateway-card::before, .gateway-card::after { content: "❧"; position: absolute; z-index: 2; top: 1px; color: #c5ad9e; font: 24px/1 var(--editorial); text-shadow: 0 1px #000; }
 .gateway-card::before { left: 7px; transform: rotate(-45deg); }
 .gateway-card::after { right: 7px; transform: scaleX(-1) rotate(-45deg); }
-.gateway-card:hover { transform: translateY(-7px); border-color: #c1a290; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.58), 0 20px 36px rgba(0,0,0,.6); }
-.gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: scale(1.075); }
+.gateway-card:hover { transform: translateY(-3px); border-color: #c1a290; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.58), 0 17px 32px rgba(0,0,0,.56); }
+.gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: scale(1.025); }
 .gateway-card:active { transform: scale(.96); transition-duration: .12s; }
 .gateway-create { --card-position: 0 14%; }
 .gateway-styles { --card-position: 100% 14%; }
@@ -99,11 +99,15 @@ p { text-wrap: pretty; }
 .hero-end::after { transform: rotate(180deg); }
 .hero-end span { margin-inline: 10px; }
 @media (hover: hover) and (pointer: fine) {
-  .gateway-card, .style-panel, .work-image { transition: transform .38s cubic-bezier(.2,.8,.2,1), opacity .3s ease, border-color .3s ease, box-shadow .38s ease; }
-  .gateway:hover .gateway-card:not(:hover), .styles-grid:hover .style-panel:not(:hover), .work-gallery:hover .work-image:not(:hover) { opacity: .65; }
-  .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { position: relative; z-index: 4; transform: translateY(-8px) scale(1.035); border-color: #d9a99b; box-shadow: 0 26px 46px rgba(0,0,0,.68), 0 0 0 1px rgba(207,57,69,.72); }
-  .gateway .gateway-card:hover .gateway-image { transform: scale(1.075); }
-  .styles-grid .style-panel:hover .style-panel-art { transform: scale(1.055); filter: brightness(1.18); }
+  .gateway-card, .style-panel, .work-image { transition: transform .65s cubic-bezier(.16,1,.3,1), opacity .55s ease, border-color .55s ease, box-shadow .65s ease; }
+  .gateway:hover .gateway-card:not(:hover), .styles-grid:hover .style-panel:not(:hover), .work-gallery:hover .work-image:not(:hover) { opacity: .84; }
+  .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { position: relative; z-index: 4; transform: translateY(-4px) scale(1.012); border-color: #d3b2a3; box-shadow: 0 20px 40px rgba(0,0,0,.58), 0 0 0 1px rgba(211,178,163,.42); }
+  .gateway .gateway-card:hover .gateway-image { transform: scale(1.025); }
+  .styles-grid .style-panel:hover .style-panel-art { transform: scale(1.025); filter: brightness(1.08); }
+  .gateway-frame::after, .style-panel-art::after, .work-image::after { content: ""; position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,245,233,.22), rgba(255,245,233,.035) 38%, rgba(255,245,233,.01) 72%); backdrop-filter: blur(1.5px); transition: opacity .6s ease; }
+  .style-panel-art { position: relative; }
+  .gateway-card:hover .gateway-frame::after, .style-panel:hover .style-panel-art::after, .work-image:hover::after { opacity: 1; }
+  .work-image span { z-index: 2; }
 }
 @media (min-width: 1001px) {
   .gateway { margin-top: 64px; }
@@ -288,10 +292,11 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
-  .gateway-card { transition-property: border-color, box-shadow; transition-duration: .32s !important; }
+  .gateway-card, .style-panel, .work-image { transition-property: opacity, border-color, box-shadow; transition-duration: .55s !important; }
   .gateway-card:hover, .gateway-card:active { transform: none; }
   .gateway-image { transition-property: filter; transition-duration: .32s !important; }
   .gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: none; filter: brightness(1.12); }
   .style-panel:hover .style-panel-art { transform: none; filter: none; }
   .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { transform: none; }
+  .gateway-frame::after, .style-panel-art::after, .work-image::after { transition-duration: .55s !important; }
 }
