@@ -135,7 +135,7 @@ def test_cors_allows_only_the_management_origin():
     with TemporaryDirectory() as folder:
         app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN)
         with TestClient(app, base_url="https://api.example.test") as client:
-            headers = {"Origin": ORIGIN, "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "authorization,content-type"}
+            headers = {"Origin": ORIGIN, "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "authorization,content-type,ngrok-skip-browser-warning"}
             response = client.options("/api/shifts/start", headers=headers)
             assert response.status_code == 200
             assert response.headers["access-control-allow-origin"] == ORIGIN

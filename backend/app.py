@@ -39,7 +39,7 @@ def create_app(db_path=None, public_origin=None):
         CORSMiddleware,
         allow_origins=[public_origin],
         allow_methods=["GET", "POST"],
-        allow_headers=["Authorization", "Content-Type"],
+        allow_headers=["Authorization", "Content-Type", "ngrok-skip-browser-warning"],
     )
 
     @app.middleware("http")
