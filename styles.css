@@ -99,6 +99,7 @@ p { text-wrap: pretty; }
 .hero-end::after { transform: rotate(180deg); }
 .hero-end span { margin-inline: 10px; }
 @media (min-width: 1001px) {
+  .hero { background-position: center 20px; }
   .gateway { margin-top: 64px; }
   .hero-end { margin-top: 58px; }
 }
