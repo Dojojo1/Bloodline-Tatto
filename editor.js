@@ -100,7 +100,7 @@ function fillInspector() {
   });
   document.querySelector('#dimension-hint').textContent = isSection
     ? 'X, Y et largeur règlent le contenu. La hauteur est un minimum : le fond suit toujours les éléments et garde toute la largeur de l’écran.'
-    : isProjectVisual ? 'La hauteur suit la largeur pour afficher l’image entière.'
+    : isProjectVisual ? 'Le cadre est carré : sa hauteur suit sa largeur.'
       : 'Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.';
   const textInput = document.querySelector('#text-value');
   const leaf = selected.children.length === 0;
