@@ -2,7 +2,7 @@
 
 La préparation de la future gestion métier est consignée dans [GESTION-PLAN.md](./GESTION-PLAN.md).
 
-Le premier module de [gestion](./gestion.html) prépare la connexion de l'équipe et le pointage des heures. Il affiche « Configuration en attente » tant que le service de données n'est pas relié. Pour l'activer : créer un projet Supabase, exécuter la migration [202611180001_staff_time.sql](./supabase/migrations/202611180001_staff_time.sql) dans son éditeur SQL, renseigner l'URL du projet et sa **clé publishable** dans [gestion-config.js](./gestion-config.js), puis inviter les deux personnes dans Supabase Auth et inscrire leurs identifiants dans `staff_members`. Désactiver l'inscription libre dans Auth : seuls les membres invités doivent accéder au pointage. Ne jamais placer la clé secrète, un mot de passe ou le webhook Discord dans ce dépôt. Les autres modules de gestion restent à construire.
+Le premier module de [gestion](./gestion.html) est désormais prévu pour le serveur Linux, dans [backend/](./backend/). Il contient une connexion privée et le pointage personnel. La page GitHub Pages affiche « Installation en attente » : la vraie gestion sera servie par le backend Linux, sur la même origine que son API. L'installation du service, son adresse HTTPS et les deux comptes restent à faire. Aucun mot de passe, base privée ou webhook Discord ne doit être placé dans ce dépôt. Les autres modules de gestion restent à construire. Voir [l'installation Linux](./deploy/README.md).
 
 Première version locale en HTML, CSS et JavaScript, construite d'après [la maquette fournie](./reference/maquette.png). Le [logo original](./assets/bloodline-logo.png) est utilisé sans modification du fichier.
 

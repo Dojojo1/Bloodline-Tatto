@@ -1,6 +1,6 @@
 # Plan de reprise — gestion Bloodline Tattoo
 
-État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Le premier module de gestion est préparé dans `gestion.html` et `supabase/migrations/202611180001_staff_time.sql` : connexion et pointage personnel. Il ne fonctionne en ligne qu'après création d'un projet Supabase, application de la migration et configuration des deux comptes. Aucun client, rendez-vous ou paiement n'est encore stocké.
+État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Le premier module de gestion utilise maintenant `backend/` et SQLite sur le serveur Linux : connexion et pointage personnel. Il n'est pas encore installé sur le serveur ni relié à vos deux comptes. Aucun client, rendez-vous ou paiement n'est encore stocké.
 
 ## Décisions déjà prises avec le propriétaire
 
@@ -15,9 +15,9 @@
 
 ## Architecture de réalisation recommandée
 
-GitHub Pages peut continuer à héberger la vitrine. Il ne peut pas assurer seul la connexion, les données privées, les permissions ou la réception sécurisée de demandes. Prévoir un service séparé : **Supabase** pour Auth, PostgreSQL, stockage des images et fonctions serveur. Le choix du fournisseur est réversible avant l'implémentation ; conserver une couche d'accès aux données claire. Les pages publiques lisent seulement le contenu publié. Le panneau de gestion utilise une connexion personnelle. Les opérations sensibles passent par les fonctions serveur et les règles de sécurité de la base.
+GitHub Pages continue à héberger la vitrine. La gestion est hébergée séparément sur le **serveur Linux existant**, avec son propre service FastAPI (port local 8082), sa propre base SQLite privée et un point d'accès HTTPS distinct de celui du vignoble. La page de gestion et l'API sont servies depuis la même origine ; la session reste dans un cookie HttpOnly. Ne pas partager les fichiers, secrets ou comptes du vignoble. Les pages publiques ne reçoivent que le contenu destiné à la vitrine. Les opérations sensibles passent par l'API Linux.
 
-Ne jamais mettre un mot de passe initial, un « code admin suprême », une clé de service ou le webhook Discord dans GitHub Pages, `site-content.js`, `design-settings.json` ou le JavaScript client. Créer les deux premiers comptes via des invitations individuelles après avoir reçu leurs adresses. Chaque personne définit son propre mot de passe ; prévoir réinitialisation et authentification à deux facteurs pour les administrateurs. Les deux comptes suprêmes doivent être protégés contre la suppression ou la perte simultanée d'accès.
+Ne jamais mettre un mot de passe initial, un « code admin suprême », une clé de service ou le webhook Discord dans GitHub Pages, `site-content.js`, `design-settings.json` ou le JavaScript client. Le premier module crée les deux comptes d'administration avec la commande privée `scripts/create_admin.py`, qui lit le mot de passe sans l'afficher. Une invitation et une réinitialisation de mot de passe restent à construire avant que la propriétaire gère seule tous les accès. Prévoir une authentification à deux facteurs pour les administrateurs et protéger les deux comptes suprêmes contre la suppression ou la perte simultanée d'accès.
 
 ## Données à prévoir
 
@@ -33,7 +33,7 @@ Définir les prix et montants en centimes, avec devise explicite. Prévoir expor
 
 ## Parcours à construire dans cet ordre
 
-1. **Socle privé** : projet Supabase, schéma et migrations versionnées, règles de sécurité, stockage des images, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites.
+1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. Le premier jet connexion + pointage est codé localement, pas encore installé.
 2. **Demandes et rendez-vous** : remplacer la copie du formulaire par un envoi réel avec consentement et protection anti-spam ; enregistrer le numéro et les disponibilités ; créer une fiche de demande ; permettre à l'équipe de contacter, assigner, confirmer, déplacer ou annuler un rendez-vous. Le client ne choisit pas de créneau.
 3. **Gestion éditoriale** : artistes, vitrine, galerie, page « Nos styles » séparée, tatouages photo/nom/prix, prestations et services ; aperçu avant publication. Les changements doivent se voir sur GitHub Pages sans nouveau commit manuel.
 4. **Pointage** : dans chaque profil connecté, boutons « Prendre mon service » et « Terminer mon service », compteur de la session en cours et historique personnel ; vue d'équipe pour les responsables, total par jour/semaine/mois et export. Horodatage par le serveur, fuseau Europe/Brussels à l'affichage. Une correction manuelle conserve l'original et l'auteur de la correction.
