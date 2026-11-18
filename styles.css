@@ -138,7 +138,7 @@ p { text-wrap: pretty; }
 .artist-profile p { max-width: 60ch; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .reverse-grid { grid-template-columns: 1fr 1fr; }
 .reverse-grid .section-copy { padding-left: 5%; }
-.work-section { background: #0a0707; }
+.work-section { flex-direction: column; justify-content: center; background: #0a0707; }
 .work-heading { text-align: center; }
 .work-heading > p:not(.section-label) { margin-inline: auto; }
 .work-gallery { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; margin-top: 48px; }
