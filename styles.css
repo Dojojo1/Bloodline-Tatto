@@ -50,6 +50,9 @@ p { text-wrap: pretty; }
 .primary-nav a:hover, .primary-nav a.is-current { color: #fff; }
 .primary-nav a:hover::after, .primary-nav a.is-current::after { left: 0; right: 0; }
 .primary-nav a.is-current::before { content: "◆"; position: absolute; bottom: 1px; left: calc(50% - 4px); color: var(--red-bright); font-size: 8px; }
+.management-access { position: absolute; top: 50%; right: clamp(16px, 3vw, 46px); transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 13px; border: 1px solid rgba(196, 154, 140, .66); background: rgba(28, 13, 14, .72); color: var(--cream); font: 600 10px/1 var(--display); letter-spacing: .045em; text-transform: uppercase; white-space: nowrap; transition: border-color .25s ease, background .25s ease, color .25s ease; }
+.management-access:hover { border-color: #e2b0a1; background: rgba(104, 24, 36, .72); color: #fff; }
+.management-access-short { display: none; }
 .mobile-brand, .menu-toggle { display: none; }
 
 .hero { position: relative; isolation: isolate; min-height: 810px; padding-top: 58px; overflow: hidden; background: var(--black) var(--hero-art, url("assets/hero-art.png")) center top / 100% auto no-repeat; }
@@ -230,6 +233,10 @@ p { text-wrap: pretty; }
   :root { --wrap: calc(100% - 36px); }
   html { scroll-padding-top: 62px; }
   .site-header { height: 62px; }
+  .management-access { z-index: 22; top: 31px; right: 76px; min-height: 38px; padding-inline: 10px; }
+  .management-access-full { display: none; }
+  .management-access-short { display: inline; }
+  body.menu-open .management-access { visibility: hidden; }
   .mobile-brand { display: flex; align-items: center; position: absolute; left: 18px; top: 7px; min-height: 46px; font: 600 18px/1 var(--display); letter-spacing: -.04em; text-transform: uppercase; }
   .menu-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; position: absolute; z-index: 22; right: 16px; top: 7px; width: 48px; height: 48px; padding: 12px; border: 0; background: transparent; color: white; cursor: pointer; }
   .menu-toggle span { display: block; width: 100%; height: 1px; background: currentColor; transition: transform .25s ease, opacity .25s ease; }
