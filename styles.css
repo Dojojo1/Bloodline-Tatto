@@ -81,8 +81,8 @@ p { text-wrap: pretty; }
 .gateway-card::before, .gateway-card::after { content: "❧"; position: absolute; z-index: 2; top: 1px; color: #c5ad9e; font: 24px/1 var(--editorial); text-shadow: 0 1px #000; }
 .gateway-card::before { left: 7px; transform: rotate(-45deg); }
 .gateway-card::after { right: 7px; transform: scaleX(-1) rotate(-45deg); }
-.gateway-card:hover { transform: translateY(-3px); border-color: #c1a290; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.58), 0 17px 32px rgba(0,0,0,.56); }
-.gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: scale(1.03); }
+.gateway-card:hover { transform: translateY(-7px); border-color: #c1a290; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.58), 0 20px 36px rgba(0,0,0,.6); }
+.gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: scale(1.075); }
 .gateway-card:active { transform: scale(.96); transition-duration: .12s; }
 .gateway-create { --card-position: 0 14%; }
 .gateway-styles { --card-position: 100% 14%; }
@@ -113,9 +113,9 @@ p { text-wrap: pretty; }
 .styles-heading > p:not(.section-label) { max-width: 64ch; margin-inline: auto; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .styles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
 .style-panel { min-width: 0; overflow: hidden; border: 1px solid rgba(177,139,122,.45); background: #120d0c; transition: border-color .3s ease; }
-.style-panel-art { min-height: clamp(200px, 15vw, 230px); background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), var(--gateway-art, url("assets/gateway-art.png")); background-size: cover, 200% auto; background-repeat: no-repeat; transition: filter .45s ease; }
+.style-panel-art { min-height: clamp(200px, 15vw, 230px); background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), var(--gateway-art, url("assets/gateway-art.png")); background-size: cover, 200% auto; background-repeat: no-repeat; transition: transform .55s cubic-bezier(.2,.8,.2,1), filter .55s ease; }
 .style-panel:hover { border-color: rgba(210,169,148,.7); }
-.style-panel:hover .style-panel-art { filter: brightness(1.12); }
+.style-panel:hover .style-panel-art { transform: scale(1.055); filter: brightness(1.18); }
 .style-art-personal { background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), url("assets/biker-club-sketch.webp"); background-size: cover, cover; background-position: center; }
 .style-art-artist { background-position: center, 100% 14%; }
 .style-art-together { background-position: center, 100% 86%; }
@@ -285,5 +285,5 @@ p { text-wrap: pretty; }
   .gateway-card:hover, .gateway-card:active { transform: none; }
   .gateway-image { transition-property: filter; transition-duration: .32s !important; }
   .gateway-card:hover .gateway-image, .gateway-card:focus-visible .gateway-image { transform: none; filter: brightness(1.12); }
-  .style-panel:hover .style-panel-art { filter: none; }
+  .style-panel:hover .style-panel-art { transform: none; filter: none; }
 }

@@ -433,7 +433,8 @@ if (window.gsap) {
     window.gsap.timeline({ defaults: { ease: 'power3.out' } })
       .from('.hero-copy', { autoAlpha: 0, y: 18, duration: 0.75 })
       .from('.hero-logo', { autoAlpha: 0, y: 12, scale: 0.975, duration: 0.85 }, '-=0.48')
-      .from('.gateway-card', { autoAlpha: 0, y: 13, duration: 0.55, stagger: 0.08 }, '-=0.34');
+      .from('.gateway-card', { autoAlpha: 0, y: 20, duration: 0.65, stagger: 0.1 }, '-=0.34')
+      .from('.hero-end', { opacity: 0.35, scaleX: 0.86, duration: 0.65, clearProps: 'opacity,transform' }, '-=0.2');
   });
 }
 
@@ -456,8 +457,8 @@ if (window.gsap && 'IntersectionObserver' in window) {
         if (!selector || reducedMotion.matches) return;
         const targets = [...entry.target.querySelectorAll(selector)];
         window.gsap.fromTo(targets,
-          { clipPath: 'inset(0 0 12% 0)', opacity: 0.78 },
-          { clipPath: 'inset(0 0 0% 0)', opacity: 1, duration: 0.7, stagger: 0.09, ease: 'power3.out', clearProps: 'clipPath,opacity' }
+          { clipPath: 'inset(0 0 30% 0)', opacity: 0.35, y: 24 },
+          { clipPath: 'inset(0 0 0% 0)', opacity: 1, y: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out', clearProps: 'clipPath,opacity,transform' }
         );
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
@@ -469,7 +470,7 @@ if (window.gsap && 'IntersectionObserver' in window) {
       if (!reducedMotion.matches) return;
       artworkObserver.disconnect();
       window.gsap.killTweensOf(artwork);
-      window.gsap.set(artwork, { clearProps: 'clipPath,opacity' });
+      window.gsap.set(artwork, { clearProps: 'clipPath,opacity,transform' });
     });
   }
 }
