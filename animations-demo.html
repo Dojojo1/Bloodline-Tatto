@@ -39,10 +39,10 @@
         gsap.set(card.querySelector('img'), { clearProps: 'all' });
         gsap.set(card.querySelector('.stroke'), { clearProps: 'all' });
       }
-      function play(card) {
+      function play(card, requested = false) {
         if (!window.gsap) return;
         reset(card);
-        if (reduced.matches) return;
+        if (reduced.matches && !requested) return;
         const image = card.querySelector('img');
         const stroke = card.querySelector('.stroke');
         switch (card.dataset.effect) {
@@ -58,7 +58,7 @@
             break;
         }
       }
-      cards.forEach(card => card.querySelector('button').addEventListener('click', () => play(card)));
+      cards.forEach(card => card.querySelector('button').addEventListener('click', () => play(card, true)));
       window.addEventListener('load', () => cards.forEach((card, index) => setTimeout(() => play(card), index * 140)));
     });
   </script>
@@ -88,7 +88,7 @@
         <button type="button">Revoir l'effet</button>
       </article>
     </div>
-    <p class="hint">Durée : environ une seconde par effet. Les mouvements sont coupés si « réduire les animations » est activé.</p>
+    <p class="hint">Durée : environ une seconde par effet. Si « réduire les animations » est activé, rien ne se lance automatiquement ; le bouton permet toujours de voir l'effet sur demande.</p>
   </main>
 </body>
 </html>
