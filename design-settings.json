@@ -1,9 +1,11 @@
 {
   "version": 1,
-  "revision": 1794955268139,
+  "revision": 1794969748147,
   "desktop": {
     "sur-mesure/div:0/div:0/div:5": {
-      "width": 490
+      "width": 362,
+      "x": -3,
+      "y": 3
     },
     "sur-mesure/div:0": {
       "width": 1062,
