@@ -165,7 +165,7 @@ window.BLOODLINE_CONTENT = {
     contactLinks: []
   },
   management: {
-    button: 'Gestion',
+    button: 'Atelier visuel',
     message: 'Le panneau de gestion sera disponible prochainement.'
   }
 };
