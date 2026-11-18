@@ -58,7 +58,7 @@ window.BLOODLINE_CONTENT = {
       emphasis: 'votre empreinte.',
       description: 'Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous.',
       items: [
-        { title: 'Votre motif', description: 'Partez d’un dessin ou d’une idée que vous apportez.', image: 'assets/gateway-art.png', artPosition: '0 14%' },
+        { title: 'Votre motif', description: 'Partez d’un dessin ou d’une idée que vous apportez.', image: 'assets/biker-club-sketch.webp', artPosition: 'center', imageSize: 'cover' },
         { title: 'Création unique', description: 'Laissez le tatoueur vous proposer une pièce originale.', image: 'assets/gateway-art.png', artPosition: '100% 14%' },
         { title: 'À imaginer ensemble', description: 'Affinez le motif, l’emplacement et la taille avec le tatoueur.', image: 'assets/gateway-art.png', artPosition: '100% 86%' }
       ]

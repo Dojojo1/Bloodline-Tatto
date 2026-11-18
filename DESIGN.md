@@ -26,6 +26,7 @@ Les liens du menu placent les sections sous la barre de navigation fixe. « Sur-
 - `reference/maquette.png` : image fournie par le propriétaire ; référence de travail.
 - `assets/hero-art.png` : image générée avec l'outil intégré ImageGen à partir de la maquette. Elle sert de décor illustratif et ne prétend pas représenter le vrai salon.
 - `assets/gateway-art.png` : planche de quatre images illustratives, générée avec l'outil intégré ImageGen à partir de la maquette pour différencier les quatre cartes.
+- `assets/biker-club-sketch.webp` : nouveau croquis fictif de tatouage « club motard », généré avec ImageGen à partir de la référence de style fournie par le propriétaire. La composition montre une moto chopper, un crâne ailé et des roses sur papier vieilli ; elle ne représente pas une réalisation du salon.
 
 ### Prompt utilisé pour le fond
 

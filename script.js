@@ -135,6 +135,7 @@ function applySiteContent(content) {
     const url = assetUrl(item.image);
     if (url) art.style.backgroundImage = `linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), ${url}`;
     art.style.backgroundPosition = `center, ${item.artPosition}`;
+    art.style.backgroundSize = item.imageSize === 'cover' ? 'cover, cover' : 'cover, 200% auto';
     const heading = document.createElement('h3');
     heading.textContent = item.title;
     const description = document.createElement('p');
