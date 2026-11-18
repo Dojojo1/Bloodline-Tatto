@@ -1,5 +1,7 @@
 # Bloodline Tattoo — site vitrine
 
+La préparation de la future gestion métier est consignée dans [GESTION-PLAN.md](./GESTION-PLAN.md).
+
 Première version locale en HTML, CSS et JavaScript, construite d'après [la maquette fournie](./reference/maquette.png). Le [logo original](./assets/bloodline-logo.png) est utilisé sans modification du fichier.
 
 ## Voir le site
