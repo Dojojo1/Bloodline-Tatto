@@ -168,20 +168,23 @@ function applySiteContent(content) {
   artistList.replaceChildren(...artistProfiles.map((profile) => {
     const article = document.createElement('article');
     article.className = 'artist-profile';
+    const photoFrame = document.createElement('div');
+    photoFrame.className = 'artist-photo-frame';
     if (assetUrl(profile.image)) {
       const portrait = document.createElement('img');
       portrait.src = profile.image;
       portrait.alt = profile.imageAlt || `Portrait de ${profile.name}`;
       portrait.loading = 'lazy';
-      article.append(portrait);
+      photoFrame.append(portrait);
     } else {
       const placeholder = document.createElement('div');
       placeholder.className = 'artist-photo-placeholder';
       placeholder.setAttribute('role', 'img');
       placeholder.setAttribute('aria-label', 'Photo à venir');
       placeholder.textContent = 'Photo à venir';
-      article.append(placeholder);
+      photoFrame.append(placeholder);
     }
+    article.append(photoFrame);
     const details = document.createElement('div');
     details.className = 'artist-details';
     const name = document.createElement('h3');
