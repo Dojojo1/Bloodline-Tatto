@@ -176,7 +176,7 @@ function startDrag(event, kind) {
 function installSelection() {
   const doc = frame.contentDocument;
   const runtime = frame.contentWindow.BLOODLINE_DESIGN;
-  if (!doc || !runtime) { status('Impossible de charger l’aperçu.', true); return; }
+  if (!doc || !runtime) return;
   runtime.assignIds(doc);
   runtime.applyAll(settings, mode, doc);
   const style = doc.createElement('style');
@@ -299,6 +299,7 @@ document.querySelector('#section-list').replaceChildren(...SECTIONS.map(([id, la
 
 frame.addEventListener('load', installSelection);
 window.addEventListener('resize', resizePreview);
+document.querySelector('#refresh-preview').addEventListener('click', () => { refreshPreview(); status('Nouvelle version de la vitrine chargée dans l’aperçu.'); });
 document.querySelectorAll('[data-device]').forEach((button) => button.addEventListener('click', () => {
   mode = button.dataset.device;
   previewWidth = DEVICE_WIDTHS[mode];
@@ -350,5 +351,5 @@ document.querySelector('#connect').addEventListener('click', async () => {
 if (localStorage.getItem(DRAFT_KEY)) document.querySelector('#restore-draft').hidden = false;
 fetch(`design-settings.json?fresh=${Date.now()}`, { cache: 'no-store' }).then((response) => response.ok ? response.json() : null).then((data) => {
   if (data?.version === 1) { settings = data; normalizeSettings(); baseRevision = data.revision || 0; }
-  if (frame.contentDocument?.readyState === 'complete') installSelection();
-}).catch(() => { if (frame.contentDocument?.readyState === 'complete') installSelection(); });
+  refreshPreview();
+}).catch(() => { refreshPreview(); });

@@ -7,7 +7,7 @@
     <title>Atelier visuel — Bloodline Tattoo</title>
     <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
     <link rel="stylesheet" href="editor.css?v=20261117-3">
-    <script src="editor.js?v=20261118-1" defer></script>
+    <script src="editor.js?v=20261118-2" defer></script>
   </head>
   <body>
     <header class="editor-header">
@@ -35,10 +35,11 @@
             <button type="button" data-device="tablet" aria-pressed="false">Tablette</button>
             <button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
           </div>
+          <button type="button" id="refresh-preview">Actualiser l’aperçu</button>
           <label class="preview-width-control">Largeur de l’écran <input id="preview-width" type="number" min="320" max="2560" step="10" value="1100"> px</label>
           <span id="preview-size">1100 px</span>
         </div>
-        <div class="preview-stage" id="preview-stage"><div class="preview-paper" id="preview-paper"><iframe id="preview" title="Aperçu du site Bloodline Tattoo" src="index.html?atelier=1"></iframe></div></div>
+        <div class="preview-stage" id="preview-stage"><div class="preview-paper" id="preview-paper"><iframe id="preview" title="Aperçu du site Bloodline Tattoo" src="about:blank"></iframe></div></div>
       </section>
 
       <aside class="editor-inspector" aria-label="Réglages de l’élément">
