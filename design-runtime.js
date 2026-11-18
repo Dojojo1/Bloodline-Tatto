@@ -40,7 +40,10 @@
     } else if (safe.x != null || safe.y != null) element.style.translate = `${safe.x || 0}px ${safe.y || 0}px`;
     if (isProjectVisual && safe.width != null) element.style.setProperty('--project-visual-width', `${Math.max(1, safe.width)}px`);
     else if (!isSection && safe.width != null) element.style.width = `${Math.max(1, safe.width)}px`;
-    if (!isSection && !isProjectVisual && safe.height != null) element.style.height = `${Math.max(1, safe.height)}px`;
+    if (!isSection && safe.height != null) {
+      if (isProjectVisual) element.style.aspectRatio = 'auto';
+      element.style.height = `${Math.max(1, safe.height)}px`;
+    }
     if (isSection && safe.paddingTop != null) element.style.paddingTop = `${Math.max(0, safe.paddingTop)}px`;
     if (isSection && safe.paddingBottom != null) element.style.paddingBottom = `${Math.max(0, safe.paddingBottom)}px`;
     if (safe.fontSize != null) element.style.fontSize = `${Math.max(8, safe.fontSize)}px`;
@@ -49,18 +52,22 @@
     if (safe.color) element.style.color = safe.color;
     if (safe.image) {
       if (element instanceof HTMLImageElement) element.src = safe.image;
-      else element.style.backgroundImage = `url("${safe.image}")`;
+      else element.style.backgroundImage = isProjectVisual
+        ? `linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1)), url("${safe.image}")`
+        : `url("${safe.image}")`;
     }
     if (safe.fit) {
       if (element instanceof HTMLImageElement) element.style.objectFit = safe.fit;
-      else element.style.backgroundSize = safe.fit;
+      else element.style.backgroundSize = isProjectVisual ? `cover, ${safe.fit}` : safe.fit;
     }
     if (safe.backgroundX != null || safe.backgroundY != null) {
       const position = `${safe.backgroundX ?? 50}% ${safe.backgroundY ?? 50}%`;
       if (element instanceof HTMLImageElement) element.style.objectPosition = position;
-      else element.style.backgroundPosition = position;
+      else element.style.backgroundPosition = isProjectVisual ? `center, ${position}` : position;
     }
-    if (safe.backgroundScale != null && !(element instanceof HTMLImageElement)) element.style.backgroundSize = `${Math.max(20, Math.min(400, safe.backgroundScale))}% auto`;
+    if (safe.backgroundScale != null && !(element instanceof HTMLImageElement)) element.style.backgroundSize = isProjectVisual
+      ? `cover, ${Math.max(20, Math.min(400, safe.backgroundScale))}% auto`
+      : `${Math.max(20, Math.min(400, safe.backgroundScale))}% auto`;
     if (safe.text != null && !element.children.length) element.textContent = safe.text;
   }
 

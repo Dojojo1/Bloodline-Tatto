@@ -26,7 +26,6 @@ function normalizeSettings() {
   for (const device of ['desktop', 'tablet', 'mobile']) {
     settings[device] ||= {};
     for (const [id, values] of Object.entries(settings[device])) {
-      if (id.endsWith('/div:5') && id.startsWith('sur-mesure/')) delete values.height;
       if (!Object.keys(values).length) delete settings[device][id];
     }
   }
@@ -95,12 +94,12 @@ function fillInspector() {
   fields.hidden = false;
   fields.querySelectorAll('[data-prop]').forEach((input) => {
     const key = input.dataset.prop;
-    input.disabled = !isSection && (['paddingTop', 'paddingBottom'].includes(key) || (isProjectVisual && key === 'height'));
+    input.disabled = !isSection && ['paddingTop', 'paddingBottom'].includes(key);
     input.value = item[key] ?? (input.type === 'color' ? key === 'color' ? '#eee2d4' : '#110b0a' : '');
   });
   document.querySelector('#dimension-hint').textContent = isSection
     ? 'X, Y et largeur règlent le contenu. La hauteur est un minimum : le fond suit toujours les éléments et garde toute la largeur de l’écran.'
-    : isProjectVisual ? 'Le cadre est carré : sa hauteur suit sa largeur.'
+    : isProjectVisual ? 'Carré par défaut. Entre une hauteur pour choisir une autre forme ; efface-la pour retrouver le carré.'
       : 'Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.';
   const textInput = document.querySelector('#text-value');
   const leaf = selected.children.length === 0;
@@ -117,7 +116,6 @@ function selectElement(element) {
 }
 
 function updateValue(key, value) {
-  if (selected?.classList.contains('project-visual') && key === 'height') return;
   const item = itemForSelected();
   if (!item) return;
   if (key === 'text') item.text = String(value);
@@ -134,6 +132,7 @@ function updateValue(key, value) {
     } else {
       if (key === 'width' && selected.classList.contains('project-visual')) selected.style.removeProperty('--project-visual-width');
       else if (key === 'width' || key === 'height' || key === 'fontSize' || key === 'opacity') selected.style[key] = '';
+      if (key === 'height' && selected.classList.contains('project-visual')) selected.style.aspectRatio = '';
       if (key === 'x' || key === 'y') selected.style.translate = `${item.x || 0}px ${item.y || 0}px`;
     }
     if (key === 'backgroundColor' || key === 'color' || key === 'image') selected.style[key === 'image' ? 'backgroundImage' : key] = '';
@@ -163,7 +162,7 @@ function startDrag(event, kind) {
       updateValue('y', start.offsetY + dy);
     } else {
       updateValue('width', Math.max(20, Math.round(start.width + dx)));
-      if (!selected.classList.contains('project-visual')) updateValue('height', Math.max(20, Math.round(start.height + dy)));
+      if (!selected.classList.contains('project-visual') || item.height != null) updateValue('height', Math.max(20, Math.round(start.height + dy)));
     }
     fillInspector();
   };
