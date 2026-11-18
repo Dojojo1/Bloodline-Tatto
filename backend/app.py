@@ -18,6 +18,11 @@ class LoginBody(BaseModel):
     password: str
 
 
+class PasswordBody(BaseModel):
+    current_password: str
+    new_password: str
+
+
 def create_app(db_path=None, public_origin=None, secure_cookie=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "http://127.0.0.1:8082").rstrip("/")
@@ -72,6 +77,17 @@ def create_app(db_path=None, public_origin=None, secure_cookie=None):
     def logout(request: Request, response: Response):
         require_same_origin(request)
         storage.delete_session(db_path, request.cookies.get(COOKIE))
+        response.delete_cookie(COOKIE, path="/")
+        return {"ok": True}
+
+    @app.post("/api/password")
+    def password(body: PasswordBody, request: Request, response: Response):
+        require_same_origin(request)
+        member = current_member(request)
+        try:
+            storage.change_password(db_path, member["id"], body.current_password, body.new_password)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
         response.delete_cookie(COOKIE, path="/")
         return {"ok": True}
 

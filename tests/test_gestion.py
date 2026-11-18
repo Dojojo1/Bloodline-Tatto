@@ -2,6 +2,7 @@
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import sqlite3
+import os
 from contextlib import closing
 
 from fastapi.testclient import TestClient
@@ -10,6 +11,7 @@ from backend.app import create_app
 from backend.storage import create_member
 from backend.storage import init_database
 from scripts.backup_gestion import main as backup_database
+from scripts.bootstrap_admins import bootstrap
 
 
 ORIGIN = "http://127.0.0.1:8082"
@@ -76,3 +78,21 @@ def test_existing_database_migrates_account_identifier():
         app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
         with TestClient(app, base_url=ORIGIN) as client:
             assert client.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN}).status_code == 200
+
+
+def test_initial_admins_and_password_change():
+    with TemporaryDirectory() as folder:
+        path = Path(folder) / "bloodline.sqlite3"
+        credentials = Path(folder) / "private" / "initial-admins.txt"
+        bootstrap(path, credentials, ("Erwan", "Lucia"))
+        if os.name != "nt":
+            assert credentials.stat().st_mode & 0o777 == 0o600
+        passwords = dict(line.strip().split(": ", 1) for line in credentials.read_text(encoding="utf-8").splitlines())
+        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        with TestClient(app, base_url=ORIGIN) as client:
+            assert client.post("/api/login", json={"username": "Erwan", "password": passwords["Erwan"]}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.post("/api/password", json={"current_password": "incorrect", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 400
+            assert client.post("/api/password", json={"current_password": passwords["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.get("/api/me").status_code == 401
+            assert client.post("/api/login", json={"username": "erwan", "password": passwords["Erwan"]}, headers={"Origin": ORIGIN}).status_code == 401
+            assert client.post("/api/login", json={"username": "lucia", "password": passwords["Lucia"]}, headers={"Origin": ORIGIN}).status_code == 200

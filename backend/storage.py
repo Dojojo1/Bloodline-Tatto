@@ -118,6 +118,17 @@ def authenticate(path, username, password):
     return dict(member)
 
 
+def change_password(path, member_id, current_password, new_password):
+    if len(new_password) < 12 or len(new_password) > 256:
+        raise ValueError("Le nouveau mot de passe doit contenir entre 12 et 256 caractères.")
+    with connect(path) as db:
+        member = db.execute("select password_hash from members where id = ? and active = 1", (member_id,)).fetchone()
+        if not member or not verify_password(current_password, member["password_hash"]):
+            raise ValueError("Mot de passe actuel incorrect.")
+        db.execute("update members set password_hash = ? where id = ?", (password_hash(new_password), member_id))
+        db.execute("delete from sessions where member_id = ?", (member_id,))
+
+
 def login_blocked(path, username, remote_address):
     cutoff = (utc_now() - timedelta(minutes=15)).isoformat()
     with connect(path) as db:

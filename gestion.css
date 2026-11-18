@@ -35,5 +35,10 @@ button:focus-visible,input:focus-visible,a:focus-visible { outline:2px solid var
 .history { display:grid; gap:8px; max-height:240px; overflow:auto; }
 .history-row { display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-top:1px solid #493731; color:var(--muted); font-size:13px; }
 .history-row strong { color:var(--paper); font-variant-numeric:tabular-nums; }
+.account-settings { margin-top:30px; padding-top:20px; border-top:1px solid #493731; }
+.account-settings summary { cursor:pointer; color:var(--paper); font:20px Georgia,serif; }
+.account-settings summary:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
+.account-settings form { margin-top:18px; }
+.account-settings p { margin:0; font-size:13px; }
 .status { grid-column:1/-1; min-height:1.5em; margin:0; color:#e7b5ad; }
 @media(max-width:800px) { .shell { grid-template-columns:1fr; min-height:0; padding-block:48px; } .intro h1 { font-size:clamp(43px,11vw,70px); } }

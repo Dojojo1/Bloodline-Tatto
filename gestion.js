@@ -66,6 +66,20 @@
     button.disabled = false;
   });
 
+  $('#password-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const current = $('#current-password').value;
+    const next = $('#new-password').value;
+    if (next !== $('#confirm-password').value) { status('Les deux nouveaux mots de passe sont différents.'); return; }
+    const button = event.currentTarget.querySelector('button'); button.disabled = true; status('Enregistrement du nouveau mot de passe…');
+    try {
+      await request('/password', { method: 'POST', body: JSON.stringify({ current_password: current, new_password: next }) });
+      event.currentTarget.reset(); clearInterval(tick); member = null; openSession = null;
+      show('login-panel'); status('Mot de passe modifié. Reconnectez-vous avec le nouveau mot de passe.');
+    } catch (error) { status(error.message || 'Le mot de passe n’a pas été modifié. Réessayez.'); }
+    button.disabled = false;
+  });
+
   fetch('/api/health', { credentials: 'same-origin' }).then((response) => {
     if (!response.ok) throw new Error();
     return refresh();
