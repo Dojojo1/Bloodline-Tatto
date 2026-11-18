@@ -56,6 +56,15 @@
           case 'focus':
             gsap.fromTo(image, { scale: 1.13, filter: 'blur(4px) brightness(.65)' }, { scale: 1, filter: 'blur(0px) brightness(1)', duration: 1.05, ease: 'power3.out', clearProps: 'transform,filter' });
             break;
+          case 'stencil':
+            gsap.fromTo(image, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 0.95, ease: 'power3.inOut', clearProps: 'clipPath' });
+            break;
+          case 'flash':
+            gsap.fromTo(image, { opacity: 0.35, filter: 'brightness(2.3) contrast(1.25)' }, { opacity: 1, filter: 'brightness(1) contrast(1)', duration: 0.8, ease: 'power2.out', clearProps: 'opacity,filter' });
+            break;
+          case 'rise':
+            gsap.fromTo(image, { y: 65, scale: 1.05, opacity: 0.5, clipPath: 'inset(0 0 24% 0)' }, { y: 0, scale: 1, opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 0.9, ease: 'power3.out', clearProps: 'transform,opacity,clipPath' });
+            break;
         }
       }
       cards.forEach(card => card.querySelector('button').addEventListener('click', () => play(card, true)));
@@ -66,7 +75,7 @@
 <body>
   <main>
     <p class="eyebrow">Bloodline Tattoo · Aperçu séparé</p>
-    <h1>Trois façons de révéler <em>une image.</em></h1>
+    <h1>Six façons de révéler <em>une image.</em></h1>
     <p class="intro">Ces essais ne changent pas le site vitrine. Clique sur « Revoir l'effet » pour comparer les animations autant de fois que tu veux.</p>
     <div class="grid">
       <article data-effect="trace">
@@ -85,6 +94,24 @@
         <div class="frame"><img src="assets/biker-club-sketch.webp" alt="Croquis de tatouage de motard"><span class="stroke" aria-hidden="true"></span></div>
         <h2>03 · La mise au point</h2>
         <p>L'image passe d'un cadrage serré et flou à un dessin net. Le plus sobre pour les photos du salon.</p>
+        <button type="button">Revoir l'effet</button>
+      </article>
+      <article data-effect="stencil">
+        <div class="frame"><img src="assets/biker-club-sketch.webp" alt="Croquis de tatouage de motard"><span class="stroke" aria-hidden="true"></span></div>
+        <h2>04 · Le pochoir</h2>
+        <p>Le dessin s'ouvre depuis le centre, comme un pochoir qu'on écarte. Une révélation plus graphique.</p>
+        <button type="button">Revoir l'effet</button>
+      </article>
+      <article data-effect="flash">
+        <div class="frame"><img src="assets/biker-club-sketch.webp" alt="Croquis de tatouage de motard"><span class="stroke" aria-hidden="true"></span></div>
+        <h2>05 · Le flash</h2>
+        <p>Une brève lumière dévoile le motif, puis retrouve l'ambiance sombre du salon.</p>
+        <button type="button">Revoir l'effet</button>
+      </article>
+      <article data-effect="rise">
+        <div class="frame"><img src="assets/biker-club-sketch.webp" alt="Croquis de tatouage de motard"><span class="stroke" aria-hidden="true"></span></div>
+        <h2>06 · L'apparition</h2>
+        <p>L'image remonte dans son cadre et se découvre progressivement. Simple, lisible et dynamique.</p>
         <button type="button">Revoir l'effet</button>
       </article>
     </div>
