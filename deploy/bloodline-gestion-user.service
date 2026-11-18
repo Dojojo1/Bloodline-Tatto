@@ -1,0 +1,15 @@
+[Unit]
+Description=Bloodline Tattoo management service
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/dojojo/Documents/bloodline
+EnvironmentFile=/home/dojojo/Documents/bloodline/.env
+ExecStart=/home/dojojo/Documents/bloodline/.venv/bin/python -m uvicorn backend.app:create_app --factory --host 127.0.0.1 --port 8082 --no-access-log --no-proxy-headers
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=default.target
