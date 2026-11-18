@@ -41,6 +41,7 @@ def init_database(path):
                 username text not null unique,
                 display_name text not null,
                 password_hash text not null,
+                activation_required integer not null default 0,
                 role text not null check (role in ('superadmin', 'staff')),
                 active integer not null default 1,
                 created_at text not null
@@ -72,6 +73,8 @@ def init_database(path):
             db.execute("alter table members rename column email to username")
         if "email" in {column["name"] for column in db.execute("pragma table_info(login_attempts)")}:
             db.execute("alter table login_attempts rename column email to username")
+        if "activation_required" not in {column["name"] for column in db.execute("pragma table_info(members)")}:
+            db.execute("alter table members add column activation_required integer not null default 0")
     try:
         os.chmod(path, 0o600)
     except OSError:
@@ -127,6 +130,26 @@ def change_password(path, member_id, current_password, new_password):
             raise ValueError("Mot de passe actuel incorrect.")
         db.execute("update members set password_hash = ? where id = ?", (password_hash(new_password), member_id))
         db.execute("delete from sessions where member_id = ?", (member_id,))
+
+
+def activate_member(path, username, code, new_password):
+    if len(new_password) < 12 or len(new_password) > 256:
+        raise ValueError("Le nouveau mot de passe doit contenir entre 12 et 256 caractères.")
+    with connect(path) as db:
+        member = db.execute(
+            "select id, password_hash, activation_required from members where username = ? and active = 1",
+            (username.strip().lower(),),
+        ).fetchone()
+        if not member or not member["activation_required"] or not verify_password(code, member["password_hash"]):
+            return None
+        result = db.execute(
+            "update members set password_hash = ?, activation_required = 0 where id = ? and activation_required = 1",
+            (password_hash(new_password), member["id"]),
+        )
+        if result.rowcount != 1:
+            return None
+        db.execute("delete from sessions where member_id = ?", (member["id"],))
+        return member["id"]
 
 
 def login_blocked(path, username, remote_address):

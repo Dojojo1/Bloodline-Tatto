@@ -1,4 +1,4 @@
-"""Create the two initial admins and keep generated secrets on the server only."""
+"""Create two admins with private one-time activation codes."""
 import argparse
 import os
 import re
@@ -24,12 +24,12 @@ def bootstrap(db_path, credentials_path, names):
         fd = os.open(credentials_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         try:
             with os.fdopen(fd, "w", encoding="utf-8") as output:
-                for name, password in generated:
-                    output.write(f"{name}: {password}\n")
-            for name, password in generated:
+                for name, code in generated:
+                    output.write(f"{name}: {code}\n")
+            for name, code in generated:
                 db.execute(
-                    "insert into members(username, display_name, password_hash, role, created_at) values (?, ?, ?, 'superadmin', ?)",
-                    (name.lower(), name, password_hash(password), utc_now().isoformat()),
+                    "insert into members(username, display_name, password_hash, activation_required, role, created_at) values (?, ?, ?, 1, 'superadmin', ?)",
+                    (name.lower(), name, password_hash(code), utc_now().isoformat()),
                 )
         except Exception:
             credentials_path.unlink(missing_ok=True)
@@ -43,9 +43,9 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     db_path = Path(os.environ.get("BLOODLINE_DB_PATH", root / "data" / "bloodline.sqlite3"))
-    credentials_path = Path.home() / ".config" / "bloodline" / "initial-admins.txt"
+    credentials_path = Path.home() / ".config" / "bloodline" / "activation-codes.txt"
     bootstrap(db_path, credentials_path, (args.first, args.second))
-    print(f"Deux comptes créés. Mots de passe dans {credentials_path} (lecture privée).")
+    print(f"Deux comptes créés. Codes d’activation dans {credentials_path} (lecture privée).")
 
 
 if __name__ == "__main__":

@@ -23,6 +23,12 @@ class PasswordBody(BaseModel):
     new_password: str
 
 
+class ActivationBody(BaseModel):
+    username: str
+    code: str
+    new_password: str
+
+
 def create_app(db_path=None, public_origin=None, secure_cookie=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "http://127.0.0.1:8082").rstrip("/")
@@ -69,7 +75,28 @@ def create_app(db_path=None, public_origin=None, secure_cookie=None):
             storage.record_login_failure(db_path, username, remote_address)
             raise HTTPException(401, "Identifiants incorrects")
         storage.clear_login_failures(db_path, username, remote_address)
+        if member["activation_required"]:
+            return {"setup_required": True}
         token = storage.create_session(db_path, member["id"])
+        response.set_cookie(COOKIE, token, max_age=604800, httponly=True, secure=secure_cookie, samesite="lax", path="/")
+        return {"ok": True}
+
+    @app.post("/api/activate")
+    def activate(body: ActivationBody, request: Request, response: Response):
+        require_same_origin(request)
+        username = body.username.strip().lower()
+        remote_address = request.client.host if request.client else "unknown"
+        if storage.login_blocked(db_path, username, remote_address):
+            raise HTTPException(429, "Trop de tentatives. Réessayez dans 15 minutes.")
+        try:
+            member_id = storage.activate_member(db_path, username, body.code, body.new_password)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        if not member_id:
+            storage.record_login_failure(db_path, username, remote_address)
+            raise HTTPException(401, "Code d’activation incorrect ou déjà utilisé.")
+        storage.clear_login_failures(db_path, username, remote_address)
+        token = storage.create_session(db_path, member_id)
         response.set_cookie(COOKIE, token, max_age=604800, httponly=True, secure=secure_cookie, samesite="lax", path="/")
         return {"ok": True}
 

@@ -1,6 +1,6 @@
 # Plan de reprise — gestion Bloodline Tattoo
 
-État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Le premier module de gestion est installé dans `/home/dojojo/Documents/bloodline` sur le serveur Linux : connexion et pointage personnel, SQLite privée, service persistant sur `127.0.0.1:8082` et sauvegarde quotidienne. Il manque les deux vrais comptes administrateurs et une adresse HTTPS pour l'ouvrir sans tunnel SSH. Aucun client, rendez-vous ou paiement n'est encore stocké.
+État au 18 novembre 2026 : le site vitrine est publié sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie actuellement la demande sur l'appareil ; il ne l'envoie pas. Le premier module de gestion est installé dans `/home/dojojo/Documents/bloodline` sur le serveur Linux : connexion et pointage personnel, SQLite privée, service persistant sur `127.0.0.1:8082` et sauvegarde quotidienne. L'adresse publique HTTPS est `https://dojojoserv.tail95e116.ts.net/` via Tailscale Funnel. Les comptes Erwan et Lucia ont été créés ; chacun doit activer son compte avec son code privé et choisir son mot de passe. Aucun client, rendez-vous ou paiement n'est encore stocké.
 
 ## Décisions déjà prises avec le propriétaire
 
@@ -33,7 +33,7 @@ Définir les prix et montants en centimes, avec devise explicite. Prévoir expor
 
 ## Parcours à construire dans cet ordre
 
-1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. Le premier jet connexion + pointage est installé et testé sur le serveur ; les comptes réels, l'accès HTTPS, les invitations et l'audit restent à faire.
+1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. Le premier jet connexion + pointage et l'accès HTTPS sont installés ; les comptes doivent être activés, puis les invitations et l'audit restent à faire.
 2. **Demandes et rendez-vous** : remplacer la copie du formulaire par un envoi réel avec consentement et protection anti-spam ; enregistrer le numéro et les disponibilités ; créer une fiche de demande ; permettre à l'équipe de contacter, assigner, confirmer, déplacer ou annuler un rendez-vous. Le client ne choisit pas de créneau.
 3. **Gestion éditoriale** : artistes, vitrine, galerie, page « Nos styles » séparée, tatouages photo/nom/prix, prestations et services ; aperçu avant publication. Les changements doivent se voir sur GitHub Pages sans nouveau commit manuel.
 4. **Pointage** : dans chaque profil connecté, boutons « Prendre mon service » et « Terminer mon service », compteur de la session en cours et historique personnel ; vue d'équipe pour les responsables, total par jour/semaine/mois et export. Horodatage par le serveur, fuseau Europe/Brussels à l'affichage. Une correction manuelle conserve l'original et l'auteur de la correction.

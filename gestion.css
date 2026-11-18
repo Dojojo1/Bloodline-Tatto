@@ -40,5 +40,7 @@ button:focus-visible,input:focus-visible,a:focus-visible { outline:2px solid var
 .account-settings summary:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
 .account-settings form { margin-top:18px; }
 .account-settings p { margin:0; font-size:13px; }
+.form-hint { margin:0; font-size:13px; line-height:1.55; }
+#activate-back { margin-top:18px; }
 .status { grid-column:1/-1; min-height:1.5em; margin:0; color:#e7b5ad; }
 @media(max-width:800px) { .shell { grid-template-columns:1fr; min-height:0; padding-block:48px; } .intro h1 { font-size:clamp(43px,11vw,70px); } }

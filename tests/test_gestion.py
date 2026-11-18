@@ -12,6 +12,7 @@ from backend.storage import create_member
 from backend.storage import init_database
 from scripts.backup_gestion import main as backup_database
 from scripts.bootstrap_admins import bootstrap
+from scripts.prepare_first_login import prepare
 
 
 ORIGIN = "http://127.0.0.1:8082"
@@ -80,19 +81,44 @@ def test_existing_database_migrates_account_identifier():
             assert client.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN}).status_code == 200
 
 
-def test_initial_admins_and_password_change():
+def test_initial_admins_create_password_on_first_login():
     with TemporaryDirectory() as folder:
         path = Path(folder) / "bloodline.sqlite3"
         credentials = Path(folder) / "private" / "initial-admins.txt"
         bootstrap(path, credentials, ("Erwan", "Lucia"))
         if os.name != "nt":
             assert credentials.stat().st_mode & 0o777 == 0o600
-        passwords = dict(line.strip().split(": ", 1) for line in credentials.read_text(encoding="utf-8").splitlines())
+        codes = dict(line.strip().split(": ", 1) for line in credentials.read_text(encoding="utf-8").splitlines())
         app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
         with TestClient(app, base_url=ORIGIN) as client:
-            assert client.post("/api/login", json={"username": "Erwan", "password": passwords["Erwan"]}, headers={"Origin": ORIGIN}).status_code == 200
-            assert client.post("/api/password", json={"current_password": "incorrect", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 400
-            assert client.post("/api/password", json={"current_password": passwords["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            first = client.post("/api/login", json={"username": "Erwan", "password": codes["Erwan"]}, headers={"Origin": ORIGIN})
+            assert first.status_code == 200 and first.json()["setup_required"]
             assert client.get("/api/me").status_code == 401
-            assert client.post("/api/login", json={"username": "erwan", "password": passwords["Erwan"]}, headers={"Origin": ORIGIN}).status_code == 401
-            assert client.post("/api/login", json={"username": "lucia", "password": passwords["Lucia"]}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.post("/api/activate", json={"username": "Erwan", "code": "wrong", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 401
+            assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": "https://evil.example"}).status_code == 403
+            assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.get("/api/me").status_code == 200
+            assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "different-long-secret"}, headers={"Origin": ORIGIN}).status_code == 401
+            assert client.post("/api/password", json={"current_password": "incorrect", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 400
+            assert client.post("/api/password", json={"current_password": "another-long-secret", "new_password": "different-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.get("/api/me").status_code == 401
+            assert client.post("/api/login", json={"username": "erwan", "password": codes["Erwan"]}, headers={"Origin": ORIGIN}).status_code == 401
+            assert client.post("/api/login", json={"username": "erwan", "password": "different-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert client.post("/api/login", json={"username": "lucia", "password": codes["Lucia"]}, headers={"Origin": ORIGIN}).json()["setup_required"]
+
+
+def test_existing_admins_convert_initial_passwords_to_activation_codes():
+    with TemporaryDirectory() as folder:
+        path = Path(folder) / "bloodline.sqlite3"
+        old = Path(folder) / "initial-admins.txt"
+        new = Path(folder) / "activation-codes.txt"
+        bootstrap(path, old, ("Erwan", "Lucia"))
+        codes = dict(line.strip().split(": ", 1) for line in old.read_text(encoding="utf-8").splitlines())
+        with closing(sqlite3.connect(path)) as db:
+            db.execute("update members set activation_required = 0")
+            db.commit()
+        prepare(path, old, new)
+        assert not old.exists() and new.exists()
+        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        with TestClient(app, base_url=ORIGIN) as client:
+            assert client.post("/api/login", json={"username": "Erwan", "password": codes["Erwan"]}, headers={"Origin": ORIGIN}).json()["setup_required"]

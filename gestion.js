@@ -1,10 +1,11 @@
 (() => {
   const $ = (selector) => document.querySelector(selector);
-  const show = (id) => { for (const panel of ['setup-panel', 'login-panel', 'shift-panel']) $(`#${panel}`).hidden = panel !== id; };
+  const show = (id) => { for (const panel of ['setup-panel', 'login-panel', 'activate-panel', 'shift-panel']) $(`#${panel}`).hidden = panel !== id; };
   const status = (message) => { $('#status').textContent = message; };
   let member = null;
   let openSession = null;
   let tick = null;
+  let pendingActivation = null;
 
   async function request(path, options = {}) {
     const response = await fetch(`/api${path}`, { credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, ...options });
@@ -46,10 +47,31 @@
     event.preventDefault(); status('Connexion en cours…');
     const button = event.currentTarget.querySelector('button'); button.disabled = true;
     try {
-      await request('/login', { method: 'POST', body: JSON.stringify({ username: $('#username').value.trim(), password: $('#password').value }) });
-      $('#password').value = ''; status(''); await refresh();
-    } catch { status('Connexion impossible. Vérifiez vos identifiants et réessayez.'); }
+      const username = $('#username').value.trim();
+      const code = $('#password').value;
+      const result = await request('/login', { method: 'POST', body: JSON.stringify({ username, password: code }) });
+      $('#password').value = '';
+      if (result.setup_required) {
+        pendingActivation = { username, code }; show('activate-panel'); status('Choisissez votre mot de passe pour terminer la première connexion.');
+        $('#activate-password').focus();
+      } else { status(''); await refresh(); }
+    } catch (error) { status(error.message || 'Connexion impossible. Vérifiez vos identifiants et réessayez.'); }
     button.disabled = false;
+  });
+  $('#activate-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!pendingActivation) { show('login-panel'); return; }
+    const next = $('#activate-password').value;
+    if (next !== $('#activate-confirm').value) { status('Les deux mots de passe sont différents.'); return; }
+    const button = event.currentTarget.querySelector('button'); button.disabled = true; status('Création du mot de passe…');
+    try {
+      await request('/activate', { method: 'POST', body: JSON.stringify({ ...pendingActivation, new_password: next }) });
+      pendingActivation = null; event.currentTarget.reset(); status('Mot de passe créé.'); await refresh();
+    } catch (error) { status(error.message || 'Impossible de créer le mot de passe. Réessayez.'); }
+    button.disabled = false;
+  });
+  $('#activate-back').addEventListener('click', () => {
+    pendingActivation = null; $('#activate-form').reset(); status(''); show('login-panel'); $('#username').focus();
   });
   $('#logout').addEventListener('click', async () => {
     try { await request('/logout', { method: 'POST' }); } catch { /* Le serveur invalide les sessions expirées. */ }
