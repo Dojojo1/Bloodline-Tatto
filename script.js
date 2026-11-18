@@ -436,3 +436,40 @@ if (window.gsap) {
       .from('.gateway-card', { autoAlpha: 0, y: 13, duration: 0.55, stagger: 0.08 }, '-=0.34');
   });
 }
+
+// Reveal selected artwork once, as it enters view. Content is visible by default.
+if (window.gsap && 'IntersectionObserver' in window) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!reducedMotion.matches) {
+    const artworkGroups = [
+      ['#styles', '.style-panel-art'],
+      ['#salon', '.salon-visual'],
+      ['#realisations', '.work-image'],
+      ['#sur-mesure', '.project-visual']
+    ];
+    const artwork = artworkGroups.flatMap(([, selector]) => [...document.querySelectorAll(selector)]);
+    const artworkObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        const selector = artworkGroups.find(([section]) => entry.target.matches(section))?.[1];
+        if (!selector || reducedMotion.matches) return;
+        const targets = [...entry.target.querySelectorAll(selector)];
+        window.gsap.fromTo(targets,
+          { clipPath: 'inset(0 0 12% 0)', opacity: 0.78 },
+          { clipPath: 'inset(0 0 0% 0)', opacity: 1, duration: 0.7, stagger: 0.09, ease: 'power3.out', clearProps: 'clipPath,opacity' }
+        );
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+    artworkGroups.forEach(([section]) => {
+      const element = document.querySelector(section);
+      if (element && !element.hidden) artworkObserver.observe(element);
+    });
+    reducedMotion.addEventListener('change', () => {
+      if (!reducedMotion.matches) return;
+      artworkObserver.disconnect();
+      window.gsap.killTweensOf(artwork);
+      window.gsap.set(artwork, { clearProps: 'clipPath,opacity' });
+    });
+  }
+}
