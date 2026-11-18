@@ -9,8 +9,8 @@ from backend.storage import create_member, init_database
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--email", required=True)
-    parser.add_argument("--name", required=True)
+    parser.add_argument("--username", required=True)
+    parser.add_argument("--name", help="Nom affiché ; utilise le nom de compte si omis")
     args = parser.parse_args()
     password = getpass.getpass("Mot de passe (12 caractères minimum) : ")
     confirm = getpass.getpass("Confirmer le mot de passe : ")
@@ -18,7 +18,7 @@ def main():
         raise SystemExit("Les mots de passe sont différents.")
     path = Path(os.environ.get("BLOODLINE_DB_PATH", Path(__file__).resolve().parents[1] / "data" / "bloodline.sqlite3"))
     init_database(path)
-    create_member(path, args.email, args.name, password, "superadmin")
+    create_member(path, args.username, args.name or args.username, password, "superadmin")
     print("Compte administrateur créé.")
 
 

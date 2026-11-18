@@ -14,7 +14,7 @@ COOKIE = "bloodline_session"
 
 
 class LoginBody(BaseModel):
-    email: str
+    username: str
     password: str
 
 
@@ -55,15 +55,15 @@ def create_app(db_path=None, public_origin=None, secure_cookie=None):
     @app.post("/api/login")
     def login(body: LoginBody, request: Request, response: Response):
         require_same_origin(request)
-        email = body.email.strip().lower()
+        username = body.username.strip().lower()
         remote_address = request.client.host if request.client else "unknown"
-        if storage.login_blocked(db_path, email, remote_address):
+        if storage.login_blocked(db_path, username, remote_address):
             raise HTTPException(429, "Trop de tentatives. Réessayez dans 15 minutes.")
-        member = storage.authenticate(db_path, body.email, body.password)
+        member = storage.authenticate(db_path, username, body.password)
         if not member:
-            storage.record_login_failure(db_path, email, remote_address)
+            storage.record_login_failure(db_path, username, remote_address)
             raise HTTPException(401, "Identifiants incorrects")
-        storage.clear_login_failures(db_path, email, remote_address)
+        storage.clear_login_failures(db_path, username, remote_address)
         token = storage.create_session(db_path, member["id"])
         response.set_cookie(COOKIE, token, max_age=604800, httponly=True, secure=secure_cookie, samesite="lax", path="/")
         return {"ok": True}

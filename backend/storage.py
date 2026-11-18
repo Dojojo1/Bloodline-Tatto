@@ -2,6 +2,7 @@
 import hashlib
 import hmac
 import os
+import re
 import secrets
 import sqlite3
 from contextlib import contextmanager
@@ -37,7 +38,7 @@ def init_database(path):
         db.executescript("""
             create table if not exists members (
                 id integer primary key,
-                email text not null unique,
+                username text not null unique,
                 display_name text not null,
                 password_hash text not null,
                 role text not null check (role in ('superadmin', 'staff')),
@@ -50,11 +51,11 @@ def init_database(path):
                 expires_at text not null
             );
             create table if not exists login_attempts (
-                email text not null,
+                username text not null,
                 remote_address text not null,
                 failures integer not null,
                 first_at text not null,
-                primary key (email, remote_address)
+                primary key (username, remote_address)
             );
             create table if not exists work_sessions (
                 id integer primary key,
@@ -66,6 +67,11 @@ def init_database(path):
             create unique index if not exists one_open_shift on work_sessions(member_id) where ended_at is null;
             create index if not exists work_sessions_member_start on work_sessions(member_id, started_at desc);
         """)
+        # Preserve an existing database created before account names replaced e-mails.
+        if "email" in {column["name"] for column in db.execute("pragma table_info(members)")}:
+            db.execute("alter table members rename column email to username")
+        if "email" in {column["name"] for column in db.execute("pragma table_info(login_attempts)")}:
+            db.execute("alter table login_attempts rename column email to username")
     try:
         os.chmod(path, 0o600)
     except OSError:
@@ -89,50 +95,50 @@ def verify_password(password, stored):
         return False
 
 
-def create_member(path, email, name, password, role="staff"):
+def create_member(path, username, name, password, role="staff"):
     if role not in {"staff", "superadmin"}:
         raise ValueError("Rôle invalide")
-    email = email.strip().lower()
+    username = username.strip().lower()
     name = name.strip()
-    if not email or "@" not in email or len(name) < 2:
-        raise ValueError("Adresse ou nom invalide")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_.-]{2,31}", username) or len(name) < 2:
+        raise ValueError("Nom de compte ou nom affiché invalide")
     hashed = password_hash(password)
     with connect(path) as db:
         if role == "superadmin" and db.execute("select count(*) from members where role = 'superadmin'").fetchone()[0] >= 2:
             raise ValueError("Les deux comptes d'administration suprême existent déjà")
-        db.execute("insert into members(email, display_name, password_hash, role, created_at) values (?, ?, ?, ?, ?)",
-                   (email, name, hashed, role, utc_now().isoformat()))
+        db.execute("insert into members(username, display_name, password_hash, role, created_at) values (?, ?, ?, ?, ?)",
+                   (username, name, hashed, role, utc_now().isoformat()))
 
 
-def authenticate(path, email, password):
+def authenticate(path, username, password):
     with connect(path) as db:
-        member = db.execute("select * from members where email = ? and active = 1", (email.strip().lower(),)).fetchone()
+        member = db.execute("select * from members where username = ? and active = 1", (username.strip().lower(),)).fetchone()
     if not member or not verify_password(password, member["password_hash"]):
         return None
     return dict(member)
 
 
-def login_blocked(path, email, remote_address):
+def login_blocked(path, username, remote_address):
     cutoff = (utc_now() - timedelta(minutes=15)).isoformat()
     with connect(path) as db:
-        row = db.execute("select failures, first_at from login_attempts where email = ? and remote_address = ?",
-                         (email, remote_address)).fetchone()
+        row = db.execute("select failures, first_at from login_attempts where username = ? and remote_address = ?",
+                         (username, remote_address)).fetchone()
     return bool(row and row["first_at"] >= cutoff and row["failures"] >= 5)
 
 
-def record_login_failure(path, email, remote_address):
+def record_login_failure(path, username, remote_address):
     cutoff = (utc_now() - timedelta(minutes=15)).isoformat()
     with connect(path) as db:
-        db.execute("""insert into login_attempts(email, remote_address, failures, first_at)
-            values (?, ?, 1, ?) on conflict(email, remote_address) do update set
+        db.execute("""insert into login_attempts(username, remote_address, failures, first_at)
+            values (?, ?, 1, ?) on conflict(username, remote_address) do update set
             failures = case when login_attempts.first_at < ? then 1 else login_attempts.failures + 1 end,
             first_at = case when login_attempts.first_at < ? then excluded.first_at else login_attempts.first_at end""",
-            (email, remote_address, utc_now().isoformat(), cutoff, cutoff))
+            (username, remote_address, utc_now().isoformat(), cutoff, cutoff))
 
 
-def clear_login_failures(path, email, remote_address):
+def clear_login_failures(path, username, remote_address):
     with connect(path) as db:
-        db.execute("delete from login_attempts where email = ? and remote_address = ?", (email, remote_address))
+        db.execute("delete from login_attempts where username = ? and remote_address = ?", (username, remote_address))
 
 
 def create_session(path, member_id):
@@ -149,7 +155,7 @@ def session_member(path, token):
         return None
     token_hash = hashlib.sha256(token.encode()).hexdigest()
     with connect(path) as db:
-        member = db.execute("""select m.id, m.email, m.display_name, m.role from sessions s
+        member = db.execute("""select m.id, m.username, m.display_name, m.role from sessions s
             join members m on m.id = s.member_id
             where s.token_hash = ? and s.expires_at > ? and m.active = 1""",
             (token_hash, utc_now().isoformat())).fetchone()

@@ -44,7 +44,7 @@ Une étape est finie seulement si la vitrine en ligne, la gestion, les permissio
 
 ## Points à trancher avant l'implémentation dépendante
 
-1. Les adresses des **deux futurs administrateurs suprêmes** et le compte/propriétaire qui ouvrira le service de données. Ne pas inscrire ces adresses ni leurs mots de passe dans ce fichier.
+1. Les noms de compte des **deux futurs administrateurs suprêmes**. Aucun e-mail n'est requis. Ne pas inscrire leurs mots de passe dans ce fichier.
 2. Pour le **pointage** : faut-il compter les pauses, permettre l'oubli de fin de service et qui peut corriger une session ? L'hypothèse de départ est : pause facultative, oubli signalé, correction réservée aux deux administrateurs suprêmes avec motif et historique.
 3. Pour les **parts des artistes** : pourcentage par artiste, par prestation ou calcul manuel ? Les rapports pourront commencer avec une saisie explicite, puis automatiser la règle choisie.
 4. Hébergement et budget du service de données, domaine éventuel, et responsable des sauvegardes. Le webhook peut être ajouté plus tard depuis la gestion.

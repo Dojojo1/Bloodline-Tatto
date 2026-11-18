@@ -46,7 +46,7 @@
     event.preventDefault(); status('Connexion en cours…');
     const button = event.currentTarget.querySelector('button'); button.disabled = true;
     try {
-      await request('/login', { method: 'POST', body: JSON.stringify({ email: $('#email').value.trim(), password: $('#password').value }) });
+      await request('/login', { method: 'POST', body: JSON.stringify({ username: $('#username').value.trim(), password: $('#password').value }) });
       $('#password').value = ''; status(''); await refresh();
     } catch { status('Connexion impossible. Vérifiez vos identifiants et réessayez.'); }
     button.disabled = false;
@@ -69,5 +69,5 @@
   fetch('/api/health', { credentials: 'same-origin' }).then((response) => {
     if (!response.ok) throw new Error();
     return refresh();
-  }).catch(() => { show('setup-panel'); status('La gestion fonctionne sur le serveur Linux, une fois son installation terminée.'); });
+  }).catch(() => { show('setup-panel'); status('Cette page n’est pas reliée au serveur de gestion.'); });
 })();

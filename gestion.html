@@ -7,14 +7,14 @@
     <title>Gestion — Bloodline Tattoo</title>
     <link rel="icon" href="https://dojojo1.github.io/Bloodline-Tatto/assets/bloodline-logo.png" type="image/png">
     <link rel="stylesheet" href="gestion.css?v=1">
-    <script src="gestion.js?v=2" defer></script>
+    <script src="gestion.js?v=3" defer></script>
   </head>
   <body>
     <header class="topbar"><a href="https://dojojo1.github.io/Bloodline-Tatto/" class="brand">Bloodline <span>Tattoo</span></a><span>Gestion du salon</span></header>
     <main class="shell">
       <div class="intro"><p class="eyebrow">Espace équipe</p><h1>Votre service,<br><em>à votre rythme.</em></h1><p>Connectez-vous pour suivre vos heures. Chaque début et fin de service est enregistré par le serveur.</p></div>
-      <section class="panel" id="setup-panel" hidden aria-labelledby="setup-title"><h2 id="setup-title">Installation en attente</h2><p>La gestion sera disponible sur le serveur Linux après installation du backend et création des deux comptes.</p></section>
-      <section class="panel" id="login-panel" hidden aria-labelledby="login-title"><h2 id="login-title">Connexion</h2><form id="login-form"><label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Se connecter <span aria-hidden="true">↗</span></button></form></section>
+      <section class="panel" id="setup-panel" hidden aria-labelledby="setup-title"><h2 id="setup-title">Accès à la gestion</h2><p>Ouvrez cette page depuis l’adresse de gestion du serveur pour vous connecter. L’adresse du site vitrine ne donne pas accès à vos données privées.</p></section>
+      <section class="panel" id="login-panel" hidden aria-labelledby="login-title"><h2 id="login-title">Connexion</h2><form id="login-form"><label for="username">Nom de compte</label><input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="32" required><label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Se connecter <span aria-hidden="true">↗</span></button></form></section>
       <section class="panel" id="shift-panel" hidden aria-labelledby="shift-title"><div class="panel-head"><div><p class="eyebrow" id="member-name">Mon profil</p><h2 id="shift-title">Mon service</h2></div><button type="button" id="logout" class="quiet">Se déconnecter</button></div><div class="clock" id="clock">00:00:00</div><p id="shift-state">Aucun service en cours.</p><button type="button" id="shift-action">Prendre mon service <span aria-hidden="true">↗</span></button><h3>Mes derniers services</h3><div id="history" class="history"></div></section>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </main>
