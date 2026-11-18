@@ -76,7 +76,7 @@ p { text-wrap: pretty; }
 
 .gateway { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; margin-top: 20px; padding-inline: 20px; }
 .gateway-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 170px; overflow: hidden; padding: 22px 12px 13px; border: 1px solid #826b5e; background: #0d0908; color: #f1e7dd; text-align: center; box-shadow: inset 0 0 0 4px rgba(7,4,4,.76), inset 0 0 0 5px rgba(196,159,138,.42), 0 12px 28px rgba(0,0,0,.5); transition: transform .42s cubic-bezier(.2, .8, .2, 1), border-color .42s ease, box-shadow .42s ease; }
-.gateway-image { position: absolute; inset: 0; background-image: linear-gradient(180deg, rgba(10, 6, 6, .08), rgba(6, 4, 4, .72) 65%, rgba(3,2,2,.92)), var(--gateway-art, url("assets/gateway-art.png")); background-repeat: no-repeat; background-size: cover, 200% auto; background-position: center, var(--card-position, 0 14%); transform: scale(1); transition: transform .9s cubic-bezier(.22, .65, .25, 1); }
+.gateway-image { position: absolute; inset: 0; background-image: linear-gradient(180deg, rgba(10, 6, 6, .08), rgba(6, 4, 4, .72) 65%, rgba(3,2,2,.92)), var(--gateway-art, url("assets/gateway-art.png")); background-repeat: no-repeat; background-size: cover, 200% auto; background-position: center, var(--card-position, 0 14%); transform: scale(1); transition: transform 1.5s cubic-bezier(.22, .65, .25, 1); }
 .gateway-frame { position: absolute; z-index: 1; inset: 5px; border: 1px solid rgba(196,159,138,.42); pointer-events: none; }
 .gateway-card::before, .gateway-card::after { content: "❧"; position: absolute; z-index: 2; top: 1px; color: #c5ad9e; font: 24px/1 var(--editorial); text-shadow: 0 1px #000; }
 .gateway-card::before { left: 7px; transform: rotate(-45deg); }
@@ -99,7 +99,7 @@ p { text-wrap: pretty; }
 .hero-end::after { transform: rotate(180deg); }
 .hero-end span { margin-inline: 10px; }
 @media (hover: hover) and (pointer: fine) {
-  .gateway-card, .style-panel, .work-image { transition: transform .9s cubic-bezier(.22,.65,.25,1), opacity .7s ease, border-color .7s ease, box-shadow .9s ease; }
+  .gateway-card, .style-panel, .work-image { transition: transform 1.5s cubic-bezier(.22,.65,.25,1), opacity .7s ease, border-color .7s ease, box-shadow .9s ease; }
   .gateway:hover .gateway-card:not(:hover), .styles-grid:hover .style-panel:not(:hover), .work-gallery:hover .work-image:not(:hover) { opacity: .84; }
   .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { position: relative; z-index: 4; transform: translateY(-2px) scale(1.008); border-color: #d3b2a3; box-shadow: 0 20px 40px rgba(0,0,0,.58), 0 0 0 1px rgba(211,178,163,.42); }
   .gateway .gateway-card:hover .gateway-image { transform: scale(1.018); }
@@ -124,7 +124,7 @@ p { text-wrap: pretty; }
 .styles-heading > p:not(.section-label) { max-width: 64ch; margin-inline: auto; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .styles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
 .style-panel { min-width: 0; overflow: hidden; border: 1px solid rgba(177,139,122,.45); background: #120d0c; transition: border-color .3s ease; }
-.style-panel-art { min-height: clamp(200px, 15vw, 230px); background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), var(--gateway-art, url("assets/gateway-art.png")); background-size: cover, 200% auto; background-repeat: no-repeat; transition: transform .9s cubic-bezier(.22,.65,.25,1), filter .7s ease; }
+.style-panel-art { min-height: clamp(200px, 15vw, 230px); background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), var(--gateway-art, url("assets/gateway-art.png")); background-size: cover, 200% auto; background-repeat: no-repeat; transition: transform 1.5s cubic-bezier(.22,.65,.25,1), filter .7s ease; }
 .style-panel:hover { border-color: rgba(210,169,148,.7); }
 .style-panel:hover .style-panel-art { transform: scale(1.055); filter: brightness(1.18); }
 .style-art-personal { background-image: linear-gradient(0deg, rgba(6,3,3,.34), transparent 40%), url("assets/biker-club-sketch.webp"); background-size: cover, cover; background-position: center; }
