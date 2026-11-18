@@ -3,7 +3,8 @@
 	auto_https off
 }
 
-http://127.0.0.1:8083 {
+:8083 {
+	bind 127.0.0.1
 	handle_path /bloodline-api/* {
 		reverse_proxy 127.0.0.1:8082
 	}
