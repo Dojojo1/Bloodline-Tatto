@@ -85,18 +85,28 @@ function labelFor(element) {
   return text ? `${type} · ${text}` : `${type} · ${element.className || element.id || 'élément'}`;
 }
 
+function hexFromColor(value, fallback) {
+  const match = value.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  return match ? `#${[match[1], match[2], match[3]].map((part) => Number(part).toString(16).padStart(2, '0')).join('')}` : fallback;
+}
+
 function fillInspector() {
   if (!selected) return;
   const item = settings[mode][selected.dataset.designId] || {};
   const isSection = selected.matches('main > section');
   const isProjectVisual = selected.classList.contains('project-visual');
-  selectedName.textContent = labelFor(selected);
+  const section = selected.closest('main > section');
+  selectedName.textContent = isSection ? `Fond de « ${SECTIONS.find(([id]) => id === selected.id)?.[1] || selected.id} »` : labelFor(selected);
   fields.hidden = false;
+  const backgroundButton = document.querySelector('#select-section-background');
+  backgroundButton.hidden = !section || isSection;
   fields.querySelectorAll('[data-prop]').forEach((input) => {
     const key = input.dataset.prop;
     input.disabled = !isSection && ['paddingTop', 'paddingBottom'].includes(key);
-    input.value = item[key] ?? (input.type === 'color' ? key === 'color' ? '#eee2d4' : '#110b0a' : '');
+    input.value = item[key] ?? (input.type === 'color'
+      ? hexFromColor(getComputedStyle(selected)[key], key === 'color' ? '#eee2d4' : '#110b0a') : '');
   });
+  document.querySelector('#hide-background-image').checked = item.hideBackgroundImage === true;
   document.querySelector('#dimension-hint').textContent = isSection
     ? 'X, Y et largeur règlent le contenu. La hauteur est un minimum : le fond suit toujours les éléments et garde toute la largeur de l’écran.'
     : isProjectVisual ? 'Carré par défaut. Entre une hauteur pour choisir une autre forme ; efface-la pour retrouver le carré.'
@@ -118,6 +128,7 @@ function selectElement(element) {
 function updateValue(key, value) {
   const item = itemForSelected();
   if (!item) return;
+  if (key === 'image' && value) { delete item.hideBackgroundImage; document.querySelector('#hide-background-image').checked = false; }
   if (key === 'text') item.text = String(value);
   else if (value === '' || value == null) delete item[key];
   else item[key] = value;
@@ -283,17 +294,25 @@ async function uploadImage(file) {
 }
 
 document.querySelector('#section-list').replaceChildren(...SECTIONS.map(([id, label]) => {
+  const row = document.createElement('div');
+  row.className = 'section-entry';
   const button = document.createElement('button');
   button.type = 'button'; button.textContent = label;
-  button.addEventListener('click', () => {
+  const chooseSection = () => {
     const section = frame.contentDocument?.getElementById(id);
     if (!section) return;
     const scale = paper.clientWidth / previewWidth;
     stage.scrollTop = Math.max(0, section.getBoundingClientRect().top * scale - 20);
-    document.querySelectorAll('#section-list button').forEach((other) => other.classList.toggle('is-active', other === button));
+    document.querySelectorAll('#section-list .section-entry').forEach((other) => other.classList.toggle('is-active', other === row));
     selectElement(section); outline.hidden = false;
-  });
-  return button;
+  };
+  button.addEventListener('click', chooseSection);
+  const background = document.createElement('button');
+  background.type = 'button'; background.className = 'background-pick'; background.textContent = 'Fond';
+  background.setAttribute('aria-label', `Modifier le fond de ${label}`);
+  background.addEventListener('click', chooseSection);
+  row.append(button, background);
+  return row;
 }));
 
 frame.addEventListener('load', installSelection);
@@ -315,6 +334,23 @@ document.querySelector('#preview-width').addEventListener('change', (event) => {
 });
 document.querySelectorAll('[data-prop]').forEach((input) => input.addEventListener('input', () => updateValue(input.dataset.prop, input.type === 'number' ? input.value === '' ? '' : Number(input.value) : input.value)));
 document.querySelector('#text-value').addEventListener('input', (event) => updateValue('text', event.target.value));
+document.querySelector('#select-section-background').addEventListener('click', () => {
+  const section = selected?.closest('main > section');
+  if (section) { selectElement(section); outline.hidden = false; }
+});
+document.querySelector('#hide-background-image').addEventListener('change', (event) => {
+  const item = itemForSelected();
+  if (!item) return;
+  if (event.target.checked) { item.hideBackgroundImage = true; selected.style.backgroundImage = 'none'; }
+  else { delete item.hideBackgroundImage; selected.style.backgroundImage = ''; if (item.image) frame.contentWindow.BLOODLINE_DESIGN.applyOne(selected, item); }
+  saveDraft();
+  status('Fond modifié dans le brouillon. Publie pour l’afficher sur le site.');
+});
+document.querySelector('#image-library').addEventListener('change', (event) => {
+  if (!event.target.value || !selected) return;
+  updateValue('image', event.target.value);
+  document.querySelector('[data-prop="image"]').value = event.target.value;
+});
 document.querySelector('#reset-element').addEventListener('click', () => { if (!selected) return; delete settings[mode][selected.dataset.designId]; saveDraft(); refreshPreview(); status('Élément réinitialisé dans le brouillon.'); });
 document.querySelector('#save-draft').addEventListener('click', () => { saveDraft(); status('Brouillon gardé sur cet appareil.'); });
 document.querySelector('#restore-draft').addEventListener('click', () => { try { settings = JSON.parse(localStorage.getItem(DRAFT_KEY)); normalizeSettings(); baseRevision = settings.revision || 0; saveDraft(); refreshPreview(); status('Brouillon restauré.'); } catch { status('Brouillon illisible.', true); } });

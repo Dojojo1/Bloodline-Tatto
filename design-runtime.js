@@ -49,8 +49,9 @@
     if (safe.fontSize != null) element.style.fontSize = `${Math.max(8, safe.fontSize)}px`;
     if (safe.opacity != null) element.style.opacity = String(safe.opacity);
     if (safe.backgroundColor) element.style.backgroundColor = safe.backgroundColor;
+    if (values.hideBackgroundImage === true) element.style.backgroundImage = 'none';
     if (safe.color) element.style.color = safe.color;
-    if (safe.image) {
+    if (safe.image && values.hideBackgroundImage !== true) {
       if (element instanceof HTMLImageElement) element.src = safe.image;
       else element.style.backgroundImage = isProjectVisual
         ? `linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1)), url("${safe.image}")`

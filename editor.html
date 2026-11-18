@@ -6,8 +6,8 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Atelier visuel — Bloodline Tattoo</title>
     <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-    <link rel="stylesheet" href="editor.css?v=20261117-3">
-    <script src="editor.js?v=20261118-3" defer></script>
+    <link rel="stylesheet" href="editor.css?v=20261118-1">
+    <script src="editor.js?v=20261118-5" defer></script>
   </head>
   <body>
     <header class="editor-header">
@@ -23,7 +23,7 @@
 
     <main class="editor-layout">
       <aside class="editor-navigation" aria-label="Zones du site">
-        <div class="panel-heading"><h2>Zones du site</h2><p>Choisis une zone, puis clique sur un élément.</p></div>
+        <div class="panel-heading"><h2>Zones du site</h2><p>Choisis une zone ou son fond, puis clique sur un élément.</p></div>
         <nav id="section-list" aria-label="Sections de la vitrine"></nav>
         <div class="editor-help"><strong>Déplacer</strong><p>Clique sur un élément dans l’aperçu, puis utilise la poignée rouge ou les chiffres à droite.</p></div>
       </aside>
@@ -45,6 +45,7 @@
       <aside class="editor-inspector" aria-label="Réglages de l’élément">
         <div class="panel-heading"><h2>Réglages</h2><p id="selected-name">Clique sur un élément dans l’aperçu.</p></div>
         <div id="inspector-fields" hidden>
+          <button type="button" id="select-section-background">Modifier le fond de cette section</button>
           <fieldset><legend>Position et dimensions</legend>
             <div class="input-grid">
               <label>Décalage X <input type="number" data-prop="x" step="1"></label>
@@ -68,7 +69,9 @@
           </fieldset>
           <fieldset><legend>Fond et image</legend>
             <label>Couleur du fond <input type="color" data-prop="backgroundColor" value="#110b0a"></label>
+            <label class="check-row"><input type="checkbox" id="hide-background-image"> Masquer l’image de fond</label>
             <label>Chemin de l’image <input type="text" data-prop="image" placeholder="assets/mon-image.png"></label>
+            <label>Images déjà présentes <select id="image-library"><option value="">Choisir une image du site</option><option value="assets/hero-art.png">Décor du salon</option><option value="assets/gateway-art.png">Planche loup et salon</option><option value="assets/biker-club-sketch.webp">Croquis club motard</option></select></label>
             <label>Affichage <select data-prop="fit"><option value="">Valeur d’origine</option><option value="cover">Remplir le cadre</option><option value="contain">Voir l’image entière</option><option value="auto">Taille d’origine</option></select></label>
             <div class="input-grid">
               <label>Image X (%) <input type="number" data-prop="backgroundX" min="0" max="100" step="1"></label>
@@ -76,7 +79,7 @@
             </div>
             <label>Zoom de l’image (%) <input type="number" data-prop="backgroundScale" min="20" max="400" step="5"></label>
             <label class="upload-button">Choisir une image <input type="file" id="upload-image" accept="image/png,image/jpeg,image/webp,image/avif"></label>
-            <p class="field-note">L’image choisie est publiée avec les réglages. Une connexion GitHub est nécessaire.</p>
+            <p class="field-note">Les images déjà présentes peuvent être utilisées sans clé. Pour ajouter un nouveau fichier, une connexion GitHub est nécessaire.</p>
           </fieldset>
           <button type="button" id="reset-element" class="reset-button">Réinitialiser cet élément</button>
         </div>
