@@ -104,7 +104,7 @@ p { text-wrap: pretty; }
   .gateway .gateway-card:hover, .styles-grid .style-panel:hover, .work-gallery .work-image:hover { position: relative; z-index: 4; transform: translateY(-4px) scale(1.012); border-color: #d3b2a3; box-shadow: 0 20px 40px rgba(0,0,0,.58), 0 0 0 1px rgba(211,178,163,.42); }
   .gateway .gateway-card:hover .gateway-image { transform: scale(1.025); }
   .styles-grid .style-panel:hover .style-panel-art { transform: scale(1.025); filter: brightness(1.08); }
-  .gateway-frame::after, .style-panel-art::after, .work-image::after { content: ""; position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,245,233,.22), rgba(255,245,233,.035) 38%, rgba(255,245,233,.01) 72%); backdrop-filter: blur(1.5px); transition: opacity .6s ease; }
+  .gateway-frame::after, .style-panel-art::after, .work-image::after { content: ""; position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,245,233,.22), rgba(255,245,233,.035) 38%, rgba(255,245,233,.01) 72%); transition: opacity .6s ease; }
   .style-panel-art { position: relative; }
   .gateway-card:hover .gateway-frame::after, .style-panel:hover .style-panel-art::after, .work-image:hover::after { opacity: 1; }
   .work-image span { z-index: 2; }
