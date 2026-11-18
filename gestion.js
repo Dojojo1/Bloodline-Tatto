@@ -1,14 +1,26 @@
 (() => {
   const $ = (selector) => document.querySelector(selector);
+  const apiOrigin = 'https://dojojoserv.tail95e116.ts.net';
+  const tokenKey = 'bloodline-management-session';
   const show = (id) => { for (const panel of ['setup-panel', 'login-panel', 'activate-panel', 'shift-panel']) $(`#${panel}`).hidden = panel !== id; };
   const status = (message) => { $('#status').textContent = message; };
+  let sessionToken = '';
+  try { sessionToken = sessionStorage.getItem(tokenKey) || ''; } catch { /* Private browsing may disable storage. */ }
+  const setSessionToken = (token) => {
+    sessionToken = token;
+    try {
+      if (token) sessionStorage.setItem(tokenKey, token);
+      else sessionStorage.removeItem(tokenKey);
+    } catch { /* Keep the session in memory until this page closes. */ }
+  };
   let member = null;
   let openSession = null;
   let tick = null;
   let pendingActivation = null;
 
   async function request(path, options = {}) {
-    const response = await fetch(`/api${path}`, { credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, ...options });
+    const headers = { 'Content-Type': 'application/json', ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}), ...options.headers };
+    const response = await fetch(`${apiOrigin}/api${path}`, { ...options, credentials: 'omit', cache: 'no-store', headers });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       const error = new Error(data.detail || 'La requête a échoué.');
@@ -42,6 +54,7 @@
       if (!history.childElementCount) history.textContent = 'Aucun service terminé.';
       show('shift-panel'); clock(); clearInterval(tick); tick = setInterval(clock, 1000);
     } catch (error) {
+      if (error.status === 401) setSessionToken('');
       member = null; openSession = null; clearInterval(tick); show('login-panel');
       if (error.status === 401) status('');
       else status('Impossible de charger votre profil. Réessayez.');
@@ -59,7 +72,7 @@
       if (result.setup_required) {
         pendingActivation = { username, code }; show('activate-panel'); status('Choisissez votre mot de passe pour terminer la première connexion.');
         $('#activate-password').focus();
-      } else { status(''); await refresh(); }
+      } else { setSessionToken(result.token); status(''); await refresh(); }
     } catch (error) { status(error.message || 'Connexion impossible. Vérifiez vos identifiants et réessayez.'); }
     button.disabled = false;
   });
@@ -70,7 +83,8 @@
     if (next !== $('#activate-confirm').value) { status('Les deux mots de passe sont différents.'); return; }
     const button = event.currentTarget.querySelector('button'); button.disabled = true; status('Création du mot de passe…');
     try {
-      await request('/activate', { method: 'POST', body: JSON.stringify({ ...pendingActivation, new_password: next }) });
+      const result = await request('/activate', { method: 'POST', body: JSON.stringify({ ...pendingActivation, new_password: next }) });
+      setSessionToken(result.token);
       pendingActivation = null; event.currentTarget.reset(); status('Mot de passe créé.'); await refresh();
     } catch (error) { status(error.message || 'Impossible de créer le mot de passe. Réessayez.'); }
     button.disabled = false;
@@ -80,7 +94,7 @@
   });
   $('#logout').addEventListener('click', async () => {
     try { await request('/logout', { method: 'POST' }); } catch { /* Le serveur invalide les sessions expirées. */ }
-    clearInterval(tick); member = null; openSession = null; status('Vous êtes déconnecté.'); show('login-panel');
+    setSessionToken(''); clearInterval(tick); member = null; openSession = null; status('Vous êtes déconnecté.'); show('login-panel');
   });
   $('#shift-action').addEventListener('click', async () => {
     if (!member) return;
@@ -101,14 +115,16 @@
     const button = event.currentTarget.querySelector('button'); button.disabled = true; status('Enregistrement du nouveau mot de passe…');
     try {
       await request('/password', { method: 'POST', body: JSON.stringify({ current_password: current, new_password: next }) });
+      setSessionToken('');
       event.currentTarget.reset(); clearInterval(tick); member = null; openSession = null;
       show('login-panel'); status('Mot de passe modifié. Reconnectez-vous avec le nouveau mot de passe.');
     } catch (error) { status(error.message || 'Le mot de passe n’a pas été modifié. Réessayez.'); }
     button.disabled = false;
   });
 
-  fetch('/api/health', { credentials: 'same-origin' }).then((response) => {
+  fetch(`${apiOrigin}/api/health`, { credentials: 'omit', cache: 'no-store' }).then((response) => {
     if (!response.ok) throw new Error();
-    return refresh();
-  }).catch(() => { show('setup-panel'); status('Cette page n’est pas reliée au serveur de gestion.'); });
+    if (sessionToken) return refresh();
+    show('login-panel');
+  }).catch(() => { show('setup-panel'); status('Le serveur de gestion ne répond pas. Actualisez la page pour réessayer.'); });
 })();

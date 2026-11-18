@@ -21,20 +21,25 @@ ORIGIN = "http://127.0.0.1:8082"
 def test_private_pointage_and_server_timestamps():
     with TemporaryDirectory() as folder:
         path = Path(folder) / "bloodline.sqlite3"
-        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        app = create_app(path, public_origin=ORIGIN)
         create_member(path, "owner", "Propriétaire", "secret-long-1234", "superadmin")
         create_member(path, "friend", "Co-propriétaire", "secret-long-5678", "superadmin")
 
         with TestClient(app, base_url=ORIGIN) as owner, TestClient(app, base_url=ORIGIN) as friend:
             assert owner.get("/api/me").status_code == 401
             assert owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": "https://evil.example"}).status_code == 403
-            assert owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN}).status_code == 200
+            login = owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN})
+            assert login.status_code == 200 and "set-cookie" not in login.headers
+            assert owner.get("/api/me").status_code == 401
+            owner.headers["Authorization"] = f"Bearer {login.json()['token']}"
             assert owner.post("/api/shifts/start", headers={"Origin": ORIGIN}).status_code == 200
             assert owner.post("/api/shifts/start", headers={"Origin": ORIGIN}).status_code == 409
             owner_data = owner.get("/api/me").json()
             assert len(owner_data["sessions"]) == 1
             assert owner_data["sessions"][0]["ended_at"] is None
-            assert friend.post("/api/login", json={"username": "friend", "password": "secret-long-5678"}, headers={"Origin": ORIGIN}).status_code == 200
+            friend_login = friend.post("/api/login", json={"username": "friend", "password": "secret-long-5678"}, headers={"Origin": ORIGIN})
+            assert friend_login.status_code == 200
+            friend.headers["Authorization"] = f"Bearer {friend_login.json()['token']}"
             assert friend.get("/api/me").json()["sessions"] == []
             assert owner.post("/api/shifts/end", headers={"Origin": "https://evil.example"}).status_code == 403
             assert owner.post("/api/shifts/end", headers={"Origin": ORIGIN}).status_code == 200
@@ -47,7 +52,7 @@ def test_private_pointage_and_server_timestamps():
 def test_login_is_throttled_after_failed_attempts():
     with TemporaryDirectory() as folder:
         path = Path(folder) / "bloodline.sqlite3"
-        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        app = create_app(path, public_origin=ORIGIN)
         create_member(path, "owner", "Propriétaire", "secret-long-1234", "superadmin")
         with TestClient(app, base_url=ORIGIN) as client:
             for _ in range(5):
@@ -76,7 +81,7 @@ def test_existing_database_migrates_account_identifier():
             legacy.commit()
         init_database(path)
         create_member(path, "owner", "Propriétaire", "secret-long-1234", "superadmin")
-        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        app = create_app(path, public_origin=ORIGIN)
         with TestClient(app, base_url=ORIGIN) as client:
             assert client.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN}).status_code == 200
 
@@ -89,14 +94,16 @@ def test_initial_admins_create_password_on_first_login():
         if os.name != "nt":
             assert credentials.stat().st_mode & 0o777 == 0o600
         codes = dict(line.strip().split(": ", 1) for line in credentials.read_text(encoding="utf-8").splitlines())
-        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        app = create_app(path, public_origin=ORIGIN)
         with TestClient(app, base_url=ORIGIN) as client:
             first = client.post("/api/login", json={"username": "Erwan", "password": codes["Erwan"]}, headers={"Origin": ORIGIN})
             assert first.status_code == 200 and first.json()["setup_required"]
             assert client.get("/api/me").status_code == 401
             assert client.post("/api/activate", json={"username": "Erwan", "code": "wrong", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 401
             assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": "https://evil.example"}).status_code == 403
-            assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 200
+            activation = client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "another-long-secret"}, headers={"Origin": ORIGIN})
+            assert activation.status_code == 200
+            client.headers["Authorization"] = f"Bearer {activation.json()['token']}"
             assert client.get("/api/me").status_code == 200
             assert client.post("/api/activate", json={"username": "Erwan", "code": codes["Erwan"], "new_password": "different-long-secret"}, headers={"Origin": ORIGIN}).status_code == 401
             assert client.post("/api/password", json={"current_password": "incorrect", "new_password": "another-long-secret"}, headers={"Origin": ORIGIN}).status_code == 400
@@ -119,6 +126,17 @@ def test_existing_admins_convert_initial_passwords_to_activation_codes():
             db.commit()
         prepare(path, old, new)
         assert not old.exists() and new.exists()
-        app = create_app(path, public_origin=ORIGIN, secure_cookie=False)
+        app = create_app(path, public_origin=ORIGIN)
         with TestClient(app, base_url=ORIGIN) as client:
             assert client.post("/api/login", json={"username": "Erwan", "password": codes["Erwan"]}, headers={"Origin": ORIGIN}).json()["setup_required"]
+
+
+def test_cors_allows_only_the_management_origin():
+    with TemporaryDirectory() as folder:
+        app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN)
+        with TestClient(app, base_url="https://api.example.test") as client:
+            headers = {"Origin": ORIGIN, "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "authorization,content-type"}
+            response = client.options("/api/shifts/start", headers=headers)
+            assert response.status_code == 200
+            assert response.headers["access-control-allow-origin"] == ORIGIN
+            assert client.options("/api/shifts/start", headers={**headers, "Origin": "https://evil.example"}).status_code == 400
