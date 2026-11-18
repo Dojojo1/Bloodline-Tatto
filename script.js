@@ -68,7 +68,7 @@ function applySiteContent(content) {
   setAssetVariable('--hero-art', content.assets.hero);
   setAssetVariable('--gateway-art', content.assets.cards);
   setAssetVariable('--salon-art', content.assets.salon);
-  setAssetVariable('--project-art', content.assets.artists);
+  setAssetVariable('--project-art', content.assets.project);
 
   const navigation = document.querySelector('.primary-nav');
   navigation.replaceChildren(...content.navigation.filter((item) => document.getElementById(item.target)).map((item, index) => {
@@ -153,6 +153,7 @@ function applySiteContent(content) {
     if (id === 'sur-mesure') {
       const paragraphs = root.querySelectorAll('.section-copy > p:not(.section-label)');
       section.paragraphs.forEach((paragraph, index) => { if (paragraphs[index]) paragraphs[index].textContent = paragraph; });
+      if (section.imageAlt) root.querySelector('.project-visual')?.setAttribute('aria-label', section.imageAlt);
     } else {
       setText(`#${id} .section-copy > p:not(.section-label), #${id} .work-heading > p:not(.section-label)`, section.description);
       setAction(`#${id} .text-link`, section.action, section.actionTarget);

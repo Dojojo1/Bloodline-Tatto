@@ -10,7 +10,7 @@ L’atelier présente la vitrine dans un aperçu sélectionnable, des tailles d�
 
 Les liens du menu placent les sections sous la barre de navigation fixe. « Sur-mesure » commence avec 20 px d’espace avant son libellé, sans bande vide au-dessus du fond rouge. Le formulaire compact inclut un numéro libre ; l’illustration tient entièrement dans un cadre de ratio 2:1. Un rafraîchissement remet la page en haut de l’accueil.
 
-« Nos artistes » commence juste sous la séparation de section, avec le titre aligné à gauche et sans lien d’action. Une ligne est affichée par profil configuré dans `site-content.js`. La hauteur du fond rouge suit automatiquement le nombre de profils ; chacun possède un emplacement photo, un nom et une phrase modifiables. Les portraits et identités restent à renseigner. L’ancienne illustration de cette section figure désormais dans « Sur-mesure », dans un cadre à côté du formulaire.
+« Nos artistes » commence juste sous la séparation de section, avec le titre aligné à gauche et sans lien d’action. Une ligne est affichée par profil configuré dans `site-content.js`. La hauteur du fond rouge suit automatiquement le nombre de profils ; chacun possède un emplacement photo, un nom et une phrase modifiables. Les portraits et identités restent à renseigner. Le cadre de « Sur-mesure » montre le croquis de loup et de rose tiré de la planche illustrée existante.
 
 ## Système appliqué
 

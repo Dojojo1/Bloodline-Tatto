@@ -26,7 +26,7 @@ window.BLOODLINE_CONTENT = {
     hero: 'assets/hero-art.png',
     cards: 'assets/gateway-art.png',
     salon: 'assets/hero-art.png',
-    artists: 'assets/hero-art.png'
+    project: 'assets/gateway-art.png'
   },
   navigation: [
     { label: 'Accueil', target: 'accueil' },
@@ -78,7 +78,6 @@ window.BLOODLINE_CONTENT = {
       heading: 'Une rencontre avant',
       emphasis: 'la première ligne.',
       description: 'Découvrez les artistes du salon. Leurs photos, noms et présentations seront ajoutés ici.',
-      imageAlt: 'Illustration de l’univers graphique Bloodline Tattoo',
       profiles: [
         { name: 'Prénom Nom', description: '« Chaque idée mérite qu’on prenne le temps de l’écouter. »', image: '' },
         { name: 'Prénom Nom', description: '« Un motif personnel commence par une vraie rencontre. »', image: '' },
@@ -103,6 +102,7 @@ window.BLOODLINE_CONTENT = {
       label: 'Sur-mesure · Pro / entreprise',
       heading: 'Votre tatouage,',
       emphasis: 'votre choix.',
+      imageAlt: 'Croquis de loup et de rose sur papier vieilli',
       paragraphs: [
         'Pour un projet personnel, de groupe ou d’entreprise, vous pouvez choisir la taille, l’emplacement et le motif. Apportez votre propre idée de tatouage ou laissez le tatoueur vous proposer une création unique.',
         'Le parcours sur mesure est le même pour les particuliers et les professionnels. Les détails et les possibilités se discutent avec le tatoueur pendant le rendez-vous.'
