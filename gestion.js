@@ -10,7 +10,11 @@
   async function request(path, options = {}) {
     const response = await fetch(`/api${path}`, { credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, ...options });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.detail || 'La requête a échoué.');
+    if (!response.ok) {
+      const error = new Error(data.detail || 'La requête a échoué.');
+      error.status = response.status;
+      throw error;
+    }
     return data;
   }
   const formatDuration = (seconds) => {
@@ -39,7 +43,8 @@
       show('shift-panel'); clock(); clearInterval(tick); tick = setInterval(clock, 1000);
     } catch (error) {
       member = null; openSession = null; clearInterval(tick); show('login-panel');
-      if (!error.message.includes('session')) status('Impossible de charger votre profil. Réessayez.');
+      if (error.status === 401) status('');
+      else status('Impossible de charger votre profil. Réessayez.');
     }
   }
 
