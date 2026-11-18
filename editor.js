@@ -17,6 +17,7 @@ let settings = { version: 1, desktop: {}, tablet: {}, mobile: {} };
 let baseRevision = 0;
 let mode = 'desktop';
 let previewWidth = DEVICE_WIDTHS.desktop;
+let activeSectionId = 'accueil';
 let selected = null;
 let outline = null;
 let token = '';
@@ -56,8 +57,9 @@ function resizePreview() {
   const doc = frame.contentDocument;
   if (!doc) return;
   const width = previewWidth;
-  const height = Math.max(800, doc.documentElement.scrollHeight);
-  const scale = Math.min(1, Math.max(.25, (stage.clientWidth - 52) / width));
+  const section = doc.getElementById(activeSectionId);
+  const height = Math.max(400, Math.ceil(section?.getBoundingClientRect().height || doc.documentElement.scrollHeight));
+  const scale = Math.min(1, Math.max(.25, (stage.clientWidth - 36) / width));
   frame.style.width = `${width}px`;
   frame.style.height = `${height}px`;
   frame.style.transform = `scale(${scale})`;
@@ -69,7 +71,7 @@ function resizePreview() {
 
 function positionOutline() {
   if (!selected || !outline || !selected.isConnected) return;
-  const target = selected.matches('main > section') ? selected.querySelector(':scope > .wrap') || selected : selected;
+  const target = selected;
   outline.querySelectorAll('button').forEach((button) => { button.hidden = false; });
   const rect = target.getBoundingClientRect();
   const win = frame.contentWindow;
@@ -112,7 +114,7 @@ function fillInspector() {
     : isProjectVisual ? 'Carré par défaut. Entre une hauteur pour choisir une autre forme ; efface-la pour retrouver le carré.'
       : 'Valeurs en pixels. Laisse largeur ou hauteur vide pour reprendre la taille naturelle.';
   const textInput = document.querySelector('#text-value');
-  const leaf = selected.children.length === 0;
+  const leaf = selected.children.length === 0 && selected.matches('p,h1,h2,h3,h4,span,strong,em,a,button,label,small');
   textInput.disabled = !leaf;
   textInput.value = leaf ? item.text ?? selected.textContent : '';
   document.querySelector('#text-hint').textContent = leaf ? 'Le texte change dans cet aperçu et après publication.' : 'Clique sur un texte à l’intérieur de cet élément pour le modifier.';
@@ -121,6 +123,7 @@ function fillInspector() {
 function selectElement(element) {
   if (!element?.dataset.designId) return;
   selected = element;
+  outline.hidden = false;
   fillInspector();
   positionOutline();
 }
@@ -162,7 +165,7 @@ function startDrag(event, kind) {
   event.stopPropagation();
   const handle = event.currentTarget;
   handle.setPointerCapture(event.pointerId);
-  const rect = (selected.matches('main > section') ? selected.querySelector(':scope > .wrap') || selected : selected).getBoundingClientRect();
+  const rect = selected.getBoundingClientRect();
   const item = itemForSelected();
   const start = { x: event.clientX, y: event.clientY, offsetX: safeNumber(item.x), offsetY: safeNumber(item.y), width: rect.width, height: rect.height };
   const move = (pointer) => {
@@ -172,7 +175,7 @@ function startDrag(event, kind) {
       updateValue('x', start.offsetX + dx);
       updateValue('y', start.offsetY + dy);
     } else {
-      updateValue('width', Math.max(20, Math.round(start.width + dx)));
+      if (!selected.matches('main > section')) updateValue('width', Math.max(20, Math.round(start.width + dx)));
       if (!selected.classList.contains('project-visual') || item.height != null) updateValue('height', Math.max(20, Math.round(start.height + dy)));
     }
     fillInspector();
@@ -190,8 +193,11 @@ function installSelection() {
   runtime.assignIds(doc);
   runtime.applyAll(settings, mode, doc);
   const style = doc.createElement('style');
-  style.textContent = '#bloodline-design-outline{position:absolute;z-index:2147483646;border:2px solid #f04b60;box-shadow:0 0 0 1px #090707;pointer-events:none;box-sizing:border-box}#bloodline-design-outline button{position:absolute;z-index:1;width:26px;height:26px;border:1px solid #ffe1df;background:#a52236;color:white;font:600 14px Arial;pointer-events:auto;cursor:move}#bloodline-design-outline button[hidden]{display:none!important}#bloodline-design-outline .move{top:-28px;left:-2px}#bloodline-design-outline .resize{right:-14px;bottom:-14px;cursor:nwse-resize}';
+  style.textContent = '#bloodline-design-outline{position:absolute;z-index:2147483646;border:2px solid #f04b60;box-shadow:0 0 0 1px #090707;pointer-events:none;box-sizing:border-box}#bloodline-design-outline button{position:absolute;z-index:1;width:30px;height:30px;border:1px solid #ffe1df;background:#a52236;color:white;font:600 14px Arial;pointer-events:auto;cursor:move}#bloodline-design-outline button[hidden]{display:none!important}#bloodline-design-outline .move{top:-30px;left:-2px}#bloodline-design-outline .resize{right:-14px;bottom:-14px;cursor:nwse-resize}';
   doc.head.append(style);
+  const isolation = doc.createElement('style');
+  isolation.id = 'bloodline-editor-isolation';
+  doc.head.append(isolation);
   outline = doc.createElement('div');
   outline.id = 'bloodline-design-outline';
   outline.hidden = true;
@@ -210,11 +216,29 @@ function installSelection() {
     if (target) { selectElement(target); outline.hidden = false; }
   }, true);
   selected = null;
-  fields.hidden = true;
-  selectedName.textContent = 'Clique sur un élément dans l’aperçu.';
-  resizePreview();
+  showSection(activeSectionId);
   doc.fonts.ready.then(resizePreview);
-  status('Aperçu prêt. Clique sur le fond ou sur un élément pour le régler.');
+  status('Section prête. Clique sur un élément dans l’aperçu pour le régler.');
+}
+
+function showSection(id) {
+  if (!SECTIONS.some(([sectionId]) => sectionId === id)) return;
+  activeSectionId = id;
+  const doc = frame.contentDocument;
+  const section = doc?.getElementById(id);
+  const isolation = doc?.getElementById('bloodline-editor-isolation');
+  document.querySelector('#active-section-name').textContent = SECTIONS.find(([sectionId]) => sectionId === id)[1];
+  document.querySelectorAll('#section-list .section-entry').forEach((entry) => {
+    const active = entry.dataset.sectionId === id;
+    entry.classList.toggle('is-active', active);
+    entry.querySelector('button').setAttribute('aria-current', active ? 'true' : 'false');
+  });
+  if (!section || !isolation || !outline) return;
+  isolation.textContent = `.site-header,.site-footer,main > section:not(#${id}){display:none!important}html{scroll-behavior:auto!important}body{min-height:0!important}*,*::before,*::after{transition:none!important;animation:none!important}`;
+  frame.contentWindow.scrollTo(0, 0);
+  stage.scrollTo(0, 0);
+  selectElement(section);
+  resizePreview();
 }
 
 function refreshPreview() {
@@ -295,28 +319,22 @@ async function uploadImage(file) {
 
 document.querySelector('#section-list').replaceChildren(...SECTIONS.map(([id, label]) => {
   const row = document.createElement('div');
-  row.className = 'section-entry';
+  row.className = 'section-entry'; row.dataset.sectionId = id;
   const button = document.createElement('button');
   button.type = 'button'; button.textContent = label;
-  const chooseSection = () => {
-    const section = frame.contentDocument?.getElementById(id);
-    if (!section) return;
-    const scale = paper.clientWidth / previewWidth;
-    stage.scrollTop = Math.max(0, section.getBoundingClientRect().top * scale - 20);
-    document.querySelectorAll('#section-list .section-entry').forEach((other) => other.classList.toggle('is-active', other === row));
-    selectElement(section); outline.hidden = false;
-  };
-  button.addEventListener('click', chooseSection);
-  const background = document.createElement('button');
-  background.type = 'button'; background.className = 'background-pick'; background.textContent = 'Fond';
-  background.setAttribute('aria-label', `Modifier le fond de ${label}`);
-  background.addEventListener('click', chooseSection);
-  row.append(button, background);
+  button.addEventListener('click', () => showSection(id));
+  row.append(button);
   return row;
 }));
 
 frame.addEventListener('load', installSelection);
 window.addEventListener('resize', resizePreview);
+document.querySelector('#toggle-inspector').addEventListener('click', (event) => {
+  const expanded = document.querySelector('.editor-layout').classList.toggle('is-preview-expanded');
+  event.currentTarget.textContent = expanded ? 'Afficher les réglages' : 'Agrandir l’aperçu';
+  event.currentTarget.setAttribute('aria-pressed', String(expanded));
+  requestAnimationFrame(resizePreview);
+});
 document.querySelector('#refresh-preview').addEventListener('click', () => { refreshPreview(); status('Nouvelle version de la vitrine chargée dans l’aperçu.'); });
 document.querySelectorAll('[data-device]').forEach((button) => button.addEventListener('click', () => {
   mode = button.dataset.device;

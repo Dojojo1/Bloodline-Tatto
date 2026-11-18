@@ -6,8 +6,8 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Atelier visuel — Bloodline Tattoo</title>
     <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-    <link rel="stylesheet" href="editor.css?v=20261118-1">
-    <script src="editor.js?v=20261118-5" defer></script>
+    <link rel="stylesheet" href="editor.css?v=20261118-2">
+    <script src="editor.js?v=20261118-6" defer></script>
   </head>
   <body>
     <header class="editor-header">
@@ -23,19 +23,20 @@
 
     <main class="editor-layout">
       <aside class="editor-navigation" aria-label="Zones du site">
-        <div class="panel-heading"><h2>Zones du site</h2><p>Choisis une zone ou son fond, puis clique sur un élément.</p></div>
+        <div class="panel-heading"><h2>Sections</h2><p>Une section à la fois</p></div>
         <nav id="section-list" aria-label="Sections de la vitrine"></nav>
-        <div class="editor-help"><strong>Déplacer</strong><p>Clique sur un élément dans l’aperçu, puis utilise la poignée rouge ou les chiffres à droite.</p></div>
       </aside>
 
       <section class="editor-workspace" aria-label="Aperçu modifiable">
         <div class="editor-toolbar">
+          <div class="workspace-title"><span>Aperçu de</span><strong id="active-section-name">Accueil</strong></div>
           <div class="device-switch" role="group" aria-label="Taille de l’écran">
             <button type="button" data-device="desktop" aria-pressed="true">Ordinateur</button>
             <button type="button" data-device="tablet" aria-pressed="false">Tablette</button>
             <button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
           </div>
           <button type="button" id="refresh-preview">Actualiser l’aperçu</button>
+          <button type="button" id="toggle-inspector" aria-pressed="false">Agrandir l’aperçu</button>
           <label class="preview-width-control">Largeur de l’écran <input id="preview-width" type="number" min="320" max="2560" step="10" value="1100"> px</label>
           <span id="preview-size">1100 px</span>
         </div>
