@@ -1,6 +1,6 @@
 # Plan de reprise — gestion Bloodline Tattoo
 
-État au 19 novembre 2026 : le site vitrine et la page de gestion sont publiés sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie encore la demande sur l'appareil ; l'envoi public attend les coordonnées du responsable à afficher dans l'information sur les données. La gestion privée présente le tableau de bord, les fiches de demandes, notes, statuts et rendez-vous confirmés, et le pointage personnel. L'API et la base SQLite privée sont dans `/home/dojojo/Documents/bloodline` sur le serveur Linux, avec sauvegarde quotidienne ; elles passent par l'adresse ngrok du vignoble sous le chemin distinct `/bloodline-api/`, via un routeur local sur `127.0.0.1:8083`. Les comptes Erwan et Lucia ont été créés ; chacun doit activer son compte avec son code privé et choisir son mot de passe. Aucune donnée de démonstration n'est stockée en production.
+État au 19 novembre 2026 : le site vitrine et la page de gestion sont publiés sur GitHub Pages. `editor.html` est un atelier de mise en page. Le formulaire sur mesure copie encore la demande sur l'appareil ; l'envoi public attend les coordonnées du responsable à afficher dans l'information sur les données. La gestion privée présente le tableau de bord, les fiches de demandes et de rendez-vous, le pointage personnel, les heures d'équipe mensuelles et la gestion des accès. L'API et la base SQLite privée sont dans `/home/dojojo/Documents/bloodline` sur le serveur Linux, avec sauvegarde quotidienne ; elles passent par l'adresse ngrok du vignoble sous le chemin distinct `/bloodline-api/`, via un routeur local sur `127.0.0.1:8083`. Les comptes Erwan et Lucia ont été créés ; un des deux attend encore son activation avec son code privé et le choix de son mot de passe. Aucune donnée de démonstration n'est stockée en production.
 
 ## Décisions déjà prises avec le propriétaire
 
@@ -17,7 +17,7 @@
 
 GitHub Pages héberge la vitrine et l'interface de gestion. Le **serveur Linux existant** héberge uniquement l'API et les données privées, dans un service FastAPI indépendant (port local 8082) avec sa propre base SQLite. L'adresse ngrok existante arrive sur un routeur Caddy local (port 8083) : seul le chemin `/bloodline-api/*` va vers Bloodline ; tous les autres chemins vont vers le vignoble (port 8081). L'API Bloodline autorise seulement l'origine GitHub Pages du propriétaire ; chaque requête privée porte un jeton de session dans l'en-tête Authorization, conservé dans le stockage de l'onglet et invalidé à la déconnexion. Ne pas partager les fichiers, secrets ou comptes du vignoble. Les opérations sensibles passent par l'API Linux.
 
-Ne jamais mettre un mot de passe initial, un « code admin suprême », une clé de service ou le webhook Discord dans GitHub Pages, `site-content.js`, `design-settings.json` ou le JavaScript client. Le premier module crée les deux comptes d'administration avec la commande privée `scripts/create_admin.py`, qui lit le mot de passe sans l'afficher. Une invitation et une réinitialisation de mot de passe restent à construire avant que la propriétaire gère seule tous les accès. Prévoir une authentification à deux facteurs pour les administrateurs et protéger les deux comptes suprêmes contre la suppression ou la perte simultanée d'accès.
+Ne jamais mettre un mot de passe initial, un « code admin suprême », une clé de service ou le webhook Discord dans GitHub Pages, `site-content.js`, `design-settings.json` ou le JavaScript client. Les deux comptes suprêmes ont été créés côté serveur avec `scripts/bootstrap_admins.py` ; les codes privés à usage unique sont remis hors du dépôt. La gestion permet d'inviter ou de réinitialiser un compte d'équipe, avec un nouveau code affiché une seule fois. Prévoir une authentification à deux facteurs pour les administrateurs et une procédure privée de récupération si les deux comptes suprêmes perdent l'accès.
 
 ## Données à prévoir
 
@@ -33,7 +33,7 @@ Définir les prix et montants en centimes, avec devise explicite. Prévoir expor
 
 ## Parcours à construire dans cet ordre
 
-1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. La connexion, le pointage, l'accès HTTPS, les invitations, les rôles renommables, la désactivation et le journal des changements d'accès sont installés. Les comptes suprêmes doivent être activés par leurs titulaires ; l'authentification à deux facteurs reste à construire.
+1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. La connexion, le pointage, l'accès HTTPS, les invitations, les rôles renommables, la désactivation et le journal des changements d'accès sont installés. Un compte suprême attend encore son activation ; l'authentification à deux facteurs reste à construire.
 2. **Demandes et rendez-vous** : le stockage privé, les fiches, notes, statuts et confirmations sont en place. Publier l'envoi réel du formulaire après ajout du nom du responsable et d'un contact pour l'information sur les données personnelles. La validation, le piège anti-spam et les limites d'envoi sont codés et testés. Le client propose ses disponibilités sans choisir de créneau.
 3. **Gestion éditoriale** : artistes, vitrine, galerie, page « Nos styles » séparée, tatouages photo/nom/prix, prestations et services ; aperçu avant publication. Les changements doivent se voir sur GitHub Pages sans nouveau commit manuel.
 4. **Pointage** : dans chaque profil connecté, boutons « Prendre mon service » et « Terminer mon service », compteur de la session en cours et historique personnel. La vue d'équipe par mois avec totaux et export CSV est installée pour les deux administrateurs suprêmes. Les totaux journaliers et hebdomadaires ainsi que les corrections manuelles avec motif et historique restent à construire. Horodatage par le serveur, fuseau Europe/Brussels à l'affichage.
@@ -44,10 +44,10 @@ Une étape est finie seulement si la vitrine en ligne, la gestion, les permissio
 
 ## Points à trancher avant l'implémentation dépendante
 
-1. Les noms de compte des **deux futurs administrateurs suprêmes**. Aucun e-mail n'est requis. Ne pas inscrire leurs mots de passe dans ce fichier.
+1. Pour activer l'envoi du formulaire public : le nom du responsable des demandes et un moyen de contact public à afficher dans l'information sur les données. Aucun e-mail de compte n'est requis.
 2. Pour le **pointage** : faut-il compter les pauses, permettre l'oubli de fin de service et qui peut corriger une session ? L'hypothèse de départ est : pause facultative, oubli signalé, correction réservée aux deux administrateurs suprêmes avec motif et historique.
 3. Pour les **parts des artistes** : pourcentage par artiste, par prestation ou calcul manuel ? Les rapports pourront commencer avec une saisie explicite, puis automatiser la règle choisie.
-4. Hébergement et budget du service de données, domaine éventuel, et responsable des sauvegardes. Le webhook peut être ajouté plus tard depuis la gestion.
+4. Le webhook Discord pourra être ajouté plus tard depuis la gestion. Les sauvegardes sont sur le serveur Linux ; prévoir aussi une copie hors serveur.
 
 ## Reprise rapide
 

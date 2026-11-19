@@ -42,4 +42,4 @@ L'atelier est réservé à la mise en page. La gestion des rendez-vous, des pres
 3. Photos des réalisations, avec autorisation de publication.
 4. Le canal réel par lequel les demandes de rendez-vous seront transmises.
 
-La future gestion des clients et des demandes demandera un système distinct de connexion, de stockage et de réception. Elle n'est pas implémentée dans cette version.
+La gestion dispose désormais d'une connexion et d'un stockage privés pour les comptes, les demandes et les rendez-vous. L'envoi public du formulaire reste désactivé jusqu'à l'ajout des informations du responsable du traitement et de son contact.
