@@ -7,7 +7,7 @@
     scheduled: 'Rendez-vous confirmé', done: 'Terminé', cancelled: 'Annulé'
   };
   const viewNames = {
-    dashboard: ['Tableau de bord', 'Les demandes reçues et les rendez-vous à venir.'],
+    dashboard: ['Gestion du salon', 'Tableau de bord · demandes et rendez-vous à venir.'],
     requests: ['Demandes & projets', 'Chaque projet garde ses échanges et son rendez-vous au même endroit.'],
     appointments: ['Rendez-vous', 'Les rendez-vous confirmés par l’équipe.'],
     service: ['Mon service', 'Vos heures enregistrées par le salon.'],
@@ -40,6 +40,7 @@
   function showAuth(id) {
     $('#auth-shell').hidden = false;
     $('#workspace').hidden = true;
+    $('#topbar-session').hidden = true;
     for (const panel of ['setup-panel', 'login-panel', 'activate-panel']) $(`#${panel}`).hidden = panel !== id;
   }
 
@@ -320,6 +321,7 @@
       (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects)) return;
     if (activeView === 'access' && name !== 'access') clearInviteCode();
     activeView = name;
+    $('#workspace').dataset.view = name;
     for (const panel of document.querySelectorAll('.workspace-view')) panel.hidden = panel.id !== `${name}-view`;
     for (const button of document.querySelectorAll('.workspace-nav [data-view]')) {
       if (button.dataset.view === name) button.setAttribute('aria-current', 'page');
@@ -406,6 +408,8 @@
     }
     member = data.member;
     $('#member-name').textContent = member.display_name;
+    $('#topbar-member-name').textContent = member.display_name;
+    $('#topbar-session').hidden = false;
     for (const element of document.querySelectorAll('[data-manager-only]')) element.hidden = !member.projects;
     for (const element of document.querySelectorAll('[data-access-only]')) element.hidden = member.role !== 'superadmin';
     renderService(data.sessions);

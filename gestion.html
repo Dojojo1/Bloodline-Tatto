@@ -8,13 +8,24 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
   <title>Gestion — Bloodline Tattoo</title>
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-  <link rel="stylesheet" href="gestion.css?v=8">
-  <script src="gestion.js?v=11" defer></script>
+  <link rel="stylesheet" href="gestion.css?v=9">
+  <script src="gestion.js?v=12" defer></script>
 </head>
 <body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="icon-crown" viewBox="0 0 24 24"><path d="m2 8 5 4 5-7 5 7 5-4-2 11H4L2 8Z"/><path d="M4 21h16"/></symbol>
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h3m3-3h3"/></symbol>
+    <symbol id="icon-project" viewBox="0 0 24 24"><path d="M5 2h10l4 4v16H5zM15 2v5h4M8 12h8m-8 4h8m-8 4h5"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 3"/></symbol>
+    <symbol id="icon-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm13-14a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5h-4"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3Z"/><path d="M9 12h6m-3-3v6"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  </svg>
   <header class="topbar">
     <a href="./" class="brand"><img src="assets/bloodline-logo.png" alt="" width="42" height="42">Bloodline <span>Tattoo</span></a>
-    <span>Gestion du salon</span>
+    <span>Espace privé</span>
+    <div class="topbar-session" id="topbar-session" hidden><span class="session-emblem" aria-hidden="true"><svg><use href="#icon-crown"></use></svg></span><span id="topbar-member-name"></span></div>
   </header>
 
   <p id="status" class="global-status" role="status" aria-live="polite"></p>
@@ -57,17 +68,18 @@
 
   <main class="workspace" id="workspace" hidden>
     <aside class="workspace-rail" aria-label="Espace de gestion">
+      <div class="rail-heading"><svg aria-hidden="true"><use href="#icon-crown"></use></svg><span>Espace gestion<br>salon</span></div>
       <div class="rail-account">
         <span>Compte connecté</span>
         <strong id="member-name">Mon compte</strong>
       </div>
       <nav class="workspace-nav" aria-label="Rubriques de gestion">
-        <button type="button" data-view="dashboard" data-manager-only>Tableau de bord</button>
-        <button type="button" data-view="requests" data-manager-only>Demandes &amp; projets</button>
-        <button type="button" data-view="appointments" data-manager-only>Rendez-vous</button>
-        <button type="button" data-view="service">Mon service</button>
-        <button type="button" data-view="team-hours" data-access-only>Heures de l’équipe</button>
-        <button type="button" data-view="access" data-access-only>Accès &amp; rôles</button>
+        <button type="button" data-view="dashboard" data-manager-only><svg aria-hidden="true"><use href="#icon-dashboard"></use></svg>Tableau de bord</button>
+        <button type="button" data-view="requests" data-manager-only><svg aria-hidden="true"><use href="#icon-project"></use></svg>Demandes &amp; projets</button>
+        <button type="button" data-view="appointments" data-manager-only><svg aria-hidden="true"><use href="#icon-calendar"></use></svg>Rendez-vous</button>
+        <button type="button" data-view="service"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>Mon service</button>
+        <button type="button" data-view="team-hours" data-access-only><svg aria-hidden="true"><use href="#icon-team"></use></svg>Heures de l’équipe</button>
+        <button type="button" data-view="access" data-access-only><svg aria-hidden="true"><use href="#icon-shield"></use></svg>Accès &amp; rôles</button>
       </nav>
       <div class="rail-art" aria-hidden="true"></div>
       <button type="button" id="logout" class="rail-logout">Se déconnecter</button>
@@ -76,7 +88,7 @@
     <div class="workspace-content">
       <div class="workspace-heading">
         <div>
-          <h1 id="view-title">Tableau de bord</h1>
+          <h1 id="view-title">Gestion du salon</h1>
           <p id="view-description">Les demandes reçues et les rendez-vous à venir.</p>
         </div>
         <div class="workspace-heading-art" aria-hidden="true"></div>
@@ -84,9 +96,9 @@
 
       <section id="dashboard-view" class="workspace-view" aria-label="Tableau de bord">
         <div class="stats" aria-label="Demandes en cours">
-          <div><strong id="stat-new">0</strong><span>Nouvelles demandes</span></div>
-          <div><strong id="stat-contact">0</strong><span>À contacter</span></div>
-          <div><strong id="stat-appointments">0</strong><span>Rendez-vous confirmés</span></div>
+          <div><svg aria-hidden="true"><use href="#icon-project"></use></svg><span>Nouvelles demandes</span><strong id="stat-new">—</strong></div>
+          <div><svg aria-hidden="true"><use href="#icon-team"></use></svg><span>À contacter</span><strong id="stat-contact">—</strong></div>
+          <div><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span>Rendez-vous confirmés</span><strong id="stat-appointments">—</strong></div>
         </div>
         <div class="overview-grid">
           <section class="overview-section" aria-labelledby="recent-title">
@@ -98,6 +110,12 @@
             <div id="next-appointments" class="record-list"></div>
           </section>
         </div>
+        <nav class="dashboard-shortcuts" aria-label="Accès rapides">
+          <button type="button" data-view="appointments"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span>Voir les rendez-vous</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
+          <button type="button" data-view="requests"><svg aria-hidden="true"><use href="#icon-project"></use></svg><span>Suivre les demandes</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
+          <button type="button" data-view="service"><svg aria-hidden="true"><use href="#icon-clock"></use></svg><span>Pointer mon service</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
+          <button type="button" data-view="access" data-access-only><svg aria-hidden="true"><use href="#icon-shield"></use></svg><span>Gérer les accès</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
+        </nav>
       </section>
 
       <section id="requests-view" class="workspace-view" hidden aria-label="Demandes et projets">
