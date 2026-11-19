@@ -54,12 +54,12 @@ button:active:not(:disabled) { transform:scale(.96); }
 .button-quiet:hover { background:transparent; border-bottom-color:#cfaa8c; }
 .form-hint,.muted { margin:0; color:var(--muted); font-size:12px; line-height:1.6; }
 .optional { font:400 11px var(--body); letter-spacing:0; text-transform:none; }
-.auth-panel,.workspace-heading,.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card { position:relative; isolation:isolate; border:0; background:linear-gradient(180deg,#0b090ad9,#0b090aee),url('assets/management-marble-texture.webp') center/cover; box-shadow:0 12px 26px #0008; }
+.auth-panel,.workspace-heading,.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card { position:relative; isolation:isolate; border:0; background-image:linear-gradient(145deg,#10070a52,#16090d85),url('assets/management-marble-texture.webp'); background-position:center; background-size:cover,900px auto; box-shadow:0 14px 30px #000b,inset 0 0 42px #4b0c1526; }
 .auth-panel::before,.workspace-heading::before,.stats>div::before,.overview-section::before,.dashboard-shortcuts button::before,.request-detail::before,.access-panel::before,.service-card::before { content:''; position:absolute; inset:0; z-index:2; border:46px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/46px/0 stretch; pointer-events:none; }
 .auth-panel>*,.workspace-heading>*,.stats>div>*,.overview-section>*,.dashboard-shortcuts button>*,.request-detail>*,.access-panel>*,.service-card>* { position:relative; z-index:3; }
 .stats>div,.dashboard-shortcuts button { padding-inline:32px; }
 .overview-section,.access-panel,.request-detail,.service-card,.auth-panel { padding-inline:max(28px,2vw); }
-.rail-heading { border:0; background:linear-gradient(#0c090cdb,#0c090cea),url('assets/management-marble-texture.webp') center/cover; box-shadow:0 10px 24px #0008; }
+.rail-heading { border:0; background:linear-gradient(#12090ba8,#14090cb0),url('assets/management-marble-texture.webp') center/900px auto; box-shadow:0 10px 24px #0008; }
 .rail-heading::before { content:''; position:absolute; inset:0; border:39px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/39px/0 stretch; pointer-events:none; }
 .rail-heading>* { position:relative; z-index:1; }
 
@@ -70,7 +70,7 @@ button:active:not(:disabled) { transform:scale(.96); }
 .auth-intro h1 { margin:0 0 22px; font:400 clamp(56px,6vw,96px)/.9 var(--editorial); text-transform:uppercase; text-shadow:0 3px 20px #000; }
 .auth-intro h1 em { color:#e34955; font-weight:400; }
 .auth-intro p { max-width:43ch; color:#e7d6ca; font-size:15px; line-height:1.75; text-shadow:0 2px 12px #000; }
-.auth-panel { width:100%; padding:clamp(26px,3vw,42px); background:linear-gradient(#0c090be8,#0c090bf0),url('assets/management-marble-texture.webp') center/cover; }
+.auth-panel { width:100%; padding:clamp(26px,3vw,42px); background-image:linear-gradient(#0c090bae,#0c090bc5),url('assets/management-marble-texture.webp'); }
 .auth-panel h2 { margin:0 0 25px; font:500 42px/.95 var(--editorial); text-transform:uppercase; }
 .auth-panel>p { color:var(--muted); font-size:13px; line-height:1.65; }
 .auth-panel form button { margin-top:8px; }
@@ -114,12 +114,16 @@ button:active:not(:disabled) { transform:scale(.96); }
 /* Dashboard */
 .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(10px,1vw,20px); margin-bottom:17px; }
 .stats>div { display:grid; align-content:center; justify-items:center; gap:4px; min-width:0; min-height:132px; padding:13px 12px; text-align:center; transition:border-color .22s ease,transform .22s ease,box-shadow .22s ease; }
-.stats>div:hover { transform:translateY(-2px); border-color:#d3977b; box-shadow:0 15px 27px #0009,inset 0 0 0 4px #100b0d,inset 0 0 0 5px #7f493b; }
+.stats>div:nth-child(2) { background-position:center,18% 42%; }
+.stats>div:nth-child(3) { background-position:center,77% 67%; }
+.stats>div:nth-child(4) { background-position:center,93% 22%; }
+.stats>div:hover { transform:translateY(-2px); box-shadow:0 17px 30px #000b,inset 0 0 45px #9e1e2829; }
 .stats>div svg { width:25px; height:25px; fill:none; stroke:#d9b298; stroke-width:1.45; stroke-linecap:round; stroke-linejoin:round; }
 .stats>div span { color:#dfd0c6; font:500 clamp(13px,1vw,17px)/1.2 var(--editorial); }
 .stats>div strong { font:400 clamp(35px,3.3vw,61px)/.95 var(--editorial); font-variant-numeric:tabular-nums; }
 .overview-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(10px,1vw,20px); }
 .overview-section { min-width:0; min-height:216px; padding:24px clamp(18px,1.5vw,32px) 18px; }
+.overview-section:nth-child(2) { background-position:center,72% 28%; }
 .section-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #6c4d3e; }
 .section-heading h2 { display:flex; align-items:center; gap:10px; margin:0; font:500 clamp(22px,1.5vw,30px)/1 var(--editorial); text-transform:uppercase; }
 .section-heading h2 svg { width:23px; height:23px; flex:none; fill:none; stroke:#d9b095; stroke-width:1.45; stroke-linecap:round; stroke-linejoin:round; }
@@ -145,7 +149,7 @@ button:active:not(:disabled) { transform:scale(.96); }
 .dashboard-shortcuts button:nth-child(2)::after { background-position:center,100% 17%; }
 .dashboard-shortcuts button:nth-child(3)::after { background-position:center,0 83%; }
 .dashboard-shortcuts button:nth-child(4)::after { background-position:center,100% 83%; }
-.dashboard-shortcuts button:hover { transform:translateY(-2px); border-color:#d4a283; box-shadow:0 15px 26px #0009,inset 0 0 0 4px #100b0d,inset 0 0 0 5px #885543; }
+.dashboard-shortcuts button:hover { transform:translateY(-2px); box-shadow:0 17px 30px #000b,inset 0 0 45px #9e1e2829; }
 .dashboard-shortcuts button:hover::after { transform:scale(1.025); filter:brightness(1.13); }
 .dashboard-shortcuts button>svg:first-child { width:24px; height:24px; fill:none; stroke:#e3c3af; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 .dashboard-shortcuts button span { max-width:18ch; font:500 clamp(15px,1.1vw,20px)/1.1 var(--editorial); text-shadow:0 2px 8px #000; }
