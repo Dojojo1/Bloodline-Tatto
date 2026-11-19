@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+  <path d="M24 12.5h112L147.5 24v112L136 147.5H24L12.5 136V24L24 12.5Z" stroke="#8e6b54" stroke-opacity=".75"/>
+  <defs>
+    <g id="corner" stroke="#c09b79" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 37c0-14 11-25 25-25" stroke-width="1.5"/>
+      <path d="M16 30c5-1 9-6 10-13M17 17c4 5 8 7 14 7" stroke-width="1"/>
+      <path d="M24 26c3 2 6 5 12 5M31 18c-2 5-3 8-7 10" stroke-width=".8" stroke-opacity=".8"/>
+      <path d="m22 22 3 3-3 3-3-3 3-3Z" fill="#9d715c" stroke-width=".7"/>
+    </g>
+  </defs>
+  <use href="#corner"/>
+  <use href="#corner" transform="translate(160 0) scale(-1 1)"/>
+  <use href="#corner" transform="translate(0 160) scale(1 -1)"/>
+  <use href="#corner" transform="translate(160 160) scale(-1 -1)"/>
+</svg>
