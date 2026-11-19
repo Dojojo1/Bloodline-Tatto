@@ -10,7 +10,8 @@
     dashboard: ['Tableau de bord', 'Les demandes reçues et les rendez-vous à venir.'],
     requests: ['Demandes & projets', 'Chaque projet garde ses échanges et son rendez-vous au même endroit.'],
     appointments: ['Rendez-vous', 'Les rendez-vous confirmés par l’équipe.'],
-    service: ['Mon service', 'Vos heures enregistrées par le salon.']
+    service: ['Mon service', 'Vos heures enregistrées par le salon.'],
+    access: ['Accès & rôles', 'Les comptes et droits de votre équipe.']
   };
   const date = (value) => new Intl.DateTimeFormat('fr-BE', {
     timeZone: 'Europe/Brussels', dateStyle: 'medium', timeStyle: 'short'
@@ -32,6 +33,7 @@
   let activeView = '';
   let requestItems = [];
   let selectedRequest = null;
+  let accessData = null;
 
   function showAuth(id) {
     $('#auth-shell').hidden = false;
@@ -134,8 +136,122 @@
     renderRecords($('#appointments-list'), items, 'appointment', 'Aucun rendez-vous confirmé pour le moment.');
   }
 
+  function node(tag, className, content) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (content !== undefined) element.textContent = content;
+    return element;
+  }
+
+  function clearInviteCode() {
+    $('#invite-code').textContent = '';
+    $('#invite-result').hidden = true;
+  }
+
+  function showInviteCode(code) {
+    $('#invite-code').textContent = code;
+    $('#invite-result').hidden = false;
+  }
+
+  function roleOptions(select, chosen, includeProtected = false) {
+    select.replaceChildren(...accessData.roles.filter((role) => includeProtected || !role.protected)
+      .map((role) => {
+        const option = node('option', '', role.name);
+        option.value = role.slug;
+        option.selected = role.slug === chosen;
+        return option;
+      }));
+  }
+
+  function renderAccess(data) {
+    accessData = data;
+    $('#member-count').textContent = `${data.members.filter((item) => item.active).length} actifs`;
+    const memberList = $('#access-members');
+    memberList.replaceChildren(...data.members.map((item) => {
+      const row = node('article', 'access-member');
+      const heading = node('div', 'access-member-heading');
+      heading.append(node('strong', '', item.display_name), node('small', '', `@${item.username} · ${item.active ? item.activation_required ? 'Invitation en attente' : 'Actif' : 'Désactivé'}`));
+      row.append(heading);
+      if (item.role_slug === 'superadmin') {
+        row.append(node('span', 'protected-label', item.role_name));
+      } else {
+        const controls = node('div', 'access-member-actions');
+        const label = node('label', '', 'Rôle');
+        const select = node('select');
+        select.setAttribute('aria-label', `Rôle de ${item.display_name}`);
+        roleOptions(select, item.role_slug);
+        select.addEventListener('change', async () => {
+          select.disabled = true;
+          try {
+            renderAccess(await request(`/members/${item.id}`, { method: 'POST', body: JSON.stringify({ role_slug: select.value, active: Boolean(item.active) }) }));
+            status('Rôle enregistré.');
+          } catch (error) { select.value = item.role_slug; status(error.message); }
+          select.disabled = false;
+        });
+        const active = node('button', 'button-quiet', item.active ? 'Désactiver' : 'Réactiver');
+        active.type = 'button';
+        active.addEventListener('click', async () => {
+          active.disabled = true;
+          try {
+            renderAccess(await request(`/members/${item.id}`, { method: 'POST', body: JSON.stringify({ role_slug: select.value, active: !item.active }) }));
+            status(item.active ? 'Compte désactivé.' : 'Compte réactivé.');
+          } catch (error) { status(error.message); active.disabled = false; }
+        });
+        const reset = node('button', 'button-quiet', 'Renouveler le code');
+        reset.type = 'button';
+        reset.hidden = !item.active;
+        reset.addEventListener('click', async () => {
+          reset.disabled = true;
+          try {
+            const result = await request(`/members/${item.id}/reset`, { method: 'POST' });
+            renderAccess(result); showInviteCode(result.code);
+            status(`Nouveau code créé pour ${item.display_name}. L’ancien mot de passe est invalidé.`);
+          } catch (error) { status(error.message); reset.disabled = false; }
+        });
+        controls.append(label, select, active, reset);
+        row.append(controls);
+      }
+      return row;
+    }));
+    roleOptions($('#invite-role'));
+    const roles = $('#access-roles');
+    roles.replaceChildren(...data.roles.map((role) => {
+      const button = node('button', 'role-item');
+      button.type = 'button';
+      button.append(node('strong', '', role.name), node('small', '', role.protected ? 'Protégé' : `${data.members.filter((item) => item.role_slug === role.slug).length} compte(s)`));
+      button.addEventListener('click', () => selectRole(role));
+      return button;
+    }));
+    const events = $('#access-events');
+    events.replaceChildren(...data.events.map((item) => {
+      const row = node('div', 'access-event');
+      row.append(node('strong', '', `${item.action} · ${item.target}`), node('small', '', `${item.author} · ${date(item.created_at)}`));
+      return row;
+    }));
+    if (!data.events.length) events.append(node('p', 'empty-state', 'Aucune modification pour le moment.'));
+  }
+
+  async function loadAccess() {
+    renderAccess(await request('/access'));
+  }
+
+  function selectRole(role = null) {
+    $('#role-slug').value = role?.slug || '';
+    $('#role-name').value = role?.name || '';
+    for (const input of $('#role-permissions').querySelectorAll('input')) {
+      input.checked = Boolean(role?.[input.name]);
+      input.disabled = Boolean(role?.protected);
+    }
+    $('#role-submit').textContent = role ? 'Enregistrer le rôle' : 'Ajouter ce rôle';
+    $('#role-cancel').hidden = !role;
+    $('#role-delete').hidden = !role || Boolean(role.protected);
+    if (role) $('#role-name').focus();
+  }
+
   async function switchView(name) {
-    if (!viewNames[name] || (member?.role !== 'superadmin' && name !== 'service')) return;
+    if (!viewNames[name] || (name === 'access' && member?.role !== 'superadmin') ||
+      (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects)) return;
+    if (activeView === 'access' && name !== 'access') clearInviteCode();
     activeView = name;
     for (const panel of document.querySelectorAll('.workspace-view')) panel.hidden = panel.id !== `${name}-view`;
     for (const button of document.querySelectorAll('.workspace-nav [data-view]')) {
@@ -149,6 +265,7 @@
       if (name === 'dashboard') await loadDashboard();
       if (name === 'requests') await loadRequests();
       if (name === 'appointments') await loadAppointments();
+      if (name === 'access') await loadAccess();
     } catch (error) { status(error.message || 'Impossible de charger les données. Réessayez.'); }
   }
 
@@ -221,10 +338,11 @@
     }
     member = data.member;
     $('#member-name').textContent = member.display_name;
-    for (const element of document.querySelectorAll('[data-manager-only]')) element.hidden = member.role !== 'superadmin';
+    for (const element of document.querySelectorAll('[data-manager-only]')) element.hidden = !member.projects;
+    for (const element of document.querySelectorAll('[data-access-only]')) element.hidden = member.role !== 'superadmin';
     renderService(data.sessions);
     $('#auth-shell').hidden = true; $('#workspace').hidden = false;
-    await switchView(activeView || (member.role === 'superadmin' ? 'dashboard' : 'service'));
+    await switchView(activeView || (member.projects ? 'dashboard' : 'service'));
   }
 
   $('#login-form').addEventListener('submit', async (event) => {
@@ -261,11 +379,51 @@
   });
   $('#logout').addEventListener('click', async () => {
     try { await request('/logout', { method: 'POST' }); } catch { /* Expired sessions are already invalid. */ }
+    clearInviteCode();
     setSessionToken(''); clearInterval(tick); member = null; openSession = null; activeView = '';
     status('Vous êtes déconnecté.'); showAuth('login-panel');
   });
 
   for (const button of document.querySelectorAll('[data-view]')) button.addEventListener('click', () => switchView(button.dataset.view));
+  $('#invite-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = event.currentTarget.querySelector('button[type="submit"]');
+    button.disabled = true; clearInviteCode();
+    try {
+      const result = await request('/members/invite', { method: 'POST', body: JSON.stringify({
+        username: $('#invite-username').value, display_name: $('#invite-name').value, role_slug: $('#invite-role').value
+      }) });
+      renderAccess(result); showInviteCode(result.code);
+      event.currentTarget.reset(); status('Compte créé. Transmettez le nom de compte et le code temporaire à cette personne.');
+    } catch (error) { status(error.message || 'Impossible de créer le compte.'); }
+    button.disabled = false;
+  });
+  $('#copy-code').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('#invite-code').textContent); status('Code copié.'); }
+    catch { status('Copie impossible : sélectionnez le code affiché.'); }
+  });
+  $('#role-cancel').addEventListener('click', () => selectRole());
+  $('#role-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = $('#role-submit'); button.disabled = true;
+    const permissions = Object.fromEntries([...$('#role-permissions').querySelectorAll('input')].map((input) => [input.name, input.checked]));
+    try {
+      renderAccess(await request('/roles', { method: 'POST', body: JSON.stringify({
+        slug: $('#role-slug').value, name: $('#role-name').value, ...permissions
+      }) }));
+      selectRole(); status('Rôle enregistré.');
+    } catch (error) { status(error.message || 'Impossible d’enregistrer ce rôle.'); }
+    button.disabled = false;
+  });
+  $('#role-delete').addEventListener('click', async () => {
+    const slug = $('#role-slug').value;
+    if (!slug || !window.confirm('Supprimer ce rôle ? Les comptes qui l’utilisent doivent être réattribués avant.')) return;
+    const button = $('#role-delete'); button.disabled = true;
+    try {
+      renderAccess(await request(`/roles/${encodeURIComponent(slug)}/delete`, { method: 'POST' }));
+      selectRole(); status('Rôle supprimé.');
+    } catch (error) { status(error.message || 'Impossible de supprimer ce rôle.'); button.disabled = false; }
+  });
   $('#request-search').addEventListener('input', renderRequestList);
   $('#request-filter').addEventListener('change', renderRequestList);
   $('#detail-close').addEventListener('click', () => {

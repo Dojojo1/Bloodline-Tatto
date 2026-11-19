@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
-from backend import requests, storage
+from backend import access, requests, storage
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,12 +56,33 @@ class NoteBody(BaseModel):
     body: str
 
 
+class RoleBody(BaseModel):
+    slug: str = ""
+    name: str
+    projects: bool = False
+    access: bool = False
+    content: bool = False
+    finance: bool = False
+
+
+class InviteBody(BaseModel):
+    username: str
+    display_name: str
+    role_slug: str
+
+
+class MemberBody(BaseModel):
+    role_slug: str
+    active: bool
+
+
 def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "https://dojojo1.github.io").rstrip("/")
     public_requests_enabled = (os.environ.get("BLOODLINE_PUBLIC_REQUESTS_ENABLED") == "1"
                                if public_requests_enabled is None else public_requests_enabled)
     storage.init_database(db_path)
+    access.init_database(db_path)
     requests.init_database(db_path)
     app = FastAPI(title="Bloodline Gestion", docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
@@ -90,8 +111,14 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
 
     def manager(request):
         member = current_member(request)
-        if member["role"] != "superadmin":
+        if not member["projects"]:
             raise HTTPException(403, "Accès réservé à la direction.")
+        return member
+
+    def supreme(request):
+        member = current_member(request)
+        if member["role"] != "superadmin":
+            raise HTTPException(403, "Accès réservé aux administrateurs suprêmes.")
         return member
 
     def bearer_token(request):
@@ -162,6 +189,69 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     def me(request: Request):
         member = current_member(request)
         return {"member": member, "sessions": storage.list_shifts(db_path, member["id"])}
+
+    @app.get("/api/access")
+    def access_overview(request: Request):
+        supreme(request)
+        return access.overview(db_path)
+
+    @app.post("/api/roles")
+    def save_role(body: RoleBody, request: Request):
+        require_same_origin(request)
+        member = supreme(request)
+        try:
+            access.save_role(db_path, member["id"], body.slug, body.name, body.model_dump())
+        except LookupError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return access.overview(db_path)
+
+    @app.post("/api/roles/{slug}/delete")
+    def delete_role(slug: str, request: Request):
+        require_same_origin(request)
+        member = supreme(request)
+        try:
+            access.delete_role(db_path, member["id"], slug)
+        except LookupError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return access.overview(db_path)
+
+    @app.post("/api/members/invite")
+    def invite_member(body: InviteBody, request: Request):
+        require_same_origin(request)
+        member = supreme(request)
+        try:
+            code = access.invite_member(db_path, member["id"], body.username, body.display_name, body.role_slug)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return {"code": code, **access.overview(db_path)}
+
+    @app.post("/api/members/{member_id}")
+    def update_member(member_id: int, body: MemberBody, request: Request):
+        require_same_origin(request)
+        member = supreme(request)
+        try:
+            access.update_member(db_path, member["id"], member_id, body.role_slug, body.active)
+        except LookupError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return access.overview(db_path)
+
+    @app.post("/api/members/{member_id}/reset")
+    def reset_member(member_id: int, request: Request):
+        require_same_origin(request)
+        member = supreme(request)
+        try:
+            code = access.reset_member(db_path, member["id"], member_id)
+        except LookupError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return {"code": code, **access.overview(db_path)}
 
     @app.post("/api/requests", status_code=201)
     def submit_project(body: ProjectRequestBody, request: Request):

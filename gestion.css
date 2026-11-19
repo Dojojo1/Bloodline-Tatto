@@ -119,8 +119,44 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
 .account-settings form { margin-top:22px; }
 .account-settings p { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
 
+.access-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr); align-items:start; gap:clamp(22px,3vw,42px); }
+.access-column { display:grid; gap:22px; min-width:0; }
+.access-panel { min-width:0; padding:clamp(22px,2.6vw,32px); border:1px solid #58433c; background:var(--surface); }
+.access-panel h2 { margin:0 0 18px; font:400 31px/1 var(--editorial); }
+.access-panel .section-heading { margin-bottom:7px; }
+.access-panel .section-heading h2 { margin:0; }
+.subtle-count { color:var(--muted); font-size:12px; }
+.access-list,.role-list,.access-events { display:grid; }
+.access-member { display:grid; gap:12px; padding:20px 0; border-top:1px solid #493731; }
+.access-member-heading { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:6px 16px; }
+.access-member-heading strong { font:400 24px/1 var(--editorial); }
+.access-member-heading small,.protected-label { color:var(--muted); font-size:11px; }
+.access-member-actions { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:end; gap:10px; }
+.access-member-actions label { grid-column:1/-1; }
+.access-member-actions select { min-width:0; }
+.access-member-actions button { white-space:nowrap; }
+.protected-label { display:inline-block; width:max-content; padding:6px 9px; border:1px solid #57433c; }
+.invite-result { margin-top:22px; padding-top:18px; border-top:1px solid #684b45; }
+.invite-result p { margin:0 0 12px; color:var(--muted); font-size:12px; line-height:1.6; }
+.code-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; }
+.code-row output { overflow-wrap:anywhere; padding:10px; border:1px solid #90676a; color:#fff; font:600 13px/1.5 monospace; user-select:all; }
+.role-list { margin:20px 0 24px; border-bottom:1px solid #493731; }
+.role-item { display:flex; justify-content:space-between; align-items:center; gap:14px; width:100%; min-height:54px; padding:12px 2px; border:0; border-top:1px solid #493731; background:transparent; text-align:left; }
+.role-item:hover { padding-inline:10px; background:#291a18; }
+.role-item strong { font:500 14px var(--body); }
+.role-item small { color:var(--muted); font-size:11px; white-space:nowrap; }
+.permission-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; min-width:0; margin:6px 0; padding:16px; border:1px solid #58433c; }
+.permission-grid legend { padding:0 6px; color:var(--muted); font-size:11px; }
+.permission-grid label { display:flex; align-items:start; gap:9px; font:400 12px/1.45 var(--body); letter-spacing:0; text-transform:none; }
+.permission-grid input { flex:none; width:16px; height:16px; min-height:0; margin:1px 0 0; accent-color:#c13b4d; }
+.form-actions { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; }
+.danger-action { color:#ee9b98; }
+.access-event { display:grid; gap:5px; padding:12px 0; border-top:1px solid #493731; }
+.access-event strong { font-size:12px; font-weight:500; }
+.access-event small { color:var(--muted); font-size:11px; }
+
 @media(max-width:1050px) {
-  .overview-grid,.service-view { grid-template-columns:1fr; }
+  .overview-grid,.service-view,.access-grid { grid-template-columns:1fr; }
   .requests-layout { grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr); gap:18px; }
   .request-detail { padding:20px; }
 }
@@ -155,4 +191,7 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
   .detail-grid,.field-pair { grid-template-columns:1fr; }
   .detail-heading h2 { font-size:32px; }
   .service-card { padding:23px; }
+  .access-member-actions { grid-template-columns:1fr 1fr; }
+  .access-member-actions select { grid-column:1/-1; }
+  .permission-grid { grid-template-columns:1fr; }
 }

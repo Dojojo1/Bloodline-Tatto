@@ -200,3 +200,55 @@ def test_public_submission_stays_closed_until_contact_information_is_ready():
         app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN, public_requests_enabled=False)
         with TestClient(app, base_url=ORIGIN) as public:
             assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 503
+
+
+def test_roles_invitations_and_account_protection():
+    with TemporaryDirectory() as folder:
+        path = Path(folder) / "bloodline.sqlite3"
+        app = create_app(path, public_origin=ORIGIN)
+        create_member(path, "owner", "Erwan", "secret-long-1234", "superadmin")
+        create_member(path, "friend", "Lucia", "secret-long-5678", "superadmin")
+        with TestClient(app, base_url=ORIGIN) as owner, TestClient(app, base_url=ORIGIN) as artist:
+            login = owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN})
+            owner.headers["Authorization"] = f"Bearer {login.json()['token']}"
+            access = owner.get("/api/access").json()
+            assert len(access["members"]) == 2
+            assert {member["role_slug"] for member in access["members"]} == {"superadmin"}
+            assert owner.post("/api/roles", json={"slug": "superadmin", "name": "Administration", "projects": False},
+                              headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.get("/api/me").json()["member"]["projects"] == 1
+            assert owner.post("/api/roles/superadmin/delete", headers={"Origin": ORIGIN}).status_code == 422
+            created = owner.post("/api/roles", json={"name": "Responsable accueil", "projects": True},
+                                 headers={"Origin": ORIGIN})
+            assert created.status_code == 200
+            slug = next(role["slug"] for role in created.json()["roles"] if role["name"] == "Responsable accueil")
+            assert owner.post("/api/members/invite", json={"username": "camille", "display_name": "Camille", "role_slug": slug},
+                              headers={"Origin": "https://evil.example"}).status_code == 403
+            invited = owner.post("/api/members/invite", json={"username": "camille", "display_name": "Camille", "role_slug": slug},
+                                 headers={"Origin": ORIGIN})
+            assert invited.status_code == 200 and "code" in invited.json()
+            code = invited.json()["code"]
+            assert code not in str(owner.get("/api/access").json())
+            camille = next(member for member in invited.json()["members"] if member["username"] == "camille")
+            assert owner.post(f"/api/roles/{slug}/delete", headers={"Origin": ORIGIN}).status_code == 422
+            assert owner.post(f"/api/members/{camille['id']}", json={"role_slug": "superadmin", "active": True},
+                              headers={"Origin": ORIGIN}).status_code == 422
+            assert artist.post("/api/login", json={"username": "camille", "password": code},
+                               headers={"Origin": ORIGIN}).json()["setup_required"]
+            activated = artist.post("/api/activate", json={"username": "camille", "code": code,
+                "new_password": "camille-new-secret"}, headers={"Origin": ORIGIN})
+            assert activated.status_code == 200
+            artist.headers["Authorization"] = f"Bearer {activated.json()['token']}"
+            assert artist.get("/api/dashboard").status_code == 200
+            assert artist.get("/api/access").status_code == 403
+            assert artist.post("/api/roles", json={"name": "Frauduleux"}, headers={"Origin": ORIGIN}).status_code == 403
+            renewed = owner.post(f"/api/members/{camille['id']}/reset", headers={"Origin": ORIGIN})
+            assert renewed.status_code == 200 and renewed.json()["code"] != code
+            assert artist.get("/api/me").status_code == 401
+            assert artist.post("/api/login", json={"username": "camille", "password": "camille-new-secret"},
+                               headers={"Origin": ORIGIN}).status_code == 401
+            assert owner.post(f"/api/members/{camille['id']}", json={"role_slug": "artiste", "active": False},
+                              headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.post(f"/api/roles/{slug}/delete", headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.post("/api/members/1", json={"role_slug": "artiste", "active": False},
+                              headers={"Origin": ORIGIN}).status_code == 422

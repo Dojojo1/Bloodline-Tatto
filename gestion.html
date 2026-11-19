@@ -8,8 +8,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
   <title>Gestion — Bloodline Tattoo</title>
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-  <link rel="stylesheet" href="gestion.css?v=5">
-  <script src="gestion.js?v=9" defer></script>
+  <link rel="stylesheet" href="gestion.css?v=6">
+  <script src="gestion.js?v=10" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -65,6 +65,7 @@
         <button type="button" data-view="requests" data-manager-only>Demandes &amp; projets</button>
         <button type="button" data-view="appointments" data-manager-only>Rendez-vous</button>
         <button type="button" data-view="service">Mon service</button>
+        <button type="button" data-view="access" data-access-only>Accès &amp; rôles</button>
       </nav>
       <button type="button" id="logout" class="rail-logout">Se déconnecter</button>
     </aside>
@@ -178,6 +179,54 @@
               <button type="submit">Enregistrer mon mot de passe</button>
             </form>
           </details>
+        </div>
+      </section>
+
+      <section id="access-view" class="workspace-view" hidden aria-label="Accès et rôles">
+        <p class="section-intro">Invitez les membres de l’équipe avec un code temporaire. Chacun choisit ensuite son propre mot de passe. Les deux comptes administrateurs suprêmes restent protégés.</p>
+        <div class="access-grid">
+          <section class="access-panel" aria-labelledby="members-title">
+            <div class="section-heading"><h2 id="members-title">Comptes</h2><span id="member-count" class="subtle-count"></span></div>
+            <div id="access-members" class="access-list"></div>
+          </section>
+          <div class="access-column">
+            <section class="access-panel" aria-labelledby="invite-title">
+              <h2 id="invite-title">Inviter une personne</h2>
+              <form id="invite-form">
+                <div class="field-pair">
+                  <div><label for="invite-username">Nom de compte</label><input id="invite-username" autocomplete="off" minlength="3" maxlength="32" pattern="[a-zA-Z0-9][a-zA-Z0-9_.-]{2,31}" placeholder="ex. camille" required></div>
+                  <div><label for="invite-name">Nom affiché</label><input id="invite-name" autocomplete="off" maxlength="80" placeholder="Camille" required></div>
+                </div>
+                <label for="invite-role">Rôle</label><select id="invite-role" required></select>
+                <button type="submit" class="button-primary">Créer le compte</button>
+              </form>
+              <div id="invite-result" class="invite-result" hidden>
+                <p>Code temporaire à transmettre à cette personne. Il ne sera plus affiché après avoir quitté cet écran.</p>
+                <div class="code-row"><output id="invite-code"></output><button type="button" id="copy-code">Copier</button></div>
+              </div>
+            </section>
+            <section class="access-panel" aria-labelledby="roles-title">
+              <h2 id="roles-title">Rôles &amp; droits</h2>
+              <p class="muted">Les noms sont modifiables. Le droit « demandes » donne accès aux projets et rendez-vous. La gestion des accès reste réservée aux deux administrateurs suprêmes ; les droits vitrine et comptabilité seront utilisés par leurs futurs modules.</p>
+              <div id="access-roles" class="role-list"></div>
+              <form id="role-form" class="role-form">
+                <input id="role-slug" type="hidden">
+                <label for="role-name">Nom du rôle</label><input id="role-name" maxlength="60" placeholder="Ex. responsable de salon" required>
+                <fieldset class="permission-grid" id="role-permissions">
+                  <legend>Droits</legend>
+                  <label><input type="checkbox" name="projects"> Demandes et rendez-vous</label>
+                  <label><input type="checkbox" name="access"> Accès (future délégation)</label>
+                  <label><input type="checkbox" name="content"> Contenu de la vitrine</label>
+                  <label><input type="checkbox" name="finance"> Comptabilité</label>
+                </fieldset>
+                <div class="form-actions"><button type="submit" class="button-primary" id="role-submit">Ajouter ce rôle</button><button type="button" id="role-cancel" class="button-quiet" hidden>Annuler</button><button type="button" id="role-delete" class="button-quiet danger-action" hidden>Supprimer ce rôle</button></div>
+              </form>
+            </section>
+            <section class="access-panel" aria-labelledby="access-history-title">
+              <h2 id="access-history-title">Dernières modifications</h2>
+              <div id="access-events" class="access-events"></div>
+            </section>
+          </div>
         </div>
       </section>
     </div>

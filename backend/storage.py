@@ -75,6 +75,28 @@ def init_database(path):
             db.execute("alter table login_attempts rename column email to username")
         if "activation_required" not in {column["name"] for column in db.execute("pragma table_info(members)")}:
             db.execute("alter table members add column activation_required integer not null default 0")
+        db.execute("""create table if not exists roles (
+            slug text primary key,
+            name text not null,
+            projects integer not null default 0,
+            access integer not null default 0,
+            content integer not null default 0,
+            finance integer not null default 0,
+            protected integer not null default 0
+        )""")
+        for slug, name, projects, access, content, finance, protected in (
+            ("superadmin", "Administrateur suprême", 1, 1, 1, 1, 1),
+            ("patron", "Patron", 1, 1, 1, 1, 0),
+            ("co_patron", "Co patron", 1, 1, 1, 1, 0),
+            ("direction", "Direction", 1, 0, 1, 0, 0),
+            ("artiste", "Artiste", 0, 0, 0, 0, 0),
+        ):
+            db.execute("""insert or ignore into roles(slug, name, projects, access, content, finance, protected)
+                values (?, ?, ?, ?, ?, ?, ?)""", (slug, name, projects, access, content, finance, protected))
+        if "role_slug" not in {column["name"] for column in db.execute("pragma table_info(members)")}:
+            db.execute("alter table members add column role_slug text")
+        db.execute("""update members set role_slug = case when role = 'superadmin' then 'superadmin' else 'artiste' end
+            where role_slug is null""")
     try:
         os.chmod(path, 0o600)
     except OSError:
@@ -109,8 +131,8 @@ def create_member(path, username, name, password, role="staff"):
     with connect(path) as db:
         if role == "superadmin" and db.execute("select count(*) from members where role = 'superadmin'").fetchone()[0] >= 2:
             raise ValueError("Les deux comptes d'administration suprême existent déjà")
-        db.execute("insert into members(username, display_name, password_hash, role, created_at) values (?, ?, ?, ?, ?)",
-                   (username, name, hashed, role, utc_now().isoformat()))
+        db.execute("insert into members(username, display_name, password_hash, role, role_slug, created_at) values (?, ?, ?, ?, ?, ?)",
+                   (username, name, hashed, role, "superadmin" if role == "superadmin" else "artiste", utc_now().isoformat()))
 
 
 def authenticate(path, username, password):
@@ -189,8 +211,9 @@ def session_member(path, token):
         return None
     token_hash = hashlib.sha256(token.encode()).hexdigest()
     with connect(path) as db:
-        member = db.execute("""select m.id, m.username, m.display_name, m.role from sessions s
-            join members m on m.id = s.member_id
+        member = db.execute("""select m.id, m.username, m.display_name, m.role, m.role_slug,
+            r.name as role_name, r.projects, r.access, r.content, r.finance from sessions s
+            join members m on m.id = s.member_id join roles r on r.slug = m.role_slug
             where s.token_hash = ? and s.expires_at > ? and m.active = 1""",
             (token_hash, utc_now().isoformat())).fetchone()
     return dict(member) if member else None

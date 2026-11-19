@@ -21,7 +21,7 @@ Ne jamais mettre un mot de passe initial, un « code admin suprême », une clé
 
 ## Données à prévoir
 
-- `users`, `roles`, `permissions`, `user_roles` : comptes, rôles renommables et matrice de droits. Identifiants stables pour les rôles, noms affichés modifiables.
+- `members`, `roles` : comptes, invitations avec code temporaire, rôles renommables et droits par rubrique. Les deux comptes administrateurs suprêmes restent protégés ; les comptes d'équipe peuvent être désactivés sans effacer leur historique.
 - `clients`, `project_requests`, `appointments`, `appointment_notes` : numéro, projet, disponibilités proposées, suivi et historique. Une demande peut produire un rendez-vous confirmé par l'équipe.
 - `artists` : profil, photo, présentation, visibilité, ordre d'affichage. Le nombre de profils est libre ; les listes et le fond de section suivent automatiquement leur contenu.
 - `services`, `tattoo_catalog`, `portfolio_items` : prestations, tatouages publiés avec photo/nom/prix, réalisations. Séparer le catalogue affiché des ventes réelles. Ici, « prise de services » désigne le pointage du personnel, pas une prestation client.
@@ -33,7 +33,7 @@ Définir les prix et montants en centimes, avec devise explicite. Prévoir expor
 
 ## Parcours à construire dans cet ordre
 
-1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. Le premier jet connexion + pointage et l'accès HTTPS sont installés ; les comptes doivent être activés, puis les invitations et l'audit restent à faire.
+1. **Socle privé** : service Linux Bloodline indépendant, schéma et migrations versionnées, connexion, invitations, deux administrateurs suprêmes et journal d'audit. Vérifier qu'un visiteur et un artiste ne peuvent pas lire les données interdites. La connexion, le pointage, l'accès HTTPS, les invitations, les rôles renommables, la désactivation et le journal des changements d'accès sont installés. Les comptes suprêmes doivent être activés par leurs titulaires ; l'authentification à deux facteurs reste à construire.
 2. **Demandes et rendez-vous** : le stockage privé, les fiches, notes, statuts et confirmations sont en place. Publier l'envoi réel du formulaire après ajout du nom du responsable et d'un contact pour l'information sur les données personnelles. La validation, le piège anti-spam et les limites d'envoi sont codés et testés. Le client propose ses disponibilités sans choisir de créneau.
 3. **Gestion éditoriale** : artistes, vitrine, galerie, page « Nos styles » séparée, tatouages photo/nom/prix, prestations et services ; aperçu avant publication. Les changements doivent se voir sur GitHub Pages sans nouveau commit manuel.
 4. **Pointage** : dans chaque profil connecté, boutons « Prendre mon service » et « Terminer mon service », compteur de la session en cours et historique personnel ; vue d'équipe pour les responsables, total par jour/semaine/mois et export. Horodatage par le serveur, fuseau Europe/Brussels à l'affichage. Une correction manuelle conserve l'original et l'auteur de la correction.
