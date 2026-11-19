@@ -154,7 +154,7 @@ def project_payload(phone="01 23 45"):
 def test_public_request_becomes_private_appointment_sheet():
     with TemporaryDirectory() as folder:
         path = Path(folder) / "bloodline.sqlite3"
-        app = create_app(path, public_origin=ORIGIN)
+        app = create_app(path, public_origin=ORIGIN, public_requests_enabled=True)
         create_member(path, "owner", "Direction", "secret-long-1234", "superadmin")
         create_member(path, "artist", "Artiste", "secret-long-5678", "staff")
         with TestClient(app, base_url=ORIGIN) as public, TestClient(app, base_url=ORIGIN) as owner, TestClient(app, base_url=ORIGIN) as artist:
@@ -188,8 +188,15 @@ def test_public_request_becomes_private_appointment_sheet():
 
 def test_public_request_is_limited_per_number():
     with TemporaryDirectory() as folder:
-        app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN)
+        app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN, public_requests_enabled=True)
         with TestClient(app, base_url=ORIGIN) as public:
             for _ in range(3):
                 assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 201
             assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 429
+
+
+def test_public_submission_stays_closed_until_contact_information_is_ready():
+    with TemporaryDirectory() as folder:
+        app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN, public_requests_enabled=False)
+        with TestClient(app, base_url=ORIGIN) as public:
+            assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 503

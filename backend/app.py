@@ -56,9 +56,11 @@ class NoteBody(BaseModel):
     body: str
 
 
-def create_app(db_path=None, public_origin=None):
+def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "https://dojojo1.github.io").rstrip("/")
+    public_requests_enabled = (os.environ.get("BLOODLINE_PUBLIC_REQUESTS_ENABLED") == "1"
+                               if public_requests_enabled is None else public_requests_enabled)
     storage.init_database(db_path)
     requests.init_database(db_path)
     app = FastAPI(title="Bloodline Gestion", docs_url=None, redoc_url=None, openapi_url=None)
@@ -164,6 +166,8 @@ def create_app(db_path=None, public_origin=None):
     @app.post("/api/requests", status_code=201)
     def submit_project(body: ProjectRequestBody, request: Request):
         require_same_origin(request)
+        if not public_requests_enabled:
+            raise HTTPException(503, "L'envoi des demandes n'est pas encore disponible.")
         if body.website:
             return {"received": True, "reference": ""}
         try:
