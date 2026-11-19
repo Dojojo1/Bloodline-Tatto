@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#090707">
     <meta name="description" content="Découvrez l'univers de Bloodline Tattoo, ses projets sur mesure et son salon.">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'self'; form-action 'self'">
     <meta name="page-type" content="place">
     <meta name="site-kind" content="other">
     <meta name="page-kind" content="place">
     <title>Bloodline Tattoo — L'art du tatouage sur mesure</title>
     <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=20261118-24">
+    <link rel="stylesheet" href="styles.css?v=20261119-1">
     <script src="assets/vendor/gsap.min.js" defer></script>
-    <script src="site-content.js?v=20261118-5" defer></script>
-    <script src="script.js?v=20261118-5" defer></script>
+    <script src="site-content.js?v=20261119-1" defer></script>
+    <script src="script.js?v=20261119-1" defer></script>
     <script src="design-runtime.js?v=20261118-2" defer></script>
   </head>
   <body>
@@ -139,8 +140,8 @@
           <form class="project-form" id="project-form">
             <p class="form-intro">Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.</p>
             <div class="form-row">
-              <div><label for="customer-name">Votre nom</label><input id="customer-name" name="nom" type="text" autocomplete="name" placeholder="Votre nom" required></div>
-              <div><label for="customer-phone">Votre numéro</label><input id="customer-phone" name="numero" type="text" placeholder="Votre numéro" required></div>
+              <div><label for="customer-name">Votre nom</label><input id="customer-name" name="nom" type="text" autocomplete="name" placeholder="Votre nom" maxlength="80" required></div>
+              <div><label for="customer-phone">Votre numéro</label><input id="customer-phone" name="numero" type="tel" autocomplete="tel" placeholder="Votre numéro" maxlength="40" required></div>
             </div>
             <div class="form-row">
               <div>
@@ -163,18 +164,21 @@
             </div>
             <div id="group-size-field" hidden>
               <label for="group-size">Nombre de personnes</label>
-              <input id="group-size" name="participants" type="number" min="2" step="1" placeholder="Ex. 3">
+              <input id="group-size" name="participants" type="number" min="2" max="50" step="1" placeholder="Ex. 3">
             </div>
 
             <label for="project-idea">Motif ou idée de départ <span class="optional">(facultatif)</span></label>
-            <textarea id="project-idea" name="idee" rows="3" placeholder="Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous."></textarea>
+            <textarea id="project-idea" name="idee" rows="3" maxlength="1500" placeholder="Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous."></textarea>
 
             <div class="form-row">
-              <div><label for="project-placement">Emplacement</label><input id="project-placement" name="emplacement" type="text" placeholder="Ex. avant-bras"></div>
-              <div><label for="appointment-availability">Vos disponibilités <span class="optional">(facultatif)</span></label><input id="appointment-availability" name="disponibilites" type="text" placeholder="Ex. vendredi soir, après 20 h"></div>
+              <div><label for="project-placement">Emplacement</label><input id="project-placement" name="emplacement" type="text" maxlength="120" placeholder="Ex. avant-bras"></div>
+              <div><label for="appointment-availability">Vos disponibilités <span class="optional">(facultatif)</span></label><input id="appointment-availability" name="disponibilites" type="text" maxlength="300" placeholder="Ex. vendredi soir, après 20 h"></div>
             </div>
 
+            <label class="acknowledge" hidden><input id="contact-acknowledged" name="acknowledged" type="checkbox"><span>J’ai compris que mes informations seront transmises à Bloodline Tattoo pour répondre à ma demande.</span></label>
+            <div class="form-trap" aria-hidden="true"><label for="website-field">Site web</label><input id="website-field" name="website" type="text" tabindex="-1" autocomplete="off"></div>
             <button class="button form-button" type="submit">Copier ma demande de rendez-vous <span aria-hidden="true">↗</span></button>
+            <button class="copy-fallback" id="copy-request" type="button" hidden>Copier ma demande à la place</button>
             <p class="form-status" id="form-status" role="status" aria-live="polite">La demande est préparée sur votre appareil : aucun rendez-vous n’est réservé ni confirmé ici.</p>
           </form>
         </div>

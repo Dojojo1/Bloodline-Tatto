@@ -200,6 +200,11 @@ p { text-wrap: pretty; }
 .form-status { margin: 3px 0 0; color: #bcaaa0; font-size: 12px; line-height: 1.6; }
 .form-status.is-success { color: #e3c0aa; }
 .form-status.is-error { color: #e78989; }
+.project-form .acknowledge { display:flex; align-items:flex-start; gap:10px; margin-top:4px; font:500 12px/1.55 var(--body); letter-spacing:0; text-transform:none; cursor:pointer; }
+.project-form .acknowledge input { flex:none; width:16px; min-height:16px; height:16px; margin:2px 0 0; padding:0; accent-color:var(--red-bright); }
+.form-trap { display:none; }
+.copy-fallback { justify-self:start; min-height:32px; padding:4px 0; border:0; border-bottom:1px solid #96786b; background:none; color:#d8c4b6; font:600 11px var(--display); cursor:pointer; }
+.copy-fallback:hover { color:#fff; }
 .site-footer { background: #060404; border-top: 1px solid #5b4038; }
 .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 25px; min-height: 150px; }
 .footer-content p { margin: 0; color: #b7a49a; font: italic 20px/1 var(--editorial); }

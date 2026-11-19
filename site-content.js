@@ -110,7 +110,9 @@ window.BLOODLINE_CONTENT = {
     }
   },
   form: {
+    sendEnabled: false,
     intro: 'Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.',
+    sendIntro: 'Envoyez votre demande à l’équipe. Le tatoueur discutera du projet avec vous avant de confirmer un rendez-vous.',
     labels: {
       name: 'Votre nom',
       phone: 'Votre numéro',
@@ -141,8 +143,10 @@ window.BLOODLINE_CONTENT = {
       { value: 'À décider avec le tatoueur', label: 'À décider avec le tatoueur' }
     ],
     action: 'Copier ma demande de rendez-vous',
+    sendAction: 'Envoyer ma demande de rendez-vous',
     idle: 'La demande est préparée sur votre appareil : aucun rendez-vous n’est réservé ni confirmé ici.',
-    success: 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé avec le tatoueur.',
+    sendIdle: 'La demande sera envoyée à l’équipe. Aucun rendez-vous n’est réservé automatiquement.',
+    success: 'Demande reçue. L’équipe vous contactera pour discuter du projet ; aucun rendez-vous n’est encore confirmé.',
     copyError: 'La copie automatique est indisponible. Sélectionnez et copiez votre texte ci-dessous.',
     summaryTitle: 'Demande de rendez-vous — Bloodline Tattoo',
     summaryLabels: {

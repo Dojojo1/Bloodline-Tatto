@@ -212,7 +212,7 @@ function applySiteContent(content) {
   }));
 
   const form = content.form;
-  setText('.form-intro', form.intro);
+  setText('.form-intro', form.sendEnabled ? form.sendIntro : form.intro);
   const fieldIds = { name: 'customer-name', phone: 'customer-phone', projectType: 'project-type', participants: 'group-size', creation: 'tattoo-choice', idea: 'project-idea', placement: 'project-placement', availability: 'appointment-availability' };
   Object.entries(fieldIds).forEach(([key, id]) => {
     setLeadingText(`label[for="${id}"]`, form.labels[key]);
@@ -221,8 +221,8 @@ function applySiteContent(content) {
   });
   replaceOptions('#project-type', form.projectTypes);
   replaceOptions('#tattoo-choice', form.creations);
-  setLeadingText('.form-button', form.action);
-  setText('#form-status', form.idle);
+  setLeadingText('.form-button', form.sendEnabled ? form.sendAction : form.action);
+  setText('#form-status', form.sendEnabled ? form.sendIdle : form.idle);
 
   const footerContacts = document.querySelector('#footer-contacts');
   const contactLinks = (content.footer.contactLinks || []).filter((link) => /^(https:\/\/|mailto:)/i.test(link.href));
@@ -377,6 +377,9 @@ const projectType = document.querySelector('#project-type');
 const groupSizeField = document.querySelector('#group-size-field');
 const groupSizeInput = document.querySelector('#group-size');
 const formContent = siteContent?.form;
+const sendEnabled = formContent?.sendEnabled === true;
+document.querySelector('.acknowledge').hidden = !sendEnabled;
+document.querySelector('#contact-acknowledged').required = sendEnabled;
 
 function needsParticipantCount() {
   return projectType.selectedOptions[0]?.dataset.needsParticipantCount === 'true' || projectType.value === 'Projet de groupe';
@@ -392,7 +395,53 @@ projectType.addEventListener('change', () => {
 projectForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!projectForm.reportValidity()) return;
+  if (!sendEnabled) { await copyRequest(); return; }
 
+  const data = new FormData(projectForm);
+  const button = projectForm.querySelector('.form-button');
+  const copyFallback = document.querySelector('#copy-request');
+  const payload = {
+    name: String(data.get('nom') || '').trim(),
+    phone: String(data.get('numero') || '').trim(),
+    project_type: String(data.get('type') || ''),
+    creation_type: String(data.get('creation') || ''),
+    group_size: needsParticipantCount() ? Number(data.get('participants')) : null,
+    idea: String(data.get('idee') || '').trim(),
+    placement: String(data.get('emplacement') || '').trim(),
+    availability: String(data.get('disponibilites') || '').trim(),
+    acknowledged: data.get('acknowledged') === 'on',
+    website: String(data.get('website') || '')
+  };
+  button.disabled = true;
+  formStatus.textContent = 'Envoi de votre demande…';
+  formStatus.className = 'form-status';
+  copyFallback.hidden = true;
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch('https://unabashed-tackle-claw.ngrok-free.dev/bloodline-api/api/requests', {
+      method: 'POST', credentials: 'omit', cache: 'no-store',
+      headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      body: JSON.stringify(payload), signal: controller.signal
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'L’envoi a échoué.');
+    formStatus.textContent = `${formContent?.success || 'Demande reçue. L’équipe vous contactera.'}${result.reference ? ` Référence : ${result.reference}.` : ''}`;
+    formStatus.className = 'form-status is-success';
+    projectForm.reset();
+    groupSizeField.hidden = true;
+    groupSizeInput.required = false;
+  } catch (error) {
+    formStatus.textContent = `${error.message || 'L’envoi a échoué.'} Votre demande n’a pas été enregistrée. Vous pouvez la copier pour la conserver.`;
+    formStatus.className = 'form-status is-error';
+    copyFallback.hidden = false;
+  } finally {
+    window.clearTimeout(timeout);
+    button.disabled = false;
+  }
+});
+
+async function copyRequest() {
   const data = new FormData(projectForm);
   const labels = formContent?.summaryLabels || {};
   const brief = [
@@ -410,8 +459,10 @@ projectForm.addEventListener('submit', async (event) => {
 
   try {
     await navigator.clipboard.writeText(brief);
-    formStatus.textContent = formContent?.success || 'Demande copiée. Vous pourrez la partager avec le salon ; le rendez-vous sera confirmé avec le tatoueur.';
-    formStatus.className = 'form-status is-success';
+    formStatus.textContent = sendEnabled
+      ? 'Demande copiée sur cet appareil. Elle n’a pas été reçue par le salon.'
+      : 'Demande copiée. Vous pourrez la partager avec le salon ; aucun rendez-vous n’est confirmé ici.';
+    formStatus.className = 'form-status';
   } catch {
     formStatus.textContent = formContent?.copyError || 'La copie automatique est indisponible. Sélectionnez et copiez votre texte ci-dessous.';
     formStatus.className = 'form-status is-error';
@@ -427,7 +478,8 @@ projectForm.addEventListener('submit', async (event) => {
     fallback.focus();
     fallback.select();
   }
-});
+}
+document.querySelector('#copy-request').addEventListener('click', copyRequest);
 
 // One quiet entrance sequence; the page remains fully usable without GSAP.
 if (window.gsap) {
