@@ -130,12 +130,12 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
   .auth-layout { grid-template-columns:1fr; gap:36px; width:min(100% - 36px,500px); min-height:calc(100vh - 58px); padding:44px 0; }
   .auth-intro h1 { font-size:clamp(54px,12vw,76px); }
   .auth-intro p { font-size:14px; }
-  .workspace { grid-template-columns:1fr; }
-  .workspace-rail { flex-direction:row; flex-wrap:wrap; align-items:center; gap:14px; padding:16px 18px 0; border-right:0; border-bottom:1px solid var(--line); }
+  .workspace { grid-template-columns:minmax(0,1fr); }
+  .workspace-rail { min-width:0; flex-direction:row; flex-wrap:wrap; align-items:center; gap:14px; padding:16px 18px 0; border-right:0; border-bottom:1px solid var(--line); }
   .rail-account { gap:2px; padding:0; border:0; }
   .rail-account strong { font-size:23px; }
   .rail-logout { margin-left:auto; margin-top:0; border:0; font-size:11px; }
-  .workspace-nav { order:3; display:flex; width:100%; gap:4px; overflow-x:auto; }
+  .workspace-nav { order:3; display:flex; width:100%; min-width:0; gap:4px; overflow-x:auto; }
   .workspace-nav button { flex:none; width:auto; white-space:nowrap; padding:14px 10px; }
   .workspace-content { padding:30px 18px 64px; }
   .workspace-heading { margin-bottom:24px; }
