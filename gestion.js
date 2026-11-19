@@ -11,7 +11,8 @@
     requests: ['Demandes & projets', 'Chaque projet garde ses échanges et son rendez-vous au même endroit.'],
     appointments: ['Rendez-vous', 'Les rendez-vous confirmés par l’équipe.'],
     service: ['Mon service', 'Vos heures enregistrées par le salon.'],
-    access: ['Accès & rôles', 'Les comptes et droits de votre équipe.']
+    access: ['Accès & rôles', 'Les comptes et droits de votre équipe.'],
+    'team-hours': ['Heures de l’équipe', 'Les services enregistrés par mois et par personne.']
   };
   const date = (value) => new Intl.DateTimeFormat('fr-BE', {
     timeZone: 'Europe/Brussels', dateStyle: 'medium', timeStyle: 'short'
@@ -34,6 +35,7 @@
   let requestItems = [];
   let selectedRequest = null;
   let accessData = null;
+  let teamHoursData = null;
 
   function showAuth(id) {
     $('#auth-shell').hidden = false;
@@ -235,6 +237,71 @@
     renderAccess(await request('/access'));
   }
 
+  function hours(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`;
+  }
+
+  function localMonth() {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Brussels', year: 'numeric', month: '2-digit'
+    }).formatToParts(new Date()).map((part) => [part.type, part.value]));
+    return `${parts.year}-${parts.month}`;
+  }
+
+  function renderTeamHours(data) {
+    teamHoursData = data;
+    $('#team-hours-total').textContent = hours(data.total_seconds);
+    $('#team-hours-export').disabled = !data.members.some((item) => item.sessions.length);
+    const container = $('#team-hours-members');
+    container.replaceChildren(...data.members.map((item) => {
+      const panel = node('details', 'team-hours-member');
+      const summary = node('summary');
+      const identity = node('span', 'team-hours-identity');
+      identity.append(node('strong', '', item.display_name), node('small', '', `@${item.username}${item.active ? '' : ' · compte désactivé'}`));
+      const total = node('span', 'team-hours-number', hours(item.seconds));
+      summary.append(identity, total);
+      if (item.open) summary.append(node('span', 'open-indicator', 'Service en cours'));
+      panel.append(summary);
+      if (!item.sessions.length) panel.append(node('p', 'empty-state', 'Aucun service sur ce mois.'));
+      for (const session of item.sessions) {
+        const row = node('div', 'team-hours-session');
+        row.append(node('span', '', `${date(session.started_at)} → ${session.ended_at ? date(session.ended_at) : 'En cours'}`),
+          node('strong', '', hours(session.seconds)));
+        panel.append(row);
+      }
+      return panel;
+    }));
+    if (!data.members.length) container.append(node('p', 'empty-state', 'Aucun compte ni service pour cette période.'));
+  }
+
+  async function loadTeamHours() {
+    if (!$('#team-month').value) $('#team-month').value = localMonth();
+    renderTeamHours(await request(`/team-hours?month=${encodeURIComponent($('#team-month').value)}`));
+  }
+
+  function csvCell(value) {
+    const text = String(value ?? '');
+    const safe = /^\s*[=+\-@]/.test(text) ? `'${text}` : text;
+    return `"${safe.replaceAll('"', '""')}"`;
+  }
+
+  function exportTeamHours() {
+    if (!teamHoursData) return;
+    const rows = [['Compte', 'Nom', 'Début', 'Fin', 'Durée en heures', 'Statut']];
+    for (const memberRow of teamHoursData.members) {
+      for (const session of memberRow.sessions) rows.push([
+        memberRow.username, memberRow.display_name, date(session.started_at),
+        session.ended_at ? date(session.ended_at) : '', (session.seconds / 3600).toFixed(2).replace('.', ','),
+        session.ended_at ? 'Terminé' : 'En cours'
+      ]);
+    }
+    const csv = '\uFEFF' + rows.map((row) => row.map(csvCell).join(';')).join('\r\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = node('a'); link.href = url; link.download = `bloodline-heures-${teamHoursData.month}.csv`;
+    link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   function selectRole(role = null) {
     $('#role-slug').value = role?.slug || '';
     $('#role-name').value = role?.name || '';
@@ -249,7 +316,7 @@
   }
 
   async function switchView(name) {
-    if (!viewNames[name] || (name === 'access' && member?.role !== 'superadmin') ||
+    if (!viewNames[name] || (['access', 'team-hours'].includes(name) && member?.role !== 'superadmin') ||
       (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects)) return;
     if (activeView === 'access' && name !== 'access') clearInviteCode();
     activeView = name;
@@ -266,6 +333,7 @@
       if (name === 'requests') await loadRequests();
       if (name === 'appointments') await loadAppointments();
       if (name === 'access') await loadAccess();
+      if (name === 'team-hours') await loadTeamHours();
     } catch (error) { status(error.message || 'Impossible de charger les données. Réessayez.'); }
   }
 
@@ -424,6 +492,12 @@
       selectRole(); status('Rôle supprimé.');
     } catch (error) { status(error.message || 'Impossible de supprimer ce rôle.'); button.disabled = false; }
   });
+  $('#team-hours-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    try { await loadTeamHours(); status('Heures mises à jour.'); }
+    catch (error) { status(error.message || 'Impossible de charger les heures.'); }
+  });
+  $('#team-hours-export').addEventListener('click', exportTeamHours);
   $('#request-search').addEventListener('input', renderRequestList);
   $('#request-filter').addEventListener('change', renderRequestList);
   $('#detail-close').addEventListener('click', () => {

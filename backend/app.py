@@ -190,6 +190,14 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
         member = current_member(request)
         return {"member": member, "sessions": storage.list_shifts(db_path, member["id"])}
 
+    @app.get("/api/team-hours")
+    def team_hours(request: Request, month: str = ""):
+        supreme(request)
+        try:
+            return storage.team_hours(db_path, month)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
     @app.get("/api/access")
     def access_overview(request: Request):
         supreme(request)

@@ -154,6 +154,26 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
 .access-event { display:grid; gap:5px; padding:12px 0; border-top:1px solid #493731; }
 .access-event strong { font-size:12px; font-weight:500; }
 .access-event small { color:var(--muted); font-size:11px; }
+.period-toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:12px; margin-bottom:30px; }
+.period-toolbar>div { display:grid; gap:9px; width:min(240px,100%); }
+.period-toolbar button { min-width:110px; }
+.team-hours-total { display:flex; align-items:baseline; justify-content:space-between; gap:20px; padding:22px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.team-hours-total span { color:var(--muted); font-size:13px; }
+.team-hours-total strong { font:400 clamp(36px,4vw,54px)/1 var(--editorial); font-variant-numeric:tabular-nums; }
+.team-hours-members { margin-top:28px; }
+.team-hours-member { border-top:1px solid #57433c; }
+.team-hours-member:last-child { border-bottom:1px solid #57433c; }
+.team-hours-member summary { display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:19px 4px; cursor:pointer; list-style:none; }
+.team-hours-member summary::-webkit-details-marker { display:none; }
+.team-hours-member summary::before { content:'+'; color:var(--red); font:400 23px/1 var(--editorial); }
+.team-hours-member[open] summary::before { content:'−'; }
+.team-hours-identity { display:grid; gap:4px; margin-right:auto; }
+.team-hours-identity strong { font:400 26px/1 var(--editorial); }
+.team-hours-identity small { color:var(--muted); font-size:11px; }
+.team-hours-number { font:400 25px/1 var(--editorial); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.open-indicator { padding:5px 8px; border:1px solid #a3544e; color:#edb8a9; font-size:10px; }
+.team-hours-session { display:flex; justify-content:space-between; gap:18px; padding:12px 12px 12px 36px; border-top:1px solid #3d2f2b; color:var(--muted); font-size:12px; }
+.team-hours-session strong { color:var(--paper); font-variant-numeric:tabular-nums; white-space:nowrap; }
 
 @media(max-width:1050px) {
   .overview-grid,.service-view,.access-grid { grid-template-columns:1fr; }
@@ -194,4 +214,5 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
   .access-member-actions { grid-template-columns:1fr 1fr; }
   .access-member-actions select { grid-column:1/-1; }
   .permission-grid { grid-template-columns:1fr; }
+  .team-hours-session { flex-wrap:wrap; gap:5px 12px; }
 }

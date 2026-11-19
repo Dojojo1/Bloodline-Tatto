@@ -8,6 +8,7 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 def utc_now():
@@ -245,3 +246,38 @@ def end_shift(path, member_id):
                             (utc_now().isoformat(), member_id))
         if result.rowcount != 1:
             raise ValueError("Aucun service en cours.")
+
+
+def team_hours(path, month=""):
+    local_now = utc_now().astimezone(ZoneInfo("Europe/Brussels"))
+    month = month or local_now.strftime("%Y-%m")
+    if not re.fullmatch(r"20\d{2}-\d{2}", month):
+        raise ValueError("Période invalide.")
+    year, number = map(int, month.split("-"))
+    if number < 1 or number > 12:
+        raise ValueError("Période invalide.")
+    local_zone = ZoneInfo("Europe/Brussels")
+    start = datetime(year, number, 1, tzinfo=local_zone).astimezone(timezone.utc)
+    next_year, next_month = (year + 1, 1) if number == 12 else (year, number + 1)
+    end = datetime(next_year, next_month, 1, tzinfo=local_zone).astimezone(timezone.utc)
+    now = utc_now()
+    with connect(path) as db:
+        members = [dict(row) for row in db.execute(
+            "select id, username, display_name, role_slug, active from members order by display_name"
+        )]
+        sessions = [dict(row) for row in db.execute("""select id, member_id, started_at, ended_at
+            from work_sessions where started_at < ? and (ended_at is null or ended_at > ?)
+            order by started_at desc""", (end.isoformat(), start.isoformat()))]
+    by_member = {member["id"]: {**member, "seconds": 0, "open": False, "sessions": []} for member in members}
+    for session in sessions:
+        actual_start = datetime.fromisoformat(session["started_at"])
+        actual_end = datetime.fromisoformat(session["ended_at"]) if session["ended_at"] else now
+        duration = max(0, int((min(actual_end, end, now) - max(actual_start, start)).total_seconds()))
+        if duration == 0:
+            continue
+        record = by_member[session["member_id"]]
+        record["seconds"] += duration
+        record["open"] = record["open"] or session["ended_at"] is None
+        record["sessions"].append({**session, "seconds": duration})
+    rows = [row for row in by_member.values() if row["active"] or row["sessions"]]
+    return {"month": month, "total_seconds": sum(row["seconds"] for row in rows), "members": rows}

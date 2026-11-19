@@ -252,3 +252,30 @@ def test_roles_invitations_and_account_protection():
             assert owner.post(f"/api/roles/{slug}/delete", headers={"Origin": ORIGIN}).status_code == 200
             assert owner.post("/api/members/1", json={"role_slug": "artiste", "active": False},
                               headers={"Origin": ORIGIN}).status_code == 422
+
+
+def test_team_hours_include_month_boundary_and_inactive_members():
+    with TemporaryDirectory() as folder:
+        path = Path(folder) / "bloodline.sqlite3"
+        app = create_app(path, public_origin=ORIGIN)
+        create_member(path, "owner", "Erwan", "secret-long-1234", "superadmin")
+        create_member(path, "artist", "Camille", "secret-long-5678", "staff")
+        with closing(sqlite3.connect(path)) as db:
+            artist_id = db.execute("select id from members where username = 'artist'").fetchone()[0]
+            db.execute("update members set active = 0 where id = ?", (artist_id,))
+            db.executemany("insert into work_sessions(member_id, started_at, ended_at) values (?, ?, ?)", [
+                (artist_id, "2025-10-31T22:00:00+00:00", "2025-11-01T00:00:00+00:00"),
+                (artist_id, "2025-11-15T09:00:00+00:00", "2025-11-15T11:30:00+00:00"),
+            ])
+            db.commit()
+        with TestClient(app, base_url=ORIGIN) as owner:
+            assert owner.get("/api/team-hours?month=2025-11").status_code == 401
+            login = owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN})
+            owner.headers["Authorization"] = f"Bearer {login.json()['token']}"
+            report = owner.get("/api/team-hours?month=2025-11").json()
+            assert report["total_seconds"] == 12600
+            artist = next(item for item in report["members"] if item["username"] == "artist")
+            assert artist["active"] == 0 and artist["seconds"] == 12600
+            assert [item["seconds"] for item in artist["sessions"]] == [9000, 3600]
+            assert owner.get("/api/team-hours?month=2025-13").status_code == 422
+            assert owner.get("/api/team-hours?month=2025-12").json()["total_seconds"] == 0

@@ -8,8 +8,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
   <title>Gestion — Bloodline Tattoo</title>
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-  <link rel="stylesheet" href="gestion.css?v=6">
-  <script src="gestion.js?v=10" defer></script>
+  <link rel="stylesheet" href="gestion.css?v=7">
+  <script src="gestion.js?v=11" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -65,6 +65,7 @@
         <button type="button" data-view="requests" data-manager-only>Demandes &amp; projets</button>
         <button type="button" data-view="appointments" data-manager-only>Rendez-vous</button>
         <button type="button" data-view="service">Mon service</button>
+        <button type="button" data-view="team-hours" data-access-only>Heures de l’équipe</button>
         <button type="button" data-view="access" data-access-only>Accès &amp; rôles</button>
       </nav>
       <button type="button" id="logout" class="rail-logout">Se déconnecter</button>
@@ -228,6 +229,17 @@
             </section>
           </div>
         </div>
+      </section>
+
+      <section id="team-hours-view" class="workspace-view" hidden aria-label="Heures de l’équipe">
+        <p class="section-intro">Les heures sont calculées à partir des débuts et fins de service enregistrés par chaque compte. Un service encore ouvert continue de compter jusqu’à maintenant.</p>
+        <form id="team-hours-form" class="period-toolbar">
+          <div><label for="team-month">Mois</label><input id="team-month" type="month" required></div>
+          <button type="submit">Afficher</button>
+          <button type="button" id="team-hours-export" class="button-quiet" disabled>Exporter en CSV</button>
+        </form>
+        <div class="team-hours-total"><span>Total de l’équipe</span><strong id="team-hours-total">0 h 00</strong></div>
+        <div id="team-hours-members" class="team-hours-members"></div>
       </section>
     </div>
   </main>
