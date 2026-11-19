@@ -54,13 +54,13 @@ button:active:not(:disabled) { transform:scale(.96); }
 .button-quiet:hover { background:transparent; border-bottom-color:#cfaa8c; }
 .form-hint,.muted { margin:0; color:var(--muted); font-size:12px; line-height:1.6; }
 .optional { font:400 11px var(--body); letter-spacing:0; text-transform:none; }
-.auth-panel,.workspace-heading,.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card { position:relative; isolation:isolate; border:0; background-image:linear-gradient(145deg,#10070a52,#16090d85),url('assets/management-marble-texture.webp'); background-position:center; background-size:cover,900px auto; box-shadow:0 14px 30px #000b,inset 0 0 42px #4b0c1526; }
-.auth-panel::before,.workspace-heading::before,.stats>div::before,.overview-section::before,.dashboard-shortcuts button::before,.request-detail::before,.access-panel::before,.service-card::before { content:''; position:absolute; inset:0; z-index:2; border:46px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/46px/0 stretch; pointer-events:none; }
+.auth-panel,.workspace-heading,.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card { position:relative; isolation:isolate; border:11px solid transparent; background-image:linear-gradient(145deg,#10070a52,#16090d85),url('assets/management-marble-texture.webp'); background-position:center; background-size:cover,900px auto; background-clip:padding-box; box-shadow:0 14px 30px #000b; }
+.auth-panel::before,.workspace-heading::before,.stats>div::before,.overview-section::before,.dashboard-shortcuts button::before,.request-detail::before,.access-panel::before,.service-card::before { content:''; position:absolute; inset:-11px; z-index:2; border:46px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/46px/0 stretch; pointer-events:none; }
 .auth-panel>*,.workspace-heading>*,.stats>div>*,.overview-section>*,.dashboard-shortcuts button>*,.request-detail>*,.access-panel>*,.service-card>* { position:relative; z-index:3; }
 .stats>div,.dashboard-shortcuts button { padding-inline:32px; }
 .overview-section,.access-panel,.request-detail,.service-card,.auth-panel { padding-inline:max(28px,2vw); }
-.rail-heading { border:0; background:linear-gradient(#12090ba8,#14090cb0),url('assets/management-marble-texture.webp') center/900px auto; box-shadow:0 10px 24px #0008; }
-.rail-heading::before { content:''; position:absolute; inset:0; border:39px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/39px/0 stretch; pointer-events:none; }
+.rail-heading { border:9px solid transparent; background:linear-gradient(#12090ba8,#14090cb0),url('assets/management-marble-texture.webp') center/900px auto; background-clip:padding-box; box-shadow:0 10px 24px #0008; }
+.rail-heading::before { content:''; position:absolute; inset:-9px; border:39px solid transparent; border-image:url('assets/ornate-management-frame.webp') 315/39px/0 stretch; pointer-events:none; }
 .rail-heading>* { position:relative; z-index:1; }
 
 /* Login and first password setup */
