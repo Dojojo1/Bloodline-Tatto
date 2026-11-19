@@ -140,3 +140,56 @@ def test_cors_allows_only_the_management_origin():
             assert response.status_code == 200
             assert response.headers["access-control-allow-origin"] == ORIGIN
             assert client.options("/api/shifts/start", headers={**headers, "Origin": "https://evil.example"}).status_code == 400
+
+
+def project_payload(phone="01 23 45"):
+    return {
+        "name": "Client Exemple", "phone": phone,
+        "project_type": "Projet personnel", "creation_type": "À décider avec le tatoueur",
+        "idea": "Rose", "placement": "Bras", "availability": "Vendredi soir",
+        "acknowledged": True,
+    }
+
+
+def test_public_request_becomes_private_appointment_sheet():
+    with TemporaryDirectory() as folder:
+        path = Path(folder) / "bloodline.sqlite3"
+        app = create_app(path, public_origin=ORIGIN)
+        create_member(path, "owner", "Direction", "secret-long-1234", "superadmin")
+        create_member(path, "artist", "Artiste", "secret-long-5678", "staff")
+        with TestClient(app, base_url=ORIGIN) as public, TestClient(app, base_url=ORIGIN) as owner, TestClient(app, base_url=ORIGIN) as artist:
+            assert public.get("/api/requests").status_code == 401
+            assert public.post("/api/requests", json=project_payload(), headers={"Origin": "https://evil.example"}).status_code == 403
+            assert public.post("/api/requests", json={**project_payload(), "acknowledged": False}, headers={"Origin": ORIGIN}).status_code == 422
+            assert public.post("/api/requests", json={**project_payload(), "website": "spam.example"}, headers={"Origin": ORIGIN}).status_code == 201
+            assert public.get("/api/requests").status_code == 401
+            submitted = public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN})
+            assert submitted.status_code == 201 and submitted.json()["reference"].startswith("BL-")
+            owner_login = owner.post("/api/login", json={"username": "owner", "password": "secret-long-1234"}, headers={"Origin": ORIGIN})
+            owner.headers["Authorization"] = f"Bearer {owner_login.json()['token']}"
+            rows = owner.get("/api/requests").json()["items"]
+            assert len(rows) == 1 and rows[0]["phone"] == "01 23 45"
+            request_id = rows[0]["id"]
+            assert owner.get("/api/dashboard").json()["new"] == 1
+            assert owner.post(f"/api/requests/{request_id}/status", json={"status": "to_contact"}, headers={"Origin": ORIGIN}).status_code == 200
+            note = owner.post(f"/api/requests/{request_id}/notes", json={"body": "À rappeler."}, headers={"Origin": ORIGIN})
+            assert note.status_code == 200 and note.json()["notes"][0]["author"] == "Direction"
+            appointment = owner.post(f"/api/requests/{request_id}/appointment", json={"local_when": "2026-12-18T14:30", "artist_name": "Lucia"}, headers={"Origin": ORIGIN})
+            assert appointment.status_code == 200 and appointment.json()["status"] == "scheduled"
+            assert len(owner.get("/api/appointments").json()["items"]) == 1
+            assert owner.get("/api/dashboard").json()["scheduled"] == 1
+            assert owner.post(f"/api/requests/{request_id}/status", json={"status": "cancelled"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.get("/api/appointments").json()["items"] == []
+            artist_login = artist.post("/api/login", json={"username": "artist", "password": "secret-long-5678"}, headers={"Origin": ORIGIN})
+            artist.headers["Authorization"] = f"Bearer {artist_login.json()['token']}"
+            assert artist.get("/api/dashboard").status_code == 403
+            assert artist.get("/api/me").status_code == 200
+
+
+def test_public_request_is_limited_per_number():
+    with TemporaryDirectory() as folder:
+        app = create_app(Path(folder) / "bloodline.sqlite3", public_origin=ORIGIN)
+        with TestClient(app, base_url=ORIGIN) as public:
+            for _ in range(3):
+                assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 201
+            assert public.post("/api/requests", json=project_payload(), headers={"Origin": ORIGIN}).status_code == 429

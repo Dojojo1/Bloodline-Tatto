@@ -5,9 +5,9 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from backend import storage
+from backend import requests, storage
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,10 +30,37 @@ class ActivationBody(BaseModel):
     new_password: str
 
 
+class ProjectRequestBody(BaseModel):
+    name: str = Field(min_length=2, max_length=80)
+    phone: str = Field(min_length=3, max_length=40)
+    project_type: str = Field(min_length=2, max_length=80)
+    creation_type: str = Field(min_length=2, max_length=100)
+    group_size: int | None = Field(default=None, ge=2, le=50)
+    idea: str = Field(default="", max_length=1500)
+    placement: str = Field(default="", max_length=120)
+    availability: str = Field(default="", max_length=300)
+    acknowledged: bool
+    website: str = Field(default="", max_length=120)
+
+
+class StatusBody(BaseModel):
+    status: str
+
+
+class AppointmentBody(BaseModel):
+    local_when: str
+    artist_name: str = ""
+
+
+class NoteBody(BaseModel):
+    body: str
+
+
 def create_app(db_path=None, public_origin=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "https://dojojo1.github.io").rstrip("/")
     storage.init_database(db_path)
+    requests.init_database(db_path)
     app = FastAPI(title="Bloodline Gestion", docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
         CORSMiddleware,
@@ -57,6 +84,12 @@ def create_app(db_path=None, public_origin=None):
         member = storage.session_member(db_path, bearer_token(request))
         if not member:
             raise HTTPException(401, "Session absente ou expirée")
+        return member
+
+    def manager(request):
+        member = current_member(request)
+        if member["role"] != "superadmin":
+            raise HTTPException(403, "Accès réservé à la direction.")
         return member
 
     def bearer_token(request):
@@ -127,6 +160,78 @@ def create_app(db_path=None, public_origin=None):
     def me(request: Request):
         member = current_member(request)
         return {"member": member, "sessions": storage.list_shifts(db_path, member["id"])}
+
+    @app.post("/api/requests", status_code=201)
+    def submit_project(body: ProjectRequestBody, request: Request):
+        require_same_origin(request)
+        if body.website:
+            return {"received": True, "reference": ""}
+        try:
+            reference = requests.create_request(db_path, body)
+        except requests.TooManyRequests as exc:
+            raise HTTPException(429, "Trop de demandes ont été envoyées. Réessayez demain.") from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        return {"received": True, "reference": reference}
+
+    @app.get("/api/dashboard")
+    def dashboard(request: Request):
+        manager(request)
+        return requests.dashboard(db_path)
+
+    @app.get("/api/requests")
+    def project_requests(request: Request):
+        manager(request)
+        return {"items": requests.list_requests(db_path)}
+
+    @app.get("/api/appointments")
+    def appointments(request: Request):
+        manager(request)
+        return {"items": requests.list_appointments(db_path)}
+
+    @app.get("/api/requests/{request_id}")
+    def project_detail(request_id: int, request: Request):
+        manager(request)
+        detail = requests.get_request(db_path, request_id)
+        if not detail:
+            raise HTTPException(404, "Demande introuvable.")
+        return detail
+
+    @app.post("/api/requests/{request_id}/status")
+    def set_project_status(request_id: int, body: StatusBody, request: Request):
+        require_same_origin(request)
+        member = manager(request)
+        try:
+            found = requests.update_status(db_path, request_id, member["id"], body.status)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        if not found:
+            raise HTTPException(404, "Demande introuvable.")
+        return requests.get_request(db_path, request_id)
+
+    @app.post("/api/requests/{request_id}/appointment")
+    def set_appointment(request_id: int, body: AppointmentBody, request: Request):
+        require_same_origin(request)
+        member = manager(request)
+        try:
+            found = requests.save_appointment(db_path, request_id, member["id"], body.local_when, body.artist_name)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        if not found:
+            raise HTTPException(404, "Demande introuvable.")
+        return requests.get_request(db_path, request_id)
+
+    @app.post("/api/requests/{request_id}/notes")
+    def add_project_note(request_id: int, body: NoteBody, request: Request):
+        require_same_origin(request)
+        member = manager(request)
+        try:
+            found = requests.add_note(db_path, request_id, member["id"], body.body)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        if not found:
+            raise HTTPException(404, "Demande introuvable.")
+        return requests.get_request(db_path, request_id)
 
     @app.post("/api/shifts/start")
     def start(request: Request):

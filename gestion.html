@@ -1,25 +1,186 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
-    <title>Gestion — Bloodline Tattoo</title>
-    <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-    <link rel="stylesheet" href="gestion.css?v=3">
-    <script src="gestion.js?v=8" defer></script>
-  </head>
-  <body>
-    <header class="topbar"><a href="https://dojojo1.github.io/Bloodline-Tatto/" class="brand">Bloodline <span>Tattoo</span></a><span>Gestion du salon</span></header>
-    <main class="shell">
-      <div class="intro"><p class="eyebrow">Espace équipe</p><h1>Votre service,<br><em>à votre rythme.</em></h1><p>Connectez-vous pour suivre vos heures. Chaque début et fin de service est enregistré par le serveur.</p></div>
-      <section class="panel" id="setup-panel" hidden aria-labelledby="setup-title"><h2 id="setup-title">Connexion indisponible</h2><p>La page est ouverte, mais le serveur de gestion ne répond pas pour le moment. Actualisez la page pour réessayer.</p></section>
-      <section class="panel" id="login-panel" hidden aria-labelledby="login-title"><h2 id="login-title">Connexion</h2><form id="login-form"><label for="username">Nom de compte</label><input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="32" required><label for="password">Mot de passe ou code d’activation</label><input id="password" type="password" autocomplete="current-password" required><p class="form-hint">Première connexion : utilisez votre code d’activation. Vous choisirez ensuite votre mot de passe.</p><button type="submit">Continuer <span aria-hidden="true">↗</span></button></form></section>
-      <section class="panel" id="activate-panel" hidden aria-labelledby="activate-title"><h2 id="activate-title">Créez votre mot de passe</h2><p>Votre code est reconnu. Choisissez maintenant le mot de passe de votre compte.</p><form id="activate-form"><label for="activate-password">Nouveau mot de passe</label><input id="activate-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required><label for="activate-confirm">Confirmer le mot de passe</label><input id="activate-confirm" type="password" autocomplete="new-password" minlength="12" maxlength="256" required><p class="form-hint">12 caractères minimum.</p><button type="submit">Créer mon mot de passe</button></form><button type="button" id="activate-back" class="quiet">Revenir à la connexion</button></section>
-      <section class="panel" id="shift-panel" hidden aria-labelledby="shift-title"><div class="panel-head"><div><p class="eyebrow" id="member-name">Mon profil</p><h2 id="shift-title">Mon service</h2></div><button type="button" id="logout" class="quiet">Se déconnecter</button></div><div class="clock" id="clock">00:00:00</div><p id="shift-state">Aucun service en cours.</p><button type="button" id="shift-action">Prendre mon service <span aria-hidden="true">↗</span></button><h3>Mes derniers services</h3><div id="history" class="history"></div><details class="account-settings"><summary>Changer mon mot de passe</summary><form id="password-form"><label for="current-password">Mot de passe actuel</label><input id="current-password" type="password" autocomplete="current-password" required><label for="new-password">Nouveau mot de passe</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required><label for="confirm-password">Confirmer le nouveau mot de passe</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required><p>12 caractères minimum. Après le changement, reconnectez-vous sur tous vos appareils.</p><button type="submit">Enregistrer le nouveau mot de passe</button></form></details></section>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
-    </main>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
+  <title>Gestion — Bloodline Tattoo</title>
+  <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
+  <link rel="stylesheet" href="gestion.css?v=4">
+  <script src="gestion.js?v=9" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="./" class="brand">Bloodline <span>Tattoo</span></a>
+    <span>Gestion du salon</span>
+  </header>
+
+  <p id="status" class="global-status" role="status" aria-live="polite"></p>
+
+  <main class="auth-layout" id="auth-shell">
+    <div class="auth-intro">
+      <h1>Le salon,<br><em>en main.</em></h1>
+      <p>Suivez les demandes, préparez les rendez-vous et retrouvez vos heures de service au même endroit.</p>
+    </div>
+    <section class="auth-panel" id="setup-panel" hidden aria-labelledby="setup-title">
+      <h2 id="setup-title">Connexion indisponible</h2>
+      <p>La page est ouverte, mais le serveur de gestion ne répond pas pour le moment. Actualisez la page pour réessayer.</p>
+    </section>
+    <section class="auth-panel" id="login-panel" hidden aria-labelledby="login-title">
+      <h2 id="login-title">Connexion</h2>
+      <form id="login-form">
+        <label for="username">Nom de compte</label>
+        <input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="32" required>
+        <label for="password">Mot de passe ou code d’activation</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <p class="form-hint">Première connexion : utilisez votre code d’activation. Vous choisirez ensuite votre mot de passe.</p>
+        <button type="submit" class="button-primary">Continuer</button>
+      </form>
+    </section>
+    <section class="auth-panel" id="activate-panel" hidden aria-labelledby="activate-title">
+      <h2 id="activate-title">Créez votre mot de passe</h2>
+      <p>Votre code est reconnu. Choisissez maintenant le mot de passe de votre compte.</p>
+      <form id="activate-form">
+        <label for="activate-password">Nouveau mot de passe</label>
+        <input id="activate-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+        <label for="activate-confirm">Confirmer le mot de passe</label>
+        <input id="activate-confirm" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+        <p class="form-hint">12 caractères minimum.</p>
+        <button type="submit" class="button-primary">Créer mon mot de passe</button>
+      </form>
+      <button type="button" id="activate-back" class="button-quiet">Revenir à la connexion</button>
+    </section>
+  </main>
+
+  <main class="workspace" id="workspace" hidden>
+    <aside class="workspace-rail" aria-label="Espace de gestion">
+      <div class="rail-account">
+        <span>Compte connecté</span>
+        <strong id="member-name">Mon compte</strong>
+      </div>
+      <nav class="workspace-nav" aria-label="Rubriques de gestion">
+        <button type="button" data-view="dashboard" data-manager-only>Tableau de bord</button>
+        <button type="button" data-view="requests" data-manager-only>Demandes &amp; projets</button>
+        <button type="button" data-view="appointments" data-manager-only>Rendez-vous</button>
+        <button type="button" data-view="service">Mon service</button>
+      </nav>
+      <button type="button" id="logout" class="rail-logout">Se déconnecter</button>
+    </aside>
+
+    <div class="workspace-content">
+      <div class="workspace-heading">
+        <div>
+          <h1 id="view-title">Tableau de bord</h1>
+          <p id="view-description">Les demandes reçues et les rendez-vous à venir.</p>
+        </div>
+        <span class="workspace-mark">Bloodline Tattoo</span>
+      </div>
+
+      <section id="dashboard-view" class="workspace-view" aria-label="Tableau de bord">
+        <div class="stats" aria-label="Demandes en cours">
+          <div><strong id="stat-new">0</strong><span>Nouvelles demandes</span></div>
+          <div><strong id="stat-contact">0</strong><span>À contacter</span></div>
+          <div><strong id="stat-appointments">0</strong><span>Rendez-vous confirmés</span></div>
+        </div>
+        <div class="overview-grid">
+          <section class="overview-section" aria-labelledby="recent-title">
+            <div class="section-heading"><h2 id="recent-title">Dernières demandes</h2><button type="button" data-view="requests" class="text-action">Tout voir</button></div>
+            <div id="recent-requests" class="record-list"></div>
+          </section>
+          <section class="overview-section" aria-labelledby="next-title">
+            <div class="section-heading"><h2 id="next-title">Prochains rendez-vous</h2><button type="button" data-view="appointments" class="text-action">Tout voir</button></div>
+            <div id="next-appointments" class="record-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="requests-view" class="workspace-view" hidden aria-label="Demandes et projets">
+        <div class="request-toolbar">
+          <label for="request-search">Rechercher</label>
+          <input id="request-search" type="search" placeholder="Nom, numéro ou référence">
+          <label for="request-filter">Statut</label>
+          <select id="request-filter">
+            <option value="">Tous les statuts</option>
+            <option value="new">Nouvelle</option>
+            <option value="to_contact">À contacter</option>
+            <option value="in_discussion">En discussion</option>
+            <option value="scheduled">Rendez-vous confirmé</option>
+            <option value="done">Terminé</option>
+            <option value="cancelled">Annulé</option>
+          </select>
+        </div>
+        <div class="requests-layout">
+          <div id="request-list" class="record-list request-list"></div>
+          <article id="request-detail" class="request-detail" hidden aria-labelledby="detail-name">
+            <div class="detail-heading">
+              <div><span id="detail-reference" class="reference"></span><h2 id="detail-name"></h2></div>
+              <button type="button" id="detail-close" class="button-quiet">Fermer la fiche</button>
+            </div>
+            <dl class="detail-grid" id="detail-fields"></dl>
+            <form id="status-form" class="detail-form">
+              <label for="detail-status">Suivi du projet</label>
+              <div class="inline-controls">
+                <select id="detail-status">
+                  <option value="new">Nouvelle</option>
+                  <option value="to_contact">À contacter</option>
+                  <option value="in_discussion">En discussion</option>
+                  <option value="scheduled" disabled>Rendez-vous confirmé</option>
+                  <option value="done">Terminé</option>
+                  <option value="cancelled">Annulé</option>
+                </select>
+                <button type="submit">Enregistrer</button>
+              </div>
+            </form>
+            <form id="appointment-form" class="detail-form">
+              <h3>Rendez-vous</h3>
+              <p id="appointment-current" class="muted"></p>
+              <div class="field-pair">
+                <div><label for="appointment-when">Date et heure du salon</label><input id="appointment-when" type="datetime-local" required></div>
+                <div><label for="appointment-artist">Artiste <span class="optional">(facultatif)</span></label><input id="appointment-artist" type="text" maxlength="80" placeholder="Nom de l’artiste"></div>
+              </div>
+              <button type="submit">Confirmer le rendez-vous</button>
+            </form>
+            <form id="note-form" class="detail-form">
+              <h3>Notes de l’équipe</h3>
+              <label for="note-body">Ajouter une note</label>
+              <textarea id="note-body" rows="3" maxlength="1500" placeholder="Échange, rappel ou précision utile" required></textarea>
+              <button type="submit">Ajouter la note</button>
+            </form>
+            <div id="detail-notes" class="detail-history"></div>
+            <div class="detail-form"><h3>Historique</h3><div id="detail-events" class="detail-history"></div></div>
+          </article>
+          <p id="detail-placeholder" class="detail-placeholder">Choisissez une demande pour ouvrir sa fiche.</p>
+        </div>
+      </section>
+
+      <section id="appointments-view" class="workspace-view" hidden aria-label="Rendez-vous">
+        <p class="section-intro">Les rendez-vous confirmés ici sont ajoutés par l’équipe après échange avec le client.</p>
+        <div id="appointments-list" class="record-list"></div>
+      </section>
+
+      <section id="service-view" class="workspace-view service-view" hidden aria-label="Mon service">
+        <div class="service-card">
+          <h2>Mes heures de service</h2>
+          <div class="clock" id="clock">00:00:00</div>
+          <p id="shift-state">Aucun service en cours.</p>
+          <button type="button" id="shift-action" class="button-primary">Prendre mon service</button>
+        </div>
+        <div class="service-secondary">
+          <section aria-labelledby="history-title"><h2 id="history-title">Mes derniers services</h2><div id="history" class="history"></div></section>
+          <details class="account-settings"><summary>Changer mon mot de passe</summary>
+            <form id="password-form">
+              <label for="current-password">Mot de passe actuel</label><input id="current-password" type="password" autocomplete="current-password" required>
+              <label for="new-password">Nouveau mot de passe</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+              <label for="confirm-password">Confirmer le nouveau mot de passe</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+              <p>12 caractères minimum. Vous devrez ensuite vous reconnecter.</p>
+              <button type="submit">Enregistrer mon mot de passe</button>
+            </form>
+          </details>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
 </html>
