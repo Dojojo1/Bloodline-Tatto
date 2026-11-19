@@ -561,9 +561,13 @@
     button.disabled = false;
   });
 
-  fetch(`${apiBase}/api/health`, { credentials: 'omit', cache: 'no-store', headers: { 'ngrok-skip-browser-warning': 'true' } }).then((response) => {
+  showAuth('login-panel');
+  if (sessionToken) refresh();
+  else fetch(`${apiBase}/api/health`, { credentials: 'omit', cache: 'no-store',
+    headers: { 'ngrok-skip-browser-warning': 'true' } }).then((response) => {
     if (!response.ok) throw new Error();
-    if (sessionToken) return refresh();
-    showAuth('login-panel');
-  }).catch(() => { showAuth('setup-panel'); status('Le serveur de gestion ne répond pas. Actualisez la page pour réessayer.'); });
+  }).catch(() => {
+    if ($('#username').value) status('Le serveur de gestion ne répond pas. Réessayez dans un instant.');
+    else { showAuth('setup-panel'); status('Le serveur de gestion ne répond pas. Actualisez la page pour réessayer.'); }
+  });
 })();

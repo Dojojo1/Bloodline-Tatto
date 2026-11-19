@@ -255,12 +255,15 @@ button:hover { background:#3a1b20; border-color:#cc9788; color:#fff; }
 .detail-placeholder { background-image:linear-gradient(0deg,#130b0b,rgba(12,7,7,.28)),url("assets/biker-club-sketch.webp"); }
 
 @media(max-width:1050px) {
-  .overview-grid,.service-view,.access-grid { grid-template-columns:1fr; }
+  .service-view,.access-grid { grid-template-columns:1fr; }
   .overview-grid { gap:20px; }
   .dashboard-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .requests-layout { grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr); gap:18px; }
   .request-detail { padding:20px; }
   .auth-intro { padding-left:clamp(0px,5vw,65px); }
+}
+@media(max-width:940px) {
+  .overview-grid { grid-template-columns:1fr; }
 }
 @media(max-width:760px) {
   .topbar { min-height:58px; }
