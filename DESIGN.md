@@ -14,11 +14,11 @@ Les liens du menu placent les sections sous la barre de navigation fixe. « Sur-
 
 ## Système appliqué
 
-La gestion reprend la même palette et les mêmes polices que la vitrine. Son tableau de bord utilise le décor du salon en arrière-plan, des panneaux noirs aux coins coupés avec un cadre gravé en bronze et des repères rouges pour l'action active. Les icônes des rubriques sont dessinées en traits fins. Les cartes n'affichent que les données réellement présentes dans l'API ; les accès rapides ouvrent les fonctions déjà disponibles. Sur mobile, le menu devient une rangée défilante et les données restent au premier plan.
+La gestion reprend la même palette et les mêmes polices que la vitrine. Son tableau de bord utilise le décor du salon en arrière-plan, un titre central accompagné d'une couronne discrète et des panneaux noirs aux coins coupés. Le cadre gravé en bronze est réservé aux zones importantes ; les chiffres, listes et accès rapides utilisent des filets plus légers. Les repères rouges signalent l'action active. Les icônes des rubriques sont dessinées en traits fins. Les cartes n'affichent que les données réellement présentes dans l'API ; les accès rapides ouvrent les fonctions déjà disponibles. Sur mobile, le menu devient une rangée défilante et les données restent au premier plan.
 
 - Palette : noir presque absolu, argent et bronze vieillis, rouge profond. Les fonds restent sombres, les textes principaux ivoire.
 - Typographie : Cinzel pour la navigation et les contrôles ; Cormorant Garamond pour les titres ; Manrope pour les paragraphes et formulaires. Les fichiers de polices sont locaux dans `assets/fonts/`.
-- Angles droits et filets fins pour rappeler les cadres gravés de la maquette.
+- Angles coupés et filets fins pour rappeler les cadres gravés de la maquette.
 - Animations : une courte séquence GSAP à l'entrée, et des transitions CSS discrètes sur les liens et boutons. Aucun contenu ne dépend de l'animation pour être visible.
 - Responsive : la composition desktop se transforme en logo, titre et cartes empilés sur mobile, avec menu plein écran.
 
