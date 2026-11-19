@@ -17,6 +17,9 @@
   const date = (value) => new Intl.DateTimeFormat('fr-BE', {
     timeZone: 'Europe/Brussels', dateStyle: 'medium', timeStyle: 'short'
   }).format(new Date(value));
+  const briefDate = (value) => new Intl.DateTimeFormat('fr-BE', {
+    timeZone: 'Europe/Brussels', dateStyle: 'short', timeStyle: 'short'
+  }).format(new Date(value));
   const status = (message) => { $('#status').textContent = message; };
   let sessionToken = '';
   try { sessionToken = sessionStorage.getItem(tokenKey) || ''; } catch { /* Storage may be disabled. */ }
@@ -94,14 +97,20 @@
   function recordButton(item, kind) {
     const button = document.createElement('button'); button.type = 'button'; button.className = 'record-button';
     if (selectedRequest?.id === (kind === 'appointment' ? item.request_id : item.id)) button.classList.add('is-selected');
+    const identity = document.createElement('span'); identity.className = 'record-identity';
     const name = document.createElement('strong'); name.textContent = item.client_name;
     const meta = document.createElement('small');
     meta.textContent = kind === 'appointment'
-      ? `${item.reference} · ${item.artist_name || 'Artiste à préciser'}`
-      : `${item.reference} · ${date(item.created_at)}`;
-    const side = document.createElement('span'); side.className = 'record-side';
-    side.textContent = kind === 'appointment' ? date(item.scheduled_at) : statusNames[item.status] || item.status;
-    button.append(name, meta, side);
+      ? [item.project_type, item.artist_name ? `avec ${item.artist_name}` : 'Artiste à préciser'].filter(Boolean).join(' · ')
+      : item.project_type || item.reference;
+    identity.append(name, meta);
+    const badge = document.createElement('span'); badge.className = 'record-badge';
+    badge.dataset.status = kind === 'appointment' ? 'scheduled' : item.status;
+    badge.textContent = kind === 'appointment' ? 'Confirmé' : statusNames[item.status] || item.status;
+    const when = document.createElement('time'); when.className = 'record-when';
+    when.dateTime = kind === 'appointment' ? item.scheduled_at : item.created_at;
+    when.textContent = briefDate(when.dateTime);
+    button.append(identity, badge, when);
     button.addEventListener('click', () => openRequest(kind === 'appointment' ? item.request_id : item.id));
     return button;
   }
@@ -116,6 +125,7 @@
     $('#stat-new').textContent = data.new;
     $('#stat-contact').textContent = data.to_contact;
     $('#stat-appointments').textContent = data.scheduled;
+    $('#stat-discussion').textContent = data.in_discussion;
     renderRecords($('#recent-requests'), data.recent, 'request', 'Aucune demande reçue pour le moment.');
     renderRecords($('#next-appointments'), data.appointments, 'appointment', 'Aucun rendez-vous confirmé pour le moment.');
   }
@@ -320,6 +330,7 @@
     if (!viewNames[name] || (['access', 'team-hours'].includes(name) && member?.role !== 'superadmin') ||
       (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects)) return;
     if (activeView === 'access' && name !== 'access') clearInviteCode();
+    $('#topbar-session').open = false;
     activeView = name;
     $('#workspace').dataset.view = name;
     for (const panel of document.querySelectorAll('.workspace-view')) panel.hidden = panel.id !== `${name}-view`;
@@ -407,8 +418,9 @@
       return;
     }
     member = data.member;
-    $('#member-name').textContent = member.display_name;
     $('#topbar-member-name').textContent = member.display_name;
+    $('#topbar-member-role').textContent = member.role_name || '';
+    $('#session-avatar').textContent = [...member.display_name.trim()][0]?.toLocaleUpperCase('fr') || 'B';
     $('#topbar-session').hidden = false;
     for (const element of document.querySelectorAll('[data-manager-only]')) element.hidden = !member.projects;
     for (const element of document.querySelectorAll('[data-access-only]')) element.hidden = member.role !== 'superadmin';

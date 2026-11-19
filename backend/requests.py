@@ -106,7 +106,7 @@ def list_requests(path, limit=100):
 def list_appointments(path, limit=100):
     with connect(path) as db:
         rows = db.execute("""select a.id, a.request_id, a.scheduled_at, a.artist_name,
-            r.reference, r.client_name, r.phone, r.status
+            r.reference, r.client_name, r.phone, r.project_type, r.status
             from appointments a join project_requests r on r.id = a.request_id
             where a.status = 'scheduled' and r.status = 'scheduled'
             order by a.scheduled_at limit ?""", (limit,)).fetchall()
@@ -121,6 +121,7 @@ def dashboard(path):
         "new": counts.get("new", 0),
         "to_contact": counts.get("to_contact", 0),
         "scheduled": counts.get("scheduled", 0),
+        "in_discussion": counts.get("in_discussion", 0),
         "recent": list_requests(path, 5),
         "appointments": list_appointments(path, 5),
     }

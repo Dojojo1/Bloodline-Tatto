@@ -1,15 +1,17 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-type="software">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
+  <meta name="page-type" content="software">
+  <meta name="site-kind" content="software">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
   <title>Gestion — Bloodline Tattoo</title>
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
-  <link rel="stylesheet" href="gestion.css?v=14">
-  <script src="gestion.js?v=13" defer></script>
+  <link rel="stylesheet" href="gestion.css?v=16">
+  <script src="gestion.js?v=15" defer></script>
 </head>
 <body>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -21,11 +23,28 @@
     <symbol id="icon-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm13-14a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5h-4"/></symbol>
     <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3Z"/><path d="M9 12h6m-3-3v6"/></symbol>
     <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 9h8m-8 3h5"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="icon-diamond" viewBox="0 0 24 24"><path d="m12 2 10 10-10 10L2 12 12 2Z"/><path d="m12 7 5 5-5 5-5-5 5-5Z"/></symbol>
   </svg>
   <header class="topbar">
-    <a href="./" class="brand"><img src="assets/bloodline-logo.png" alt="" width="42" height="42">Bloodline <span>Tattoo</span></a>
-    <span>Espace privé</span>
-    <div class="topbar-session" id="topbar-session" hidden><span class="session-emblem" aria-hidden="true"><svg><use href="#icon-crown"></use></svg></span><span id="topbar-member-name"></span></div>
+    <a href="./" class="brand" aria-label="Bloodline Tattoo, retour au site"><img src="assets/bloodline-logo.png" alt="" width="56" height="56">Bloodline <span>Tattoo</span></a>
+    <nav class="topbar-links" aria-label="Navigation du site">
+      <a href="./#accueil">Accueil</a>
+      <a href="./#styles">Nos styles</a>
+      <a href="./#salon">Le salon</a>
+      <a href="./#artistes">Nos artistes</a>
+      <a href="./#realisations">Réalisations</a>
+      <a href="./#sur-mesure">Sur-mesure</a>
+      <a href="gestion.html" aria-current="page">Gestion</a>
+    </nav>
+    <details class="topbar-session" id="topbar-session" hidden>
+      <summary><span class="session-avatar" id="session-avatar" aria-hidden="true"></span><span class="session-identity"><strong id="topbar-member-name"></strong><small id="topbar-member-role"></small></span><svg class="session-chevron" aria-hidden="true"><use href="#icon-chevron"></use></svg></summary>
+      <div class="session-menu">
+        <button type="button" data-view="service">Mon service et mon compte</button>
+        <button type="button" id="logout">Se déconnecter</button>
+      </div>
+    </details>
   </header>
 
   <p id="status" class="global-status" role="status" aria-live="polite"></p>
@@ -69,20 +88,15 @@
   <main class="workspace" id="workspace" hidden>
     <aside class="workspace-rail" aria-label="Espace de gestion">
       <div class="rail-heading"><svg aria-hidden="true"><use href="#icon-crown"></use></svg><span>Espace gestion<br>salon</span></div>
-      <div class="rail-account">
-        <span>Compte connecté</span>
-        <strong id="member-name">Mon compte</strong>
-      </div>
       <nav class="workspace-nav" aria-label="Rubriques de gestion">
         <button type="button" data-view="dashboard" data-manager-only><svg aria-hidden="true"><use href="#icon-dashboard"></use></svg>Tableau de bord</button>
-        <button type="button" data-view="requests" data-manager-only><svg aria-hidden="true"><use href="#icon-project"></use></svg>Demandes &amp; projets</button>
         <button type="button" data-view="appointments" data-manager-only><svg aria-hidden="true"><use href="#icon-calendar"></use></svg>Rendez-vous</button>
+        <button type="button" data-view="requests" data-manager-only><svg aria-hidden="true"><use href="#icon-project"></use></svg>Demandes &amp; projets</button>
         <button type="button" data-view="service"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>Mon service</button>
         <button type="button" data-view="team-hours" data-access-only><svg aria-hidden="true"><use href="#icon-team"></use></svg>Heures de l’équipe</button>
         <button type="button" data-view="access" data-access-only><svg aria-hidden="true"><use href="#icon-shield"></use></svg>Accès &amp; rôles</button>
       </nav>
       <div class="rail-art" aria-hidden="true"></div>
-      <button type="button" id="logout" class="rail-logout">Se déconnecter</button>
     </aside>
 
     <div class="workspace-content">
@@ -90,7 +104,8 @@
         <div>
           <span class="heading-crest" aria-hidden="true"><svg><use href="#icon-crown"></use></svg></span>
           <h1 id="view-title">Gestion du salon</h1>
-          <div class="heading-ornament" aria-hidden="true"><span></span><svg><use href="#icon-crown"></use></svg><span></span></div>
+          <div class="heading-ornament" aria-hidden="true"><span></span><svg><use href="#icon-diamond"></use></svg><span></span></div>
+          <span class="heading-brand">Bloodline Tattoo</span>
           <p id="view-description">Les demandes reçues et les rendez-vous à venir.</p>
         </div>
         <div class="workspace-heading-art" aria-hidden="true"></div>
@@ -101,14 +116,15 @@
           <div><svg aria-hidden="true"><use href="#icon-project"></use></svg><span>Nouvelles demandes</span><strong id="stat-new">—</strong></div>
           <div><svg aria-hidden="true"><use href="#icon-team"></use></svg><span>À contacter</span><strong id="stat-contact">—</strong></div>
           <div><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span>Rendez-vous confirmés</span><strong id="stat-appointments">—</strong></div>
+          <div><svg aria-hidden="true"><use href="#icon-chat"></use></svg><span>En discussion</span><strong id="stat-discussion">—</strong></div>
         </div>
         <div class="overview-grid">
           <section class="overview-section" aria-labelledby="recent-title">
-            <div class="section-heading"><h2 id="recent-title">Dernières demandes</h2><button type="button" data-view="requests" class="text-action">Tout voir</button></div>
+            <div class="section-heading"><h2 id="recent-title"><svg aria-hidden="true"><use href="#icon-project"></use></svg>Dernières demandes</h2><button type="button" data-view="requests" class="text-action">Tout voir <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></button></div>
             <div id="recent-requests" class="record-list"></div>
           </section>
           <section class="overview-section" aria-labelledby="next-title">
-            <div class="section-heading"><h2 id="next-title">Prochains rendez-vous</h2><button type="button" data-view="appointments" class="text-action">Tout voir</button></div>
+            <div class="section-heading"><h2 id="next-title"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg>Prochains rendez-vous</h2><button type="button" data-view="appointments" class="text-action">Tout voir <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></button></div>
             <div id="next-appointments" class="record-list"></div>
           </section>
         </div>

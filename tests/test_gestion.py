@@ -172,11 +172,14 @@ def test_public_request_becomes_private_appointment_sheet():
             request_id = rows[0]["id"]
             assert owner.get("/api/dashboard").json()["new"] == 1
             assert owner.post(f"/api/requests/{request_id}/status", json={"status": "to_contact"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.post(f"/api/requests/{request_id}/status", json={"status": "in_discussion"}, headers={"Origin": ORIGIN}).status_code == 200
+            assert owner.get("/api/dashboard").json()["in_discussion"] == 1
             note = owner.post(f"/api/requests/{request_id}/notes", json={"body": "À rappeler."}, headers={"Origin": ORIGIN})
             assert note.status_code == 200 and note.json()["notes"][0]["author"] == "Direction"
             appointment = owner.post(f"/api/requests/{request_id}/appointment", json={"local_when": "2026-12-18T14:30", "artist_name": "Lucia"}, headers={"Origin": ORIGIN})
             assert appointment.status_code == 200 and appointment.json()["status"] == "scheduled"
-            assert len(owner.get("/api/appointments").json()["items"]) == 1
+            appointment_rows = owner.get("/api/appointments").json()["items"]
+            assert len(appointment_rows) == 1 and appointment_rows[0]["project_type"] == "Projet personnel"
             assert owner.get("/api/dashboard").json()["scheduled"] == 1
             assert owner.post(f"/api/requests/{request_id}/status", json={"status": "cancelled"}, headers={"Origin": ORIGIN}).status_code == 200
             assert owner.get("/api/appointments").json()["items"] == []
