@@ -54,3 +54,19 @@ body{background:#080709 url('assets/management-marble-texture.webp') center/1000
 /* One uninterrupted slab behind each view; no tiled image seams. */
 body{background:#080709}
 .section-navigation main>section:not(.hero){background-image:linear-gradient(#080709a0,#080709b8),url('assets/management-marble-texture.webp')!important;background-size:cover!important;background-repeat:no-repeat!important;background-position:center!important}
+
+/* Illustrated blocks keep their original presentation, without stone or backlight. */
+stone-light-shell:has(>.gateway-card),stone-light-shell:has(>.style-panel),stone-light-shell:has(>.section-visual),stone-light-shell:has(>.work-image){filter:none}
+.gateway-card{border:1px solid #826b5e;border-radius:0;background:#0d0908;box-shadow:inset 0 0 0 4px #070404c2,inset 0 0 0 5px #c49f8a6b,0 12px 28px #0008}
+.gateway-image{inset:0;border-radius:0}.gateway-frame{display:block}
+.style-panel{padding:0;clip-path:none;border:1px solid #b18b7a73;background:#120d0c;box-shadow:none}
+.style-panel-art{clip-path:none}.style-panel-copy{background:none}
+.section-visual{border-radius:0;border:1px solid #c19d8b7a;outline:1px solid #ffffff17;outline-offset:-8px;box-shadow:0 20px 35px #0005}
+.salon-visual{background-image:var(--salon-art,url('assets/salon-book.png'))!important;background-size:cover!important;background-position:center!important;aspect-ratio:auto;min-height:480px!important}
+.work-image{clip-path:none;border:1px solid #c19d8b6b;outline:1px solid #ffffff14;outline-offset:-7px;box-shadow:none}
+.work-image-one{background-image:linear-gradient(0deg,#000000d9,transparent 45%),var(--work-art,url('assets/hero-art.png'))!important;background-size:cover,cover!important;background-position:center,50% 50%!important}
+.work-image-two{background-image:linear-gradient(0deg,#000000d9,transparent 45%),var(--work-art,url('assets/hero-art.png'))!important;background-size:cover,auto 140%!important;background-position:center,83% 50%!important}
+.work-image-three{background-image:linear-gradient(0deg,#000000d9,transparent 45%),var(--work-art,url('assets/hero-art.png'))!important;background-size:cover,auto 140%!important;background-position:center,4% 42%!important}
+.project-section .project-visual{background-image:linear-gradient(#0000001a,#0000001a),var(--project-art,url('assets/gateway-art.png'))!important;background-size:cover,200% auto!important;background-position:center,0% 0%!important;border-radius:0}
+.gateway-card:hover,.styles-grid .style-panel:hover,.work-gallery .work-image:hover,.section-visual:hover{box-shadow:0 16px 28px #0007}
+@media(max-width:760px){.salon-visual{min-height:340px!important}}
