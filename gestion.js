@@ -22,11 +22,24 @@
   }).format(new Date(value));
   const status = (message) => { $('#status').textContent = message; };
   let sessionToken = '';
-  try { sessionToken = sessionStorage.getItem(tokenKey) || ''; } catch { /* Storage may be disabled. */ }
+  try {
+    sessionToken = localStorage.getItem(tokenKey) || sessionStorage.getItem(tokenKey) || '';
+    if (sessionToken) {
+      localStorage.setItem(tokenKey, sessionToken);
+      sessionStorage.removeItem(tokenKey);
+    }
+  } catch {
+    try { sessionToken = sessionStorage.getItem(tokenKey) || ''; } catch { /* Storage may be disabled. */ }
+  }
   const setSessionToken = (token) => {
     sessionToken = token;
+    let saved = false;
     try {
-      if (token) sessionStorage.setItem(tokenKey, token);
+      if (token) { localStorage.setItem(tokenKey, token); saved = true; }
+      else localStorage.removeItem(tokenKey);
+    } catch { /* Fall back to this tab when persistent storage is unavailable. */ }
+    try {
+      if (token && !saved) sessionStorage.setItem(tokenKey, token);
       else sessionStorage.removeItem(tokenKey);
     } catch { /* Keep the session in memory until this page closes. */ }
   };
