@@ -509,7 +509,7 @@ body:has(#workspace:not([hidden])) .brand img { display:none; }
   inset:0;
   border:0;
   border-image:none;
-  background:url('assets/bloodline-silver-rose-frame.png') center/100% 100% no-repeat;
+  background:none;
   opacity:1;
 }
 .overview-section { padding:45px 74px 25px; }
@@ -582,7 +582,7 @@ body:has(#workspace:not([hidden])) .brand img { display:none; }
 .empty-state,.record-identity small,.record-when { color:#d8d1cf; }
 .dashboard-shortcuts { border-top-color:#9d2532; }
 .stats>div::before,.overview-section::before,.dashboard-shortcuts button::before,.request-detail::before,.access-panel::before,.service-card::before,.auth-panel::before {
-  background-image:url('assets/bloodline-gold-rose-frame.png');
+  background-image:none;
 }
 .stats>div::after,.overview-section::after,.dashboard-shortcuts button::after,.request-detail::after,.access-panel::after,.service-card::after,.auth-panel::after {
   background:linear-gradient(rgba(4,3,5,.85),rgba(5,3,5,.9)),url('assets/management-marble-texture.webp') center/700px auto;
@@ -662,45 +662,62 @@ body:has(#workspace:not([hidden])) .brand img { display:none; }
   }
 }
 
-/* Rose ornament A: nine-slice keeps the gold rails and roses in proportion. */
+/* Marble panels: white veining, fine antique-gold edge, no floral ornament. */
 .stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card,.auth-panel {
-  --ornament-top:48px;
-  --ornament-side:60px;
-}
-.stats>div,.dashboard-shortcuts button {
-  --ornament-top:30px;
-  --ornament-side:38px;
+  border:1px solid #a88b5e;
+  border-radius:16px;
+  overflow:hidden;
+  background:none;
+  box-shadow:0 12px 26px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.12);
+  transition:transform .24s ease-out,box-shadow .24s ease-out;
 }
 .stats>div::before,.overview-section::before,.dashboard-shortcuts button::before,.request-detail::before,.access-panel::before,.service-card::before,.auth-panel::before {
-  inset:0;
-  border:1px solid transparent;
-  border-image-source:url('assets/bloodline-ornament-a.png');
-  border-image-slice:280 350 280 350;
-  border-image-width:var(--ornament-top) var(--ornament-side);
-  border-image-repeat:stretch;
-  background:none;
-  border-radius:0;
+  inset:5px;
+  border:1px solid rgba(242,238,228,.2);
+  border-image:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,transparent,#9c8055 28%,#e1d2b3 50%,#9c8055 72%,transparent) top / 100% 1px no-repeat;
   opacity:1;
+  filter:none;
+  transition:none;
 }
-.overview-section,.request-detail,.access-panel,.service-card { padding-inline:max(62px,4vw); }
-.auth-panel { padding-inline:max(62px,4vw); }
+.stats>div::after,.overview-section::after,.dashboard-shortcuts button::after,.request-detail::after,.access-panel::after,.service-card::after,.auth-panel::after {
+  inset:0;
+  border-radius:15px;
+  background:linear-gradient(135deg,rgba(3,4,6,.42),rgba(5,5,7,.72)),url('assets/management-marble-texture.webp') center/700px auto;
+  filter:grayscale(1);
+}
+.overview-section,.request-detail,.access-panel,.service-card { padding-inline:clamp(25px,2.2vw,36px); }
+.stats>div,.dashboard-shortcuts button { padding-inline:clamp(24px,2vw,32px); }
+.stats>div:hover,.overview-section:hover,.dashboard-shortcuts button:hover,.request-detail:hover,.access-panel:hover,.service-card:hover,.auth-panel:hover,
+.overview-section:focus-within,.dashboard-shortcuts button:focus-visible,.request-detail:focus-within,.access-panel:focus-within,.service-card:focus-within,.auth-panel:focus-within {
+  transform:translateY(-2px);
+  box-shadow:0 17px 30px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.15);
+}
+.stats>div:hover::before,.overview-section:hover::before,.dashboard-shortcuts button:hover::before,.request-detail:hover::before,.access-panel:hover::before,.service-card:hover::before,.auth-panel:hover::before,
+.overview-section:focus-within::before,.dashboard-shortcuts button:focus-visible::before,.request-detail:focus-within::before,.access-panel:focus-within::before,.service-card:focus-within::before,.auth-panel:focus-within::before { filter:none; }
 .auth-scene { display:none; }
 .auth-layout {
   grid-template-columns:minmax(0,1fr) minmax(350px,480px);
   gap:clamp(32px,5vw,90px);
 }
 .auth-intro { grid-column:1; justify-self:center; width:min(100%,560px); padding-left:0; }
-.auth-panel { grid-column:2; padding:64px 62px 42px; }
+.auth-panel { grid-column:2; padding:42px 38px; }
 @media (max-width:820px) {
   .auth-layout { grid-template-columns:minmax(0,1fr); align-content:start; gap:26px; padding:clamp(24px,5vw,40px); }
   .auth-intro,.auth-panel { grid-column:1; width:min(100%,620px); justify-self:center; }
   .auth-intro h1 { font-size:clamp(50px,9vw,76px); }
 }
 @media (max-width:550px) {
-  .stats>div,.dashboard-shortcuts button { --ornament-top:28px; --ornament-side:34px; }
-  .overview-section,.request-detail,.access-panel,.service-card,.auth-panel { --ornament-top:38px; --ornament-side:45px; padding-inline:48px; }
+  .overview-section,.request-detail,.access-panel,.service-card { padding-inline:22px; }
+  .stats>div,.dashboard-shortcuts button { padding-inline:22px; }
   .auth-layout { padding:30px 20px 44px; }
   .auth-intro h1 { font-size:clamp(48px,13vw,64px); }
-  .auth-panel { padding:58px 38px 35px; }
+  .auth-panel { padding:36px 27px; }
   .auth-panel h2 { font-size:34px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card,.auth-panel { transition:none; }
+  .stats>div:hover,.overview-section:hover,.dashboard-shortcuts button:hover,.request-detail:hover,.access-panel:hover,.service-card:hover,.auth-panel:hover,
+  .overview-section:focus-within,.dashboard-shortcuts button:focus-visible,.request-detail:focus-within,.access-panel:focus-within,.service-card:focus-within,.auth-panel:focus-within { transform:none; }
 }
