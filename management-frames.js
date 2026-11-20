@@ -1,6 +1,6 @@
 /* White LED: Heritage's bloom, glow and core adapted to Bloodline stone frames. */
 (() => {
-  const selector = '.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card,.auth-panel';
+  const selector = '.stats>div,.overview-section,.dashboard-shortcuts button,.request-detail,.access-panel,.service-card,.auth-panel,.gateway-card,.style-panel,.section-visual,.work-image,.project-form,.artist-profile';
   const namespace = 'http://www.w3.org/2000/svg';
   const observer = new ResizeObserver(entries => {
     for (const { target } of entries) {
@@ -8,7 +8,7 @@
       const w = target.clientWidth - 28, h = target.clientHeight - 28;
       if (!svg || w < 20 || h < 20) continue;
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      const cut = target.matches('.overview-section,.request-detail,.access-panel,.auth-panel');
+      const cut = target.matches('.overview-section,.request-detail,.access-panel,.auth-panel,.style-panel,.work-image,.project-form');
       const r = Math.min(cut ? 17 : 29, h / 3);
       const d = cut
         ? `M${r} 2H${w-r}L${w-2} ${r}V${h-r}L${w-r} ${h-2}H${r}L2 ${h-r}V${r}Z`
