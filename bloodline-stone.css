@@ -70,3 +70,5 @@ stone-light-shell:has(>.gateway-card),stone-light-shell:has(>.style-panel),stone
 .project-section .project-visual{background-image:linear-gradient(#0000001a,#0000001a),var(--project-art,url('assets/gateway-art.png'))!important;background-size:cover,200% auto!important;background-position:center,0% 0%!important;border-radius:0}
 .gateway-card:hover,.styles-grid .style-panel:hover,.work-gallery .work-image:hover,.section-visual:hover{box-shadow:0 16px 28px #0007}
 @media(max-width:760px){.salon-visual{min-height:340px!important}}
+
+.work-image-one{background-image:linear-gradient(0deg,#000000b3,transparent 45%),url('assets/tattoo-book-open.png')!important;background-size:cover,cover!important;background-position:center!important}
