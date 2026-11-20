@@ -19,6 +19,10 @@
   const decorate = () => {
     document.querySelectorAll(selector).forEach(panel => {
       if (panel.querySelector(':scope > .marble-led')) return;
+      if (!panel.parentElement.matches('stone-light-shell')) {
+        const shell = document.createElement('stone-light-shell');
+        panel.before(shell); shell.append(panel);
+      }
       const svg = document.createElementNS(namespace, 'svg');
       svg.classList.add('marble-led'); svg.setAttribute('aria-hidden', 'true');
       for (const layer of ['bloom', 'glow', 'core']) {

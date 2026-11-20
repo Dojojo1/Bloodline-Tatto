@@ -29,3 +29,28 @@ body{background:#080709 url('assets/management-marble-texture.webp') center/1000
 @media(max-width:1000px){.project-grid{gap:32px}.primary-nav{gap:21px}.hero-main{min-height:470px}.gateway{gap:15px}.content-section{padding-block:65px}.style-panel-art{min-height:190px}}
 @media(max-width:760px){.primary-nav{background:#09080afc}.hero{min-height:0;padding-bottom:35px}.hero-main{min-height:0}.hero-copy{margin-left:0;padding-top:38px}.hero h1{font-size:42px}.hero-logo{width:min(76vw,380px)}.gateway{gap:15px;margin-top:15px}.gateway-card{min-height:168px;padding:24px 15px}.gateway-title{font-size:24px}.content-section{padding-block:55px}.project-grid{gap:30px}.project-form{padding:34px 29px}.styles-grid{gap:22px}.style-panel-art{min-height:230px}.work-gallery{gap:22px}.content-section.project-section{padding:55px 0}.artist-profile{padding:28px}.marble-led-core{opacity:.6}}
 @media(prefers-reduced-motion:reduce){.gateway-card:hover,.styles-grid .style-panel:hover,.work-gallery .work-image:hover,.section-visual:hover,.artist-profile:hover{transform:none}}
+
+/* Isolated sections: navigation opens one complete page at a time. */
+.route-inactive{display:none!important}
+.section-navigation main>section:not(.route-inactive){min-height:calc(100svh - 58px)!important;height:auto!important;padding-top:60px!important;padding-bottom:60px!important;margin:0!important}
+.section-navigation main{padding-top:58px}
+.section-navigation main>.hero:not(.route-inactive){padding-top:0!important;padding-bottom:28px!important;min-height:calc(100svh - 58px)!important;background-size:cover!important;background-position:center top!important}
+.section-navigation .site-footer{margin-top:0}
+.section-navigation .artists-section,.section-navigation .salon-section,.section-navigation .project-section{background:linear-gradient(#0807098c,#080709b8),url('assets/management-marble-texture.webp') center/1000px auto!important;background-color:#080709!important}
+.section-navigation .hero-main{min-height:490px}
+.gateway-card{background:linear-gradient(145deg,#ffffff25,transparent 32%,#0005 84%),url('assets/management-marble-texture.webp') center/690px auto}
+.style-panel{background:linear-gradient(145deg,#ffffff30,transparent 32%,#0005 84%),url('assets/management-marble-texture.webp') center/690px auto}
+.project-form{background:linear-gradient(145deg,#ffffff20,#0000 32%,#0005 84%),url('assets/management-marble-texture.webp') center/690px auto}
+.artist-profile{background:linear-gradient(#04040638,#04040670),url('assets/management-marble-texture.webp') center/690px auto}
+/* Single, uncropped images, never a second inherited image over the first. */
+.section-visual::before,.work-image::before,.section-visual::after,.work-image::after{display:none!important}
+.salon-visual{background-image:url('assets/salon-book.png')!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#09080a!important;aspect-ratio:1;min-height:0!important}
+.project-section .project-visual{background-image:url('assets/biker-club-sketch.webp')!important;background-size:contain!important;background-position:center!important;background-color:#09080a!important}
+.work-image-one{background-image:linear-gradient(#0000,#0009),url('assets/tattoo-book-open.png')!important;background-size:cover,contain!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#09080a}
+.work-image-two{background-image:linear-gradient(#0000,#0009),url('assets/salon-book.png')!important;background-size:cover,contain!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#09080a}
+.work-image-three{background-image:linear-gradient(#0000,#0009),url('assets/bloodline-logo.png')!important;background-size:cover,contain!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#09080a}
+@media(max-width:760px){.section-navigation main>section:not(.route-inactive){padding-top:32px!important;padding-bottom:40px!important}.section-navigation .hero-main{min-height:0}.section-navigation main>.hero:not(.route-inactive){background-size:auto 600px!important}}
+
+/* One uninterrupted slab behind each view; no tiled image seams. */
+body{background:#080709}
+.section-navigation main>section:not(.hero){background-image:linear-gradient(#080709a0,#080709b8),url('assets/management-marble-texture.webp')!important;background-size:cover!important;background-repeat:no-repeat!important;background-position:center!important}
