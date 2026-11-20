@@ -81,3 +81,6 @@ stone-light-shell:has(>.gateway-card),stone-light-shell:has(>.style-panel),stone
 .project-form textarea{min-height:110px}
 .project-form input,.project-form select{min-height:49px}
 }
+
+/* Nos styles: empty surface requested by the owner. */
+#styles>.styles-heading,#styles>.styles-grid{display:none!important}
