@@ -108,11 +108,17 @@
     centerOffset = offset;
     position.style.transform = `translate3d(${offset}px,0,0)`;
   };
+  const coverLeft = (kind, angle, rect) => {
+    const singleBack = kind === 'back' && book.getOrientation() === 'portrait';
+    const closingOffset = singleBack ? rect.pageWidth * (1 - Math.min(1, Math.abs(angle) / 180)) : 0;
+    return rect.left + (kind === 'front' ? rect.pageWidth : 0) + closingOffset;
+  };
   const paintCoverCore = (layer, solids, rect, kind, angle) => {
     const { core, coreContext: ctx } = layer;
     core.style.display = solids.length ? 'block' : 'none';
     if (!solids.length || !ctx) return;
-    const padding = 160, width = position.clientWidth, height = position.clientHeight;
+    const padding = Math.ceil(Math.max(160, rect.height * .4)), width = position.clientWidth, height = position.clientHeight;
+    core.style.top = `${-padding}px`;
     const ratio = Math.min(2, devicePixelRatio || 1);
     const pixelWidth = Math.ceil(width * ratio), pixelHeight = Math.ceil((height + padding * 2) * ratio);
     if (core.width !== pixelWidth || core.height !== pixelHeight) {
@@ -123,7 +129,7 @@
     ctx.clearRect(0, 0, width, height + padding * 2);
     const root = angle * Math.PI / 180, cosine = Math.cos(root), sine = Math.sin(root);
     const hinge = kind === 'front' ? 0 : rect.pageWidth;
-    const left = rect.left + (kind === 'front' ? rect.pageWidth : 0);
+    const left = coverLeft(kind, angle, rect);
     const project = (solid, dx, y, dz) => {
       const c = Math.cos(solid.radians), s = Math.sin(solid.radians);
       const x = solid.x + c * dx + s * dz, z = solid.z - s * dx + c * dz;
@@ -196,7 +202,7 @@
     }
     const { scene, board } = layer;
     Object.assign(board.style, {
-      top: `${rect.top}px`, left: `${rect.left + (kind === 'front' ? rect.pageWidth : 0)}px`,
+      top: `${rect.top}px`, left: `${coverLeft(kind, angle, rect)}px`,
       width: `${rect.pageWidth}px`, height: `${rect.height}px`,
       transformOrigin: kind === 'front' ? 'left center' : 'right center',
       transform: `rotateY(${angle}deg)`
@@ -451,8 +457,8 @@
     if (book || !fontsReady || stage.clientWidth < 10 || !window.St?.PageFlip) return;
     stage.dataset.loading = 'true';
     book = new St.PageFlip(host, {
-      width: 420, height: 560, size: 'stretch', minWidth: 350, maxWidth: 435,
-      minHeight: 300, maxHeight: 580, autoSize: false, showCover: true, usePortrait: true,
+      width: 420, height: 560, size: 'stretch', minWidth: 350, maxWidth: 840,
+      minHeight: 300, maxHeight: 1120, autoSize: false, showCover: true, usePortrait: true,
       startPage: 0, drawShadow: true, maxShadowOpacity: .58,
       flippingTime: 1600, mobileScrollSupport: true,
       swipeDistance: 28, showPageCorners: false, useMouseEvents: true, disableFlipByClick: false

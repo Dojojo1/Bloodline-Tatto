@@ -1,9 +1,9 @@
 /* Scoped to Nos styles. PageFlip owns all page transforms and clipping. */
-#styles .tattoo-library{width:min(1120px,calc(100% - 40px));margin:0 auto;color:#eee5db}
-#styles .tattoo-library-heading{text-align:center;margin:0 0 26px}
+#styles .tattoo-library{width:min(1760px,calc(100% - 64px));margin:0 auto;color:#eee5db}
+#styles .tattoo-library-heading{text-align:center;margin:0 0 18px}
 #styles .tattoo-library-heading h2{font:500 clamp(32px,3.2vw,49px)/1.1 var(--editorial);text-transform:none;letter-spacing:-.02em;margin:0 0 9px}
 #styles .tattoo-library-heading p{font:400 14px/1.5 var(--body);color:#cfbeb0;margin:0}
-#styles .tattoo-book-stage{position:relative;isolation:isolate;margin:auto;width:100%;height:590px;outline-offset:8px;touch-action:pan-y;overflow-x:clip;overflow-y:visible}
+#styles .tattoo-book-stage{position:relative;isolation:isolate;margin:auto;width:100%;height:clamp(660px,calc(100svh - 240px),1120px);outline-offset:8px;touch-action:pan-y;overflow-x:clip;overflow-y:visible}
 #styles .tattoo-book-stage:focus:not(:focus-visible){outline:none}
 #styles .tattoo-book-position{position:relative;height:100%;width:100%;z-index:1;transition:none}
 #styles .tattoo-book{height:100%;margin:auto;min-width:0!important;user-select:none;-webkit-user-select:none;touch-action:pan-y}
@@ -85,3 +85,4 @@
 #styles .tattoo-book-stage[data-loading="true"]{visibility:hidden}
 @media(max-width:760px){#styles .tattoo-library{width:calc(100% - 20px)}#styles .tattoo-book-stage{height:490px}#styles .tattoo-library-heading{margin-bottom:23px}#styles .tattoo-book-controls{gap:10px;margin-top:22px}#styles .tattoo-book-controls button{padding:10px 8px;font-size:14px}#styles #tattoo-book-status{min-width:85px;font-size:12px}#styles .tattoo-book-stage[data-display="open"] .tattoo-book-support{outline-width:4px}#styles .tattoo-paper-inner{padding:10% 9% 8%}}
 @media(prefers-reduced-motion:reduce){#styles .tattoo-book-position{transition:none}}
+@media(min-width:761px){.section-navigation main>#styles:not(.route-inactive){padding-top:18px!important;padding-bottom:22px!important;justify-content:flex-start}#styles .tattoo-book-controls{margin-top:16px}#styles .tattoo-book-hint{margin-top:8px}}
