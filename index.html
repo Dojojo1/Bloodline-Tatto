@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#090707">
     <meta name="description" content="Découvrez l'univers de Bloodline Tattoo, ses projets sur mesure et son salon.">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'self'; form-action 'self'">
     <meta name="page-type" content="place">
     <meta name="site-kind" content="other">
     <meta name="page-kind" content="place">
@@ -20,6 +20,11 @@
     <script src="script.js?v=20261119-1" defer></script>
     <script src="design-runtime.js?v=20261118-2" defer></script>
     <script src="bloodline-pages.js?v=1" defer></script>
+    <link rel="stylesheet" href="book-layout.css?v=1">
+    <link rel="stylesheet" href="tattoo-book.css?v=18">
+    <script src="book-layout.js?v=1" defer></script>
+    <script src="assets/vendor/page-flip.browser.js?v=2.0.7" defer></script>
+    <script src="tattoo-book.js?v=20" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Aller au contenu</a>
@@ -84,7 +89,27 @@
         <div class="hero-end wrap" aria-hidden="true"><span>✦</span></div>
       </section>
 
-      <section class="content-section styles-section" id="styles" aria-labelledby="styles-title">
+      <section class="content-section styles-section" id="styles" aria-labelledby="tattoo-book-title">
+        <div class="tattoo-library" id="tattoo-library">
+          <header class="tattoo-library-heading">
+            <h2 id="tattoo-book-title">Le livre <em>Bloodline.</em></h2>
+            <p>Des idées à feuilleter, une histoire à écrire sur la peau.</p>
+          </header>
+          <div class="tattoo-book-stage" id="tattoo-book-stage" role="region" aria-label="Livre de croquis Bloodline, utilisez les boutons ou les flèches du clavier" tabindex="0">
+            <div class="tattoo-book-support" aria-hidden="true"></div>
+            <div class="tattoo-book-position">
+              <div class="tattoo-book" id="tattoo-book"></div>
+            </div>
+          </div>
+          <nav class="tattoo-book-controls" aria-label="Feuilleter le livre">
+            <button id="tattoo-book-prev" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg><span>Précédente</span></button>
+            <p id="tattoo-book-status" role="status" aria-live="polite">Préparation du livre…</p>
+            <button id="tattoo-book-next" type="button"><span>Ouvrir le livre</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+          </nav>
+          <p class="tattoo-book-hint">Tournez les pages au clic ou en faisant glisser un coin.</p>
+          <p class="tattoo-book-demo">Les illustrations existantes servent d’exemples de mise en page.</p>
+          <noscript><p>Le livre interactif nécessite JavaScript. Les illustrations restent accessibles : <a href="assets/biker-club-sketch.webp">croquis moto</a> · <a href="assets/tattoo-book-open.png">livre ouvert</a>.</p></noscript>
+        </div>
         <div class="wrap styles-heading">
           <p class="section-label">Nos styles</p>
           <h2 id="styles-title">Une direction, <em>votre empreinte.</em></h2>

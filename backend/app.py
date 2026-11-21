@@ -4,10 +4,10 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from pydantic import BaseModel, Field
 
-from backend import access, requests, storage
+from backend import access, book, requests, storage
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,6 +76,20 @@ class MemberBody(BaseModel):
     active: bool
 
 
+class BookBody(BaseModel):
+    document: dict
+    revision: int = Field(ge=1)
+
+
+class PublishBookBody(BaseModel):
+    revision: int = Field(ge=1)
+
+
+class BookImageBody(BaseModel):
+    encoded: str = Field(max_length=7_000_000)
+    name: str = Field(default="Croquis", max_length=160)
+
+
 def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     db_path = Path(db_path or os.environ.get("BLOODLINE_DB_PATH", ROOT / "data" / "bloodline.sqlite3"))
     public_origin = (public_origin or os.environ.get("BLOODLINE_PUBLIC_ORIGIN") or "https://dojojo1.github.io").rstrip("/")
@@ -84,6 +98,7 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     storage.init_database(db_path)
     access.init_database(db_path)
     requests.init_database(db_path)
+    book.init_database(db_path)
     app = FastAPI(title="Bloodline Gestion", docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
         CORSMiddleware,
@@ -94,6 +109,9 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
 
     @app.middleware("http")
     async def api_cache_headers(request: Request, call_next):
+        if request.method == "POST" and request.url.path.startswith("/api/book"):
+            if len(await request.body()) > 7_100_000:
+                return Response(status_code=413)
         response = await call_next(request)
         if request.url.path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-store"
@@ -121,6 +139,12 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
             raise HTTPException(403, "Accès réservé aux administrateurs suprêmes.")
         return member
 
+    def content_editor(request):
+        member = current_member(request)
+        if not member["content"]:
+            raise HTTPException(403, "Vous n’avez pas le droit de modifier le contenu du site.")
+        return member
+
     def bearer_token(request):
         scheme, _, token = request.headers.get("authorization", "").partition(" ")
         return token.strip() if scheme.lower() == "bearer" else None
@@ -133,6 +157,61 @@ def create_app(db_path=None, public_origin=None, public_requests_enabled=None):
     @app.get("/api/health")
     def health():
         return {"status": "ok"}
+
+    @app.get("/api/book/public")
+    def public_book():
+        return book.read(db_path, public=True)
+
+    @app.get("/api/book/public/media/{asset_id}")
+    def public_book_media(asset_id: str):
+        image = book.asset(db_path, asset_id, public=True)
+        if not image:
+            raise HTTPException(404, "Image introuvable.")
+        return Response(image["body"], media_type=image["media_type"], headers={"X-Content-Type-Options": "nosniff"})
+
+    @app.get("/api/book/draft")
+    def book_draft(request: Request):
+        content_editor(request)
+        return book.read(db_path)
+
+    @app.post("/api/book/draft")
+    def save_book_draft(body: BookBody, request: Request):
+        require_same_origin(request)
+        member = content_editor(request)
+        try:
+            return book.save(db_path, member["id"], body.document, body.revision)
+        except book.Conflict as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
+    @app.post("/api/book/publish")
+    def publish_book(body: PublishBookBody, request: Request):
+        require_same_origin(request)
+        member = content_editor(request)
+        try:
+            return book.publish(db_path, member["id"], body.revision)
+        except book.Conflict as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
+    @app.post("/api/book/assets", status_code=201)
+    def upload_book_image(body: BookImageBody, request: Request):
+        require_same_origin(request)
+        content_editor(request)
+        try:
+            return book.upload(db_path, body.encoded, body.name)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
+    @app.get("/api/book/assets/{asset_id}")
+    def private_book_media(asset_id: str, request: Request):
+        content_editor(request)
+        image = book.asset(db_path, asset_id)
+        if not image:
+            raise HTTPException(404, "Image introuvable.")
+        return Response(image["body"], media_type=image["media_type"], headers={"X-Content-Type-Options": "nosniff"})
 
     @app.post("/api/login")
     def login(body: LoginBody, request: Request):

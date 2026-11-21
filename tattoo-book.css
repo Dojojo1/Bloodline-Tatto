@@ -1,0 +1,87 @@
+/* Scoped to Nos styles. PageFlip owns all page transforms and clipping. */
+#styles .tattoo-library{width:min(1120px,calc(100% - 40px));margin:0 auto;color:#eee5db}
+#styles .tattoo-library-heading{text-align:center;margin:0 0 26px}
+#styles .tattoo-library-heading h2{font:500 clamp(32px,3.2vw,49px)/1.1 var(--editorial);text-transform:none;letter-spacing:-.02em;margin:0 0 9px}
+#styles .tattoo-library-heading p{font:400 14px/1.5 var(--body);color:#cfbeb0;margin:0}
+#styles .tattoo-book-stage{position:relative;isolation:isolate;margin:auto;width:100%;height:590px;outline-offset:8px;touch-action:pan-y;overflow-x:clip;overflow-y:visible}
+#styles .tattoo-book-stage:focus:not(:focus-visible){outline:none}
+#styles .tattoo-book-position{position:relative;height:100%;width:100%;z-index:1;transition:none}
+#styles .tattoo-book{height:100%;margin:auto;min-width:0!important;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+/* Centering is driven by PageFlip's own animation clock, never a second transition. */
+#styles .tattoo-book-support{position:absolute;z-index:0;left:var(--book-left,0);top:var(--book-top,0);width:var(--book-width,100%);height:var(--book-height,100%);opacity:0;border-radius:7px;background:#1b1010 url('assets/book-leather.png') center/400px;box-shadow:0 6px 0 #2c1710,0 9px 0 #0a0605,0 27px 42px #000c;pointer-events:none}
+#styles .tattoo-book-stage .tattoo-book-support{display:none}
+#styles .tattoo-book-support::before{content:'';position:absolute;left:0;right:0;top:100%;height:6px;background:repeating-linear-gradient(to bottom,#927346 0 1px,#d2b581 1px 2px,#8c6b42 2px 3px);border-radius:0 0 3px 3px;box-shadow:0 4px 4px #0007}
+/* The gutter comes from each leaf's own shading; nothing crosses a turning leaf. */
+#styles .tattoo-book-stage::after{display:none}
+/* One two-sided board owns cover motion; PageFlip draws only the static
+   spread below it until the board has finished rotating. */
+#styles .tattoo-cover-scene{position:absolute;inset:0;z-index:0;perspective:2000px;pointer-events:none;visibility:hidden}
+#styles .tattoo-book{position:relative;z-index:1}
+#styles .tattoo-book-stage[data-cover-active="front"] .tattoo-cover-scene[data-cover-kind="front"],#styles .tattoo-book-stage[data-cover-active="back"] .tattoo-cover-scene[data-cover-kind="back"],#styles .tattoo-book-stage[data-display="front"] .tattoo-cover-scene[data-cover-kind="front"],#styles .tattoo-book-stage[data-display="back"] .tattoo-cover-scene[data-cover-kind="back"]{z-index:20}
+#styles .tattoo-cover-board{position:absolute;z-index:1;transform-style:preserve-3d;will-change:transform}
+#styles .tattoo-cover-core{position:absolute;left:0;top:-160px;z-index:0;pointer-events:none}
+#styles .tattoo-board-strip{position:absolute;left:0;top:0;transform-origin:center;transform-style:preserve-3d}
+#styles .tattoo-board-face{position:absolute;inset:0;width:100%;height:100%;margin:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:0;box-sizing:border-box;overflow:hidden;box-shadow:none;background:transparent}
+#styles .tattoo-board-outside{transform:translateZ(var(--cover-half-depth));border:0;background:transparent;box-shadow:none}
+#styles .tattoo-board-edge{position:absolute;left:0;top:0;transform-origin:center;backface-visibility:visible;background-image:var(--cover-rim-art);background-repeat:repeat;pointer-events:none;filter:brightness(.9)}
+#styles .tattoo-board-edge[data-side="bottom"]{filter:brightness(.75)}
+#styles .tattoo-board-skin{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:0;border-radius:6px;box-shadow:none}
+/* Trim the source image's thin rectangular margin without altering the board
+   size, hinge, inner face or page geometry. */
+#styles .tattoo-board-outside .tattoo-cover-art{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);max-width:none}
+#styles .tattoo-board-inside{display:block;transform:rotateY(180deg) translateZ(var(--cover-half-depth));border-radius:0}
+#styles .tattoo-leaf.tattoo-endpaper{border:0;border-radius:6px;background-size:calc(100% + 4px) calc(100% + 4px);background-position:center}
+#styles .tattoo-board-inside .tattoo-paper-inner{height:100%}
+#styles .tattoo-book-stage[data-display="front"] .tattoo-book,#styles .tattoo-book-stage[data-display="back"] .tattoo-book{visibility:hidden}
+#styles .tattoo-book-stage[data-cover-active] .tattoo-book{visibility:visible}
+#styles .tattoo-book [data-book-guard="true"]{visibility:hidden!important}
+/* During a PAPER turn these leaves provide the engine's clipped destination
+   surface. Hiding them leaves the outgoing sheet visible until final cleanup.
+   Cover rotations still use only their persistent two-sided boards. */
+#styles .tattoo-book-stage:is([data-state="flipping"],[data-state="user_fold"]):not([data-cover-active]) .tattoo-book [data-book-guard="true"]:not(.--simple){visibility:visible!important}
+#styles .tattoo-book-stage[data-cover-active] .tattoo-book [class*="Shadow"]{display:none!important}
+#styles .tattoo-book-stage[data-orientation="portrait"][data-display="open"]:not([data-cover-active]) .tattoo-cover-scene[data-cover-kind="front"]{display:none}
+#styles .tattoo-leaf{background:#bd9a61 url('assets/book-paper.png') center/100% 100%;color:#392619;overflow:hidden;border:1px solid #664d2f66}
+#styles .tattoo-leaf::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;box-shadow:inset 0 0 14px #6b421e44}
+#styles .tattoo-leaf.--left::after{background:linear-gradient(90deg,#432b151a,transparent 18% 74%,#42290f21 94%,#23150bc2)}
+#styles .tattoo-leaf.--right::after{background:linear-gradient(90deg,#24170bad,#80532b2a 5%,transparent 25% 85%,#58351919)}
+#styles .tattoo-paper-inner{height:100%;width:100%;position:relative;display:flex;flex-direction:column;padding:9% 9% 8%;border:0;box-sizing:border-box}
+#styles .tattoo-paper-inner::before{content:'';position:absolute;inset:4.5%;border:1px solid #62492766;outline:1px solid #62492729;outline-offset:4px;pointer-events:none}
+#styles .tattoo-folio{font:500 clamp(8px,1vw,11px)/1.3 var(--display);letter-spacing:.14em;text-transform:uppercase;color:#593a22;margin:0 0 5%;text-align:center}
+#styles .tattoo-plate{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;margin:0}
+#styles .tattoo-plate img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;-webkit-user-drag:none;/* No child transform, transition, crop or animation. */}
+#styles .tattoo-plate-stack{display:flex;flex-direction:column;gap:6%;flex:1;min-height:0}
+#styles .tattoo-plate-stack .tattoo-plate{flex:1;height:44%}
+#styles .tattoo-caption{font:italic 500 clamp(13px,1.4vw,18px)/1.25 var(--editorial);text-align:center;color:#432b1a;margin:5% 0 0}
+#styles .tattoo-page-number{display:block;font:500 12px/1 var(--editorial);text-align:center;margin-top:5%;color:#563b26}
+#styles .tattoo-title-page{justify-content:center;align-items:center;text-align:center;gap:4%}
+#styles .tattoo-title-page h3{font:600 clamp(26px,3.5vw,44px)/1.1 var(--editorial);text-transform:uppercase;margin:0;color:#3d271a;letter-spacing:.02em}
+#styles .tattoo-title-page p{font:500 clamp(14px,1.6vw,21px)/1.5 var(--editorial);color:#4a301f;max-width:24ch;margin:0}
+#styles .tattoo-title-page .tattoo-stamp{font:500 74px/1 var(--editorial);border:1px solid #705032;outline:1px solid #70503266;outline-offset:5px;width:95px;height:110px;display:grid;place-items:center;color:#654023}
+#styles .tattoo-cover{background:#180c0b url('assets/book-leather.png') center/cover;border:1px solid #463026;border-radius:4px;box-shadow:inset 0 0 0 3px #21120c,inset 0 0 0 5px #80604766,6px 7px 0 #1b0e0a,0 16px 32px #000c}
+#styles .tattoo-cover::after{display:none}
+#styles .tattoo-cover-art{height:100%;width:100%;display:block;object-fit:fill;pointer-events:none;-webkit-user-drag:none}
+/* The draw adapter restores origins for every rigid drawing, including soft
+   leaves temporarily drawn rigid beside a cover. No density-based CSS offset. */
+#styles .tattoo-leaf[data-face-away="true"]{visibility:hidden!important}
+#styles .tattoo-leaf.--hard{transform-style:flat}
+#styles .tattoo-cover-art,#styles .tattoo-endpaper .tattoo-paper-inner{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#styles .tattoo-endpaper{background:#1b100e url('assets/bloodline-book-back.png') center/100% 100%;border-color:#34221b}
+#styles .tattoo-endpaper .tattoo-paper-inner{background:linear-gradient(90deg,#0005,transparent 15% 80%,#0006)}
+#styles .tattoo-endpaper .tattoo-paper-inner::before{display:none}
+#styles .tattoo-endpaper .tattoo-title-page h3,#styles .tattoo-endpaper .tattoo-title-page p,#styles .tattoo-endpaper .tattoo-page-number{color:#dac3a6;text-shadow:0 2px 3px #000}
+#styles .tattoo-endpaper .tattoo-title-page .tattoo-stamp{color:#cfb087;border-color:#967753;outline-color:#96775366}
+#styles .tattoo-cover-back{position:absolute;inset:6%;border:1px solid #a1805866;outline:1px solid #a1805833;outline-offset:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c4aa80;gap:18px}
+#styles .tattoo-cover-back strong{font:500 clamp(26px,3vw,40px)/1 var(--display);letter-spacing:.02em}
+#styles .tattoo-cover-back span{font:400 13px var(--display);letter-spacing:.3em}
+#styles .tattoo-book-controls{display:flex;align-items:center;justify-content:center;gap:26px;margin:28px auto 0;max-width:700px}
+#styles .tattoo-book-controls button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:10px 14px;border:1px solid #aa8a6466;background:#0a0807b8;color:#e8d8c1;border-radius:4px;font:500 15px var(--editorial);cursor:pointer;transition:background .2s,border-color .2s}
+#styles .tattoo-book-controls button:hover:not(:disabled){background:#32131b;border-color:#c59672}
+#styles .tattoo-book-controls button:disabled{opacity:.35;cursor:default}
+#styles .tattoo-book-controls svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5}
+#styles #tattoo-book-status{color:#d6c5ae;min-width:115px;text-align:center;font:400 14px var(--body);margin:0}
+#styles .tattoo-book-hint,#styles .tattoo-book-demo{text-align:center;font:400 12px/1.5 var(--body);color:#c3b29f;margin:14px 0 0}
+#styles .tattoo-book-demo{font-size:11px;color:#af9e8c;margin-top:7px}
+#styles .tattoo-book-stage[data-loading="true"]{visibility:hidden}
+@media(max-width:760px){#styles .tattoo-library{width:calc(100% - 20px)}#styles .tattoo-book-stage{height:490px}#styles .tattoo-library-heading{margin-bottom:23px}#styles .tattoo-book-controls{gap:10px;margin-top:22px}#styles .tattoo-book-controls button{padding:10px 8px;font-size:14px}#styles #tattoo-book-status{min-width:85px;font-size:12px}#styles .tattoo-book-stage[data-display="open"] .tattoo-book-support{outline-width:4px}#styles .tattoo-paper-inner{padding:10% 9% 8%}}
+@media(prefers-reduced-motion:reduce){#styles .tattoo-book-position{transition:none}}

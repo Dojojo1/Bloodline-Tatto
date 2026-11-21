@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "pages": [
+    {"id":"encre-liberte","title":"Encre & liberté","items":[{"id":"moto","src":"assets/biker-club-sketch.webp","alt":"Croquis existant : moto, roses et crâne ailé","x":0,"y":0,"w":100,"h":100}]},
+    {"id":"archives","title":"Les archives Bloodline","items":[{"id":"planches","src":"assets/tattoo-book-open.png","alt":"Illustration du livre ouvert Bloodline","x":0,"y":0,"w":100,"h":100}]},
+    {"id":"atelier","title":"Le carnet de l’atelier","items":[{"id":"cuir","src":"assets/salon-book.png","alt":"Livre ancien Bloodline en cuir gravé","x":0,"y":0,"w":100,"h":100}]},
+    {"id":"deux-etudes","title":"Deux études sur une page","items":[{"id":"etude-moto","src":"assets/biker-club-sketch.webp","alt":"Étude moto et roses","x":0,"y":0,"w":100,"h":47},{"id":"etude-livre","src":"assets/tattoo-book-open.png","alt":"Étude des planches Bloodline","x":0,"y":53,"w":100,"h":47}]}
+  ]
+}

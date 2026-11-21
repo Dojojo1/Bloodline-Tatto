@@ -7,13 +7,17 @@
   <meta name="referrer" content="no-referrer">
   <meta name="page-type" content="software">
   <meta name="site-kind" content="software">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src https://unabashed-tackle-claw.ngrok-free.dev; base-uri 'none'; form-action 'self'">
   <title>Gestion — Bloodline Tattoo</title>
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
   <link rel="stylesheet" href="gestion.css?v=43">
   <link rel="stylesheet" href="bloodline-backlight.css?v=1">
+  <link rel="stylesheet" href="book-layout.css?v=1">
+  <link rel="stylesheet" href="book-editor.css?v=1">
   <script src="management-frames.js?v=3" defer></script>
-  <script src="gestion.js?v=16" defer></script>
+  <script src="book-layout.js?v=1" defer></script>
+  <script src="book-editor.js?v=1" defer></script>
+  <script src="gestion.js?v=17" defer></script>
 </head>
 <body>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -21,6 +25,7 @@
     <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/></symbol>
     <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h3m3-3h3"/></symbol>
     <symbol id="icon-project" viewBox="0 0 24 24"><path d="M5 2h10l4 4v16H5zM15 2v5h4M8 12h8m-8 4h8m-8 4h5"/></symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 5C8 2 4 2 2 3v17c3-1 7-1 10 1 3-2 7-2 10-1V3c-3-1-7-1-10 2Zm0 0v16"/></symbol>
     <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 3"/></symbol>
     <symbol id="icon-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm13-14a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5h-4"/></symbol>
     <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3Z"/><path d="M9 12h6m-3-3v6"/></symbol>
@@ -85,6 +90,7 @@
         <button type="button" data-view="dashboard" data-manager-only><svg aria-hidden="true"><use href="#icon-dashboard"></use></svg>Tableau de bord</button>
         <button type="button" data-view="appointments" data-manager-only><svg aria-hidden="true"><use href="#icon-calendar"></use></svg>Rendez-vous</button>
         <button type="button" data-view="requests" data-manager-only><svg aria-hidden="true"><use href="#icon-project"></use></svg>Demandes &amp; projets</button>
+        <button type="button" data-view="book" data-content-only hidden><svg aria-hidden="true"><use href="#icon-book"></use></svg>Livre de croquis</button>
         <button type="button" data-view="service"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>Mon service</button>
         <button type="button" data-view="team-hours" data-access-only><svg aria-hidden="true"><use href="#icon-team"></use></svg>Heures de l’équipe</button>
         <button type="button" data-view="access" data-access-only><svg aria-hidden="true"><use href="#icon-shield"></use></svg>Accès &amp; rôles</button>
@@ -127,6 +133,16 @@
           <button type="button" data-view="service"><svg aria-hidden="true"><use href="#icon-clock"></use></svg><span>Pointer mon service</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
           <button type="button" data-view="access" data-access-only><svg aria-hidden="true"><use href="#icon-shield"></use></svg><span>Gérer les accès</span><svg class="shortcut-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg></button>
         </nav>
+      </section>
+
+      <section id="book-view" class="workspace-view" hidden aria-label="Livre de croquis">
+        <div class="book-actions"><p id="book-state">Chargement du livre…</p><button type="button" id="book-reload">Recharger</button><button type="button" id="book-save" disabled>Enregistrer le brouillon</button><button type="button" id="book-publish" class="book-primary" disabled>Publier le livre</button><a href="./#styles" target="_blank" rel="noopener">Voir le livre en ligne</a></div>
+        <p id="book-message" role="status" aria-live="polite"></p>
+        <div id="book-workbench" class="book-editor-grid">
+          <aside class="book-page-column" aria-label="Pages du livre"><h2 class="book-page-heading">Les pages</h2><button type="button" id="book-add-page">Ajouter une page</button><nav id="book-pages" class="book-page-list" aria-label="Choisir une page"></nav><div class="book-page-actions"><button type="button" id="book-page-up">Monter</button><button type="button" id="book-page-down">Descendre</button><button type="button" id="book-page-copy">Dupliquer</button><button type="button" id="book-page-delete">Retirer la page</button></div></aside>
+          <div class="book-composition"><label for="book-page-title">Titre de cette page</label><input id="book-page-title" maxlength="120" placeholder="Nom ou thème de la planche"><div class="book-paper"><p class="book-print-heading">Bloodline Tattoo · Carnet de l’atelier</p><div id="book-canvas" class="sketch-stage" aria-label="Composition de la page"></div><p id="book-caption"></p><p id="book-folio"></p></div><p class="book-help">Sélectionnez un croquis, puis déplacez-le à la souris ou au doigt. Les flèches du clavier affinent sa position ; Maj + flèche accélère le déplacement.</p><div class="book-page-actions"><button type="button" id="book-undo" disabled>Annuler</button><button type="button" id="book-redo" disabled>Rétablir</button></div></div>
+          <aside class="book-properties" aria-label="Réglages des croquis"><label class="book-upload" for="book-files">Ajouter des croquis<input type="file" id="book-files" accept="image/png,image/jpeg,image/webp" multiple></label><p class="book-help">PNG, JPEG ou WebP · 5 Mo par image. Les dessins sont conservés en entier.</p><div id="book-sketches" class="book-sketch-list" aria-label="Croquis de cette page"></div><fieldset id="book-item-fields" disabled><legend>Croquis sélectionné</legend><label for="book-alt">Description du dessin</label><input id="book-alt" maxlength="180"><div class="book-coordinate-fields"><label>Horizontal (%)<input id="book-x" type="number" min="0" max="100" step="0.5"></label><label>Vertical (%)<input id="book-y" type="number" min="0" max="100" step="0.5"></label><label>Largeur (%)<input id="book-w" type="number" min="2" max="100" step="0.5"></label><label>Hauteur (%)<input id="book-h" type="number" min="2" max="100" step="0.5"></label></div><button type="button" id="book-remove-item">Retirer ce croquis</button></fieldset><div class="book-arrange" aria-label="Alignement des croquis"><button type="button" data-book-arrange="1">Une colonne</button><button type="button" data-book-arrange="2">Deux colonnes</button></div><p class="book-help">Les réglages portent sur la zone de dessin, à l’intérieur du papier. Enregistrez pour conserver le brouillon ; publiez pour le rendre visible.</p></aside>
+        </div>
       </section>
 
       <section id="requests-view" class="workspace-view" hidden aria-label="Demandes et projets">

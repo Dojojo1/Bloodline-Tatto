@@ -12,6 +12,7 @@
     appointments: ['Rendez-vous', 'Les rendez-vous confirmés par l’équipe.'],
     service: ['Mon service', 'Vos heures enregistrées par le salon.'],
     access: ['Accès & rôles', 'Les comptes et droits de votre équipe.'],
+    book: ['Le livre de croquis', 'Composez les pages du livre présenté dans Nos styles.'],
     'team-hours': ['Heures de l’équipe', 'Les services enregistrés par mois et par personne.']
   };
   const date = (value) => new Intl.DateTimeFormat('fr-BE', {
@@ -61,13 +62,15 @@
   }
 
   async function request(path, options = {}) {
+    const { binary = false, ...fetchOptions } = options;
     const headers = { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true',
       ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}), ...options.headers };
-    const response = await fetch(`${apiBase}/api${path}`, { ...options, credentials: 'omit', cache: 'no-store', headers });
+    const response = await fetch(`${apiBase}/api${path}`, { ...fetchOptions, credentials: 'omit', cache: 'no-store', headers });
+    if (response.ok && binary) return response.blob();
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401 && path !== '/login' && path !== '/activate') {
-        setSessionToken(''); showAuth('login-panel');
+        setSessionToken(''); window.BLOODLINE_BOOK_EDITOR.reset(); showAuth('login-panel');
       }
       const error = new Error(data.detail || 'La requête a échoué.');
       error.status = response.status;
@@ -341,7 +344,8 @@
 
   async function switchView(name) {
     if (!viewNames[name] || (['access', 'team-hours'].includes(name) && member?.role !== 'superadmin') ||
-      (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects)) return;
+      (['dashboard', 'requests', 'appointments'].includes(name) && !member?.projects) ||
+      (name === 'book' && !member?.content)) return;
     if (activeView === 'access' && name !== 'access') clearInviteCode();
     $('#topbar-session').open = false;
     activeView = name;
@@ -360,6 +364,7 @@
       if (name === 'appointments') await loadAppointments();
       if (name === 'access') await loadAccess();
       if (name === 'team-hours') await loadTeamHours();
+      if (name === 'book') await window.BLOODLINE_BOOK_EDITOR.open(request);
     } catch (error) { status(error.message || 'Impossible de charger les données. Réessayez.'); }
   }
 
@@ -437,6 +442,7 @@
     $('#topbar-session').hidden = false;
     for (const element of document.querySelectorAll('[data-manager-only]')) element.hidden = !member.projects;
     for (const element of document.querySelectorAll('[data-access-only]')) element.hidden = member.role !== 'superadmin';
+    for (const element of document.querySelectorAll('[data-content-only]')) element.hidden = !member.content;
     renderService(data.sessions);
     $('#auth-shell').hidden = true; $('#workspace').hidden = false;
     await switchView(activeView || (member.projects ? 'dashboard' : 'service'));
@@ -477,6 +483,7 @@
   $('#logout').addEventListener('click', async () => {
     try { await request('/logout', { method: 'POST' }); } catch { /* Expired sessions are already invalid. */ }
     clearInviteCode();
+    window.BLOODLINE_BOOK_EDITOR.reset();
     setSessionToken(''); clearInterval(tick); member = null; openSession = null; activeView = '';
     status('Vous êtes déconnecté.'); showAuth('login-panel');
   });
