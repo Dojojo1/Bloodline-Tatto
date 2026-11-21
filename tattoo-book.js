@@ -331,6 +331,39 @@
     requestAnimationFrame(tick);
   };
   const stabilizeCoverFaces = instance => {
+    const clipUnturnedPaper = (element, orientation) => {
+      const render = instance.getRender();
+      const calculation = instance.getFlipController().getCalculation();
+      if (coverMotion || !calculation || render.flippingPage?.getDrawingDensity() !== 'soft') return;
+      const backward = calculation.getDirection() === 1;
+      if (orientation !== (backward ? 0 : 1)) return;
+      const { pageWidth: width, height } = instance.getBoundsRect();
+      const pointer = calculation.getPosition();
+      const cornerY = calculation.getCorner() === 'bottom' ? height : 0;
+      const a = width - pointer.x, b = cornerY - pointer.y;
+      if (Math.hypot(a, b) < .01) return;
+      const c = (width * width + cornerY * cornerY - pointer.x * pointer.x - pointer.y * pointer.y) / 2;
+      // PageFlip leaves this entire face underneath its clipped moving layers.
+      // Explicitly retain only the unturned side of the fold. Otherwise small
+      // corner wedges remain visible through rounding/antialiasing gaps.
+      const distance = p => a * p.x + b * p.y - c + Math.hypot(a, b) * .5;
+      const rectangle = [{ x: 0, y: 0 }, { x: width, y: 0 }, { x: width, y: height }, { x: 0, y: height }];
+      const polygon = [];
+      for (let i = 0; i < rectangle.length; i++) {
+        const from = rectangle[i], to = rectangle[(i + 1) % rectangle.length];
+        const d0 = distance(from), d1 = distance(to);
+        if (d0 <= 0) polygon.push(from);
+        if ((d0 <= 0) !== (d1 <= 0)) {
+          const t = d0 / (d0 - d1);
+          polygon.push({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t });
+        }
+      }
+      const clip = polygon.length >= 3
+        ? `polygon(${polygon.map(p => `${backward ? width - p.x : p.x}px ${p.y}px`).join(',')})`
+        : 'polygon(0 0,0 0,0 0)';
+      element.style.clipPath = clip;
+      element.style.webkitClipPath = clip;
+    };
     // A soft bottom leaf is also drawn in hard mode beside a cover. Normalize
     // every actual rigid drawing to the same origin used by the static spread.
     for (let index = 0; index < instance.getPageCount(); index++) {
@@ -359,6 +392,7 @@
       leaf.simpleDraw = (...args) => {
         delete element.dataset.faceAway;
         simpleDraw(...args);
+        clipUnturnedPaper(element, args[0]);
       };
     }
   };
