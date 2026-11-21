@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Effets de cadres — Bloodline Tattoo</title>
+  <style>
+    @font-face { font-family:Cinzel; src:url('../assets/fonts/cinzel.woff2') format('woff2'); font-display:swap }
+    @font-face { font-family:Manrope; src:url('../assets/fonts/manrope.woff2') format('woff2'); font-display:swap }
+    * { box-sizing:border-box }
+    html { color-scheme:dark; -webkit-font-smoothing:antialiased }
+    body { min-width:320px; min-height:100vh; margin:0; padding:clamp(20px,4vw,56px); background:linear-gradient(#050305b8,#050305db),url('../assets/management-marble-scene.webp') center/cover fixed; color:#fff; font-family:Manrope,Arial,sans-serif }
+    main { max-width:1160px; margin:auto }
+    h1 { margin:0 0 12px; font:500 clamp(28px,3vw,42px)/1.15 Cinzel,Georgia,serif }
+    p { margin:0 0 30px; color:#ddd3d1; font-size:14px; line-height:1.6 }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px }
+    .option { min-width:0 }
+    .option h2 { margin:0 0 9px; font:500 19px/1.3 Cinzel,Georgia,serif }
+    .option p { margin:0 0 12px; color:#d0c5c4; font-size:12px }
+    .frame { position:relative; isolation:isolate; display:grid; place-items:center; width:100%; min-height:235px; padding:30px 65px; border:0; border-radius:22px; background:none; color:#fff; text-align:center; cursor:pointer; transition:transform .2s ease-out }
+    .frame::before { content:''; position:absolute; inset:0; z-index:2; background:url('../assets/bloodline-gold-rose-frame.png') center/100% 100% no-repeat; pointer-events:none; transition:filter .25s ease-out,opacity .25s ease-out }
+    .frame::after { content:''; position:absolute; inset:12px; z-index:0; border-radius:15px; background:linear-gradient(#080406e8,#080406ef),url('../assets/management-marble-texture.webp') center/700px auto; pointer-events:none }
+    .frame strong { position:relative; z-index:3; font:500 clamp(16px,1.6vw,23px)/1.3 Cinzel,Georgia,serif }
+    .frame small { position:relative; z-index:3; display:block; margin-top:8px; color:#ded3d2; font-size:12px }
+    .frame:focus-visible { outline:2px solid #f24f5f; outline-offset:4px }
+    .frame:active { transform:scale(.96) }
+    .glint::before { filter:brightness(.95) }
+    .glint:hover::before,.glint:focus-visible::before { filter:brightness(1.4) }
+    .glint .scan { position:absolute; z-index:3; top:19px; left:25%; width:45%; height:2px; background:linear-gradient(90deg,transparent,#fff8ec,transparent); opacity:0; transform:translateX(-45%); transition:opacity .18s ease-out,transform .55s ease-out; pointer-events:none }
+    .glint:hover .scan,.glint:focus-visible .scan { opacity:.8; transform:translateX(60%) }
+    .red-flare:hover::before,.red-flare:focus-visible::before { filter:drop-shadow(0 0 6px #c51933) brightness(1.15) }
+    .lift:hover,.lift:focus-visible { transform:translateY(-3px) }
+    .lift:hover::before,.lift:focus-visible::before { filter:brightness(1.15) }
+    .diamond .spark { position:absolute; z-index:3; left:50%; width:10px; height:10px; background:#f3263c; box-shadow:0 0 10px #e31a31; transform:translateX(-50%) rotate(45deg) scale(.55); opacity:0; transition:transform .28s ease-out,opacity .28s ease-out; pointer-events:none }
+    .diamond .spark.top { top:12px }
+    .diamond .spark.bottom { bottom:12px }
+    .diamond:hover .spark,.diamond:focus-visible .spark { opacity:1; transform:translateX(-50%) rotate(45deg) scale(1) }
+    .diamond:hover::before,.diamond:focus-visible::before { filter:brightness(1.15) }
+    @media (max-width:700px) { .grid { grid-template-columns:1fr }; .frame { min-height:200px } }
+    @media (prefers-reduced-motion:reduce) { .frame,.frame::before,.frame .scan,.frame .spark { transition:none } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Effets de cadres</h1>
+    <p>Passe la souris sur chaque cadre ou utilise Tab pour voir l'effet. Ce sont des propositions : rien n'est encore appliqué à la gestion.</p>
+    <div class="grid">
+      <section class="option"><h2>1. Éclat du métal</h2><p>Un reflet bref sur la bordure au survol.</p><button class="frame glint" type="button"><span class="scan" aria-hidden="true"></span><span><strong>Dernières demandes</strong><small>Effet discret et élégant</small></span></button></section>
+      <section class="option"><h2>2. Lueur rouge</h2><p>Les roses et le contour s'allument au survol.</p><button class="frame red-flare" type="button"><span><strong>Dernières demandes</strong><small>Effet plus intense</small></span></button></section>
+      <section class="option"><h2>3. Relief</h2><p>Le cadre se soulève légèrement sans lumière.</p><button class="frame lift" type="button"><span><strong>Dernières demandes</strong><small>Effet sobre pour les actions</small></span></button></section>
+      <section class="option"><h2>4. Diamants rouges</h2><p>Les deux gemmes marquent le survol.</p><button class="frame diamond" type="button"><span class="spark top" aria-hidden="true"></span><span class="spark bottom" aria-hidden="true"></span><span><strong>Dernières demandes</strong><small>Accent sur l'identité Bloodline</small></span></button></section>
+    </div>
+  </main>
+</body>
+</html>

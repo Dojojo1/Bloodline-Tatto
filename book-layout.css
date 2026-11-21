@@ -1,3 +1,31 @@
 .sketch-stage{position:relative;flex:1;min-height:0;width:100%;isolation:isolate}
 .sketch-item{position:absolute;box-sizing:border-box;user-select:none;-webkit-user-select:none}
 .sketch-item img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+
+/* Editor-only resize handles. The public book never creates these elements. */
+#book-view .sketch-item.is-editable{cursor:grab;outline:1px dashed #67462f88;outline-offset:2px}
+#book-view .sketch-item.is-editable:active{cursor:grabbing}
+#book-view .sketch-item.is-editable.is-selected{outline:2px solid #722b32;outline-offset:3px}
+#book-view .sketch-item.is-editable:focus-visible{outline:3px solid #302117}
+#book-view .sketch-item.is-editable .sketch-handle{position:absolute;z-index:3;display:none;width:14px;height:14px;margin:0;padding:0;border:1px solid #3a2418;border-radius:2px;background:#e8d7b8;box-shadow:0 1px 2px #0006;touch-action:none}
+#book-view .sketch-item.is-editable.is-selected .sketch-handle{display:block}
+#book-view .sketch-handle-nw{left:-7px;top:-7px;cursor:nwse-resize}
+#book-view .sketch-handle-n{left:50%;top:-7px;transform:translateX(-50%);cursor:ns-resize}
+#book-view .sketch-handle-ne{right:-7px;top:-7px;cursor:nesw-resize}
+#book-view .sketch-handle-e{right:-7px;top:50%;transform:translateY(-50%);cursor:ew-resize}
+#book-view .sketch-handle-se{right:-7px;bottom:-7px;cursor:nwse-resize}
+#book-view .sketch-handle-s{left:50%;bottom:-7px;transform:translateX(-50%);cursor:ns-resize}
+#book-view .sketch-handle-sw{left:-7px;bottom:-7px;cursor:nesw-resize}
+#book-view .sketch-handle-w{left:-7px;top:50%;transform:translateY(-50%);cursor:ew-resize}
+@media (pointer:coarse){
+  #book-view .sketch-item.is-editable .sketch-handle{width:20px;height:20px}
+  #book-view .sketch-handle-nw,#book-view .sketch-handle-ne,#book-view .sketch-handle-se,#book-view .sketch-handle-sw{width:22px;height:22px}
+  #book-view .sketch-handle-nw{left:-11px;top:-11px}
+  #book-view .sketch-handle-ne{right:-11px;top:-11px}
+  #book-view .sketch-handle-se{right:-11px;bottom:-11px}
+  #book-view .sketch-handle-sw{left:-11px;bottom:-11px}
+  #book-view .sketch-handle-n{top:-10px}
+  #book-view .sketch-handle-s{bottom:-10px}
+  #book-view .sketch-handle-e{right:-10px}
+  #book-view .sketch-handle-w{left:-10px}
+}

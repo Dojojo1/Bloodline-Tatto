@@ -12,11 +12,11 @@
   <link rel="icon" href="assets/bloodline-logo.png" type="image/png">
   <link rel="stylesheet" href="gestion.css?v=43">
   <link rel="stylesheet" href="bloodline-backlight.css?v=1">
-  <link rel="stylesheet" href="book-layout.css?v=1">
-  <link rel="stylesheet" href="book-editor.css?v=1">
+  <link rel="stylesheet" href="book-layout.css?v=2">
+  <link rel="stylesheet" href="book-editor.css?v=2">
   <script src="management-frames.js?v=3" defer></script>
-  <script src="book-layout.js?v=1" defer></script>
-  <script src="book-editor.js?v=1" defer></script>
+  <script src="book-layout.js?v=2" defer></script>
+  <script src="book-editor.js?v=2" defer></script>
   <script src="gestion.js?v=17" defer></script>
 </head>
 <body>
@@ -140,7 +140,7 @@
         <p id="book-message" role="status" aria-live="polite"></p>
         <div id="book-workbench" class="book-editor-grid">
           <aside class="book-page-column" aria-label="Pages du livre"><h2 class="book-page-heading">Les pages</h2><button type="button" id="book-add-page">Ajouter une page</button><nav id="book-pages" class="book-page-list" aria-label="Choisir une page"></nav><div class="book-page-actions"><button type="button" id="book-page-up">Monter</button><button type="button" id="book-page-down">Descendre</button><button type="button" id="book-page-copy">Dupliquer</button><button type="button" id="book-page-delete">Retirer la page</button></div></aside>
-          <div class="book-composition"><label for="book-page-title">Titre de cette page</label><input id="book-page-title" maxlength="120" placeholder="Nom ou thème de la planche"><div class="book-paper"><p class="book-print-heading">Bloodline Tattoo · Carnet de l’atelier</p><div id="book-canvas" class="sketch-stage" aria-label="Composition de la page"></div><p id="book-caption"></p><p id="book-folio"></p></div><p class="book-help">Sélectionnez un croquis, puis déplacez-le à la souris ou au doigt. Les flèches du clavier affinent sa position ; Maj + flèche accélère le déplacement.</p><div class="book-page-actions"><button type="button" id="book-undo" disabled>Annuler</button><button type="button" id="book-redo" disabled>Rétablir</button></div></div>
+          <div class="book-composition"><label for="book-page-title">Titre de cette page</label><input id="book-page-title" maxlength="120" placeholder="Nom ou thème de la planche"><div class="book-paper"><p class="book-print-heading">Bloodline Tattoo · Carnet de l’atelier</p><div id="book-canvas" class="sketch-stage" aria-label="Composition de la page"></div><p id="book-caption"></p><p id="book-folio"></p></div><p class="book-help">Sélectionnez un croquis, puis déplacez-le à la souris ou au doigt. Tirez un coin (diagonal) ou un bord (horizontal/vertical) pour le redimensionner ; Maj en glissant un coin conserve les proportions. Les flèches du clavier affinent la position, Maj + flèche accélère le déplacement.</p><div class="book-page-actions"><button type="button" id="book-undo" disabled>Annuler</button><button type="button" id="book-redo" disabled>Rétablir</button></div></div>
           <aside class="book-properties" aria-label="Réglages des croquis"><label class="book-upload" for="book-files">Ajouter des croquis<input type="file" id="book-files" accept="image/png,image/jpeg,image/webp" multiple></label><p class="book-help">PNG, JPEG ou WebP · 5 Mo par image. Les dessins sont conservés en entier.</p><div id="book-sketches" class="book-sketch-list" aria-label="Croquis de cette page"></div><fieldset id="book-item-fields" disabled><legend>Croquis sélectionné</legend><label for="book-alt">Description du dessin</label><input id="book-alt" maxlength="180"><div class="book-coordinate-fields"><label>Horizontal (%)<input id="book-x" type="number" min="0" max="100" step="0.5"></label><label>Vertical (%)<input id="book-y" type="number" min="0" max="100" step="0.5"></label><label>Largeur (%)<input id="book-w" type="number" min="2" max="100" step="0.5"></label><label>Hauteur (%)<input id="book-h" type="number" min="2" max="100" step="0.5"></label></div><button type="button" id="book-remove-item">Retirer ce croquis</button></fieldset><div class="book-arrange" aria-label="Alignement des croquis"><button type="button" data-book-arrange="1">Une colonne</button><button type="button" data-book-arrange="2">Deux colonnes</button></div><p class="book-help">Les réglages portent sur la zone de dessin, à l’intérieur du papier. Enregistrez pour conserver le brouillon ; publiez pour le rendre visible.</p></aside>
         </div>
       </section>

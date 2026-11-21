@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr" class="preview-motion">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aperçu local — Gestion Bloodline Tattoo</title>
+  <link rel="stylesheet" href="../gestion.css?v=39">
+  <style>
+    /* Cette maquette montre volontairement la durée choisie, même si le navigateur réduit les animations. */
+    @media (prefers-reduced-motion:reduce) {
+      html.preview-motion .stats>div,
+      html.preview-motion .overview-section,
+      html.preview-motion .dashboard-shortcuts button { transition:transform 1.2s ease-in-out !important; }
+      html.preview-motion .stats>div::before,
+      html.preview-motion .overview-section::before,
+      html.preview-motion .dashboard-shortcuts button::before { transition:filter 1.2s ease-in-out !important; }
+      html.preview-motion .stats>div:hover,
+      html.preview-motion .overview-section:hover,
+      html.preview-motion .dashboard-shortcuts button:hover,
+      html.preview-motion .overview-section:focus-within,
+      html.preview-motion .dashboard-shortcuts button:focus-visible { transform:translateY(-2px) scale(1.035); }
+    }
+  </style>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h3m3-3h3"/></symbol>
+    <symbol id="icon-project" viewBox="0 0 24 24"><path d="M5 2h10l4 4v16H5zM15 2v5h4M8 12h8m-8 4h8m-8 4h5"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 3"/></symbol>
+    <symbol id="icon-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm13-14a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5h-4"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3Z"/><path d="M9 12h6m-3-3v6"/></symbol>
+  </svg>
+  <header class="topbar">
+    <a class="brand" href="../gestion.html"><span>Bloodline Tattoo</span></a>
+    <span style="margin-left:auto;padding:0 22px;color:#d7bca9;font:13px Manrope,Arial,sans-serif">Aperçu animé · 1,2 s</span>
+  </header>
+  <main class="workspace" id="workspace" data-view="dashboard">
+    <aside class="workspace-rail" aria-label="Espace de gestion">
+      <nav class="workspace-nav" aria-label="Rubriques de gestion">
+        <button type="button" aria-current="page"><svg aria-hidden="true"><use href="#icon-dashboard"></use></svg>Tableau de bord</button>
+        <button type="button"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg>Rendez-vous</button>
+        <button type="button"><svg aria-hidden="true"><use href="#icon-project"></use></svg>Demandes &amp; projets</button>
+        <button type="button"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>Mon service</button>
+        <button type="button"><svg aria-hidden="true"><use href="#icon-team"></use></svg>Heures de l’équipe</button>
+        <button type="button"><svg aria-hidden="true"><use href="#icon-shield"></use></svg>Accès &amp; rôles</button>
+      </nav>
+      <div class="rail-art" aria-hidden="true"></div>
+    </aside>
+    <div class="workspace-content">
+      <div class="workspace-heading"><div><h1>Gestion du salon</h1><div class="heading-ornament" aria-hidden="true"><span></span>◇<span></span></div></div></div>
+      <section class="workspace-view" aria-label="Tableau de bord">
+        <div class="stats" aria-label="Indicateurs">
+          <div><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 2h10l4 4v16H5zM15 2v5h4M8 12h8m-8 4h8"/></svg><span>Nouvelles demandes</span><strong>0</strong></div>
+          <div><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm13-14a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5h-4"/></svg><span>À contacter</span><strong>0</strong></div>
+          <div><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M7 3v4m10-4v4M3 10h18"/></svg><span>Rendez-vous confirmés</span><strong>0</strong></div>
+          <div><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 9h8m-8 3h5"/></svg><span>En discussion</span><strong>0</strong></div>
+        </div>
+        <div class="overview-grid">
+          <section class="overview-section"><div class="section-heading"><h2>Dernières demandes</h2><span class="text-action">Tout voir →</span></div><div class="record-list"><p class="empty-state">Aucune demande pour le moment</p></div></section>
+          <section class="overview-section"><div class="section-heading"><h2>Prochains rendez-vous</h2><span class="text-action">Tout voir →</span></div><div class="record-list"><p class="empty-state">Aucun rendez-vous pour le moment</p></div></section>
+        </div>
+        <nav class="dashboard-shortcuts" aria-label="Accès rapides">
+          <button type="button"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span>Voir les rendez-vous</span></button>
+          <button type="button"><svg aria-hidden="true"><use href="#icon-project"></use></svg><span>Suivre les demandes</span></button>
+          <button type="button"><svg aria-hidden="true"><use href="#icon-clock"></use></svg><span>Pointer mon service</span></button>
+          <button type="button"><svg aria-hidden="true"><use href="#icon-shield"></use></svg><span>Gérer les accès</span></button>
+        </nav>
+      </section>
+    </div>
+  </main>
+  <script>
+    document.querySelector('.workspace-nav').addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      document.querySelector('.workspace-nav [aria-current]')?.removeAttribute('aria-current');
+      button.setAttribute('aria-current', 'page');
+    });
+  </script>
+</body>
+</html>

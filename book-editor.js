@@ -143,18 +143,51 @@
       changed(); render();
     });
     const canvas = $('#book-canvas');
+    const MIN_SIZE = 2;
+    const resize = (value, initial, direction, dx, dy) => {
+      let left = initial.x, top = initial.y;
+      let right = initial.x + initial.w, bottom = initial.y + initial.h;
+      if (direction.includes('w')) left = Math.min(initial.x + dx, right - MIN_SIZE);
+      if (direction.includes('e')) right = Math.max(initial.x + initial.w + dx, left + MIN_SIZE);
+      if (direction.includes('n')) top = Math.min(initial.y + dy, bottom - MIN_SIZE);
+      if (direction.includes('s')) bottom = Math.max(initial.y + initial.h + dy, top + MIN_SIZE);
+      left = Math.max(0, left); top = Math.max(0, top);
+      right = Math.min(100, right); bottom = Math.min(100, bottom);
+      value.x = left; value.y = top; value.w = right - left; value.h = bottom - top;
+    };
     canvas.addEventListener('pointerdown', event => {
-      const target = event.target.closest('[data-item]'); if (!target || busy || event.button !== 0) return;
-      selected = target.dataset.item; selection(); target.focus(); event.preventDefault();
-      dragging = { pointer: event.pointerId, x: event.clientX, y: event.clientY, initial: clone(item()), checkpoint: false };
+      if (busy || event.button !== 0) return;
+      const target = event.target.closest('[data-item]'); if (!target) return;
+      const handle = event.target.closest('[data-handle]');
+      selected = target.dataset.item; selection(); target.focus({ preventScroll: true }); event.preventDefault();
+      const value = item(); if (!value) return;
+      dragging = {
+        pointer: event.pointerId, x: event.clientX, y: event.clientY,
+        initial: clone(value), direction: handle ? handle.dataset.handle : '', checkpoint: false
+      };
       canvas.setPointerCapture(event.pointerId);
     });
     canvas.addEventListener('pointermove', event => {
       if (!dragging || event.pointerId !== dragging.pointer) return;
       if (!dragging.checkpoint) { checkpoint(); dragging.checkpoint = true; }
       const rect = canvas.getBoundingClientRect(), value = item();
-      value.x = dragging.initial.x + (event.clientX - dragging.x) / rect.width * 100;
-      value.y = dragging.initial.y + (event.clientY - dragging.y) / rect.height * 100; bounds(value);
+      if (!value) return;
+      const dx = (event.clientX - dragging.x) / rect.width * 100;
+      const dy = (event.clientY - dragging.y) / rect.height * 100;
+      if (dragging.direction) {
+        resize(value, dragging.initial, dragging.direction, dx, dy);
+        // Shift on a corner keeps the drawing's original proportions.
+        if (event.shiftKey && dragging.direction.length === 2) {
+          const ratio = dragging.initial.w / dragging.initial.h;
+          if (Math.abs(value.w - dragging.initial.w) >= Math.abs(value.h - dragging.initial.h) * ratio) value.h = value.w / ratio;
+          else value.w = value.h * ratio;
+          if (dragging.direction.includes('w')) value.x = dragging.initial.x + dragging.initial.w - value.w;
+          if (dragging.direction.includes('n')) value.y = dragging.initial.y + dragging.initial.h - value.h;
+          bounds(value);
+        }
+      } else {
+        value.x = dragging.initial.x + dx; value.y = dragging.initial.y + dy; bounds(value);
+      }
       layout.place(canvas.querySelector(`[data-item="${selected}"]`), value); changed(); selection();
     });
     const stopDrag = event => { if (dragging?.pointer === event.pointerId) { dragging = null; if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); } };

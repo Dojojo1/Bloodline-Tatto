@@ -1,0 +1,299 @@
+- generic [active] [ref=e1]:
+  - link "Aller au contenu" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Bloodline Tattoo, retour à l'accueil" [ref=e4] [cursor=pointer]:
+      - /url: "#accueil"
+      - text: Bloodline
+    - button "Ouvrir le menu" [ref=e5]
+    - navigation "Navigation principale" [ref=e6]:
+      - link "Accueil" [ref=e7] [cursor=pointer]:
+        - /url: "#accueil"
+      - link "Nos styles" [ref=e8] [cursor=pointer]:
+        - /url: "#styles"
+      - link "Le salon" [ref=e9] [cursor=pointer]:
+        - /url: "#salon"
+      - link "Nos artistes" [ref=e10] [cursor=pointer]:
+        - /url: "#artistes"
+      - link "Réalisations" [ref=e11] [cursor=pointer]:
+        - /url: "#realisations"
+      - link "Sur-mesure" [ref=e12] [cursor=pointer]:
+        - /url: "#sur-mesure"
+    - link "Accès à la gestion Bloodline" [ref=e13] [cursor=pointer]:
+      - /url: gestion.html
+      - text: Accès gestionGestion
+  - main [ref=e14]:
+    - region "L’art du tatouage sur-mesure" [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - paragraph [ref=e18]: Bloodline Tattoo
+          - heading [level=1] [ref=e19]:
+            - text: L’art du tatouage
+            - emphasis [ref=e20]: sur-mesure
+          - paragraph [ref=e21]: Créations uniques · Projet personnaliséParticulier & professionnel
+        - img "Bloodline Tattoo" [ref=e23]
+      - generic "Explorer Bloodline Tattoo" [ref=e24]:
+        - link [ref=e25] [cursor=pointer]:
+          - /url: "#styles"
+          - generic [ref=e26]:
+            - text: Nos
+            - strong [ref=e27]: styles
+          - text: ✦
+        - link [ref=e28] [cursor=pointer]:
+          - /url: "#salon"
+          - generic [ref=e29]:
+            - text: Le
+            - strong [ref=e30]: salon
+          - text: ✦
+        - link [ref=e31] [cursor=pointer]:
+          - /url: "#sur-mesure"
+          - generic [ref=e32]:
+            - text: Création
+            - strong [ref=e33]: sur-mesure
+          - text: ✦
+        - link "Rendez-vous" [ref=e34] [cursor=pointer]:
+          - /url: "#sur-mesure"
+          - text: Rendez-vous ✦
+      - generic [aria-hidden] [ref=e35]: ✦
+    - region "Le livre Bloodline." [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - heading [level=2] [ref=e39]:
+            - text: Le livre
+            - emphasis [ref=e40]: Bloodline.
+          - paragraph [ref=e41]: Des idées à feuilleter, une histoire à écrire sur la peau.
+        - region "Livre de croquis Bloodline, utilisez les boutons ou les flèches du clavier" [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e47]:
+              - paragraph [ref=e48]: Bloodline Tattoo · Carnet de l’atelier
+              - figure [ref=e49]:
+                - 'img "Croquis existant : moto, roses et crâne ailé"'
+              - paragraph [ref=e50]: Encre & liberté
+              - generic [ref=e51]: "2"
+            - generic [aria-hidden]:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: B
+                        - heading [level=3]: Le carnet Bloodline
+                        - paragraph: Une idée, un trait. Le début de votre histoire.
+                        - generic: "1"
+        - navigation "Feuilleter le livre" [ref=e52]:
+          - button "Précédente" [disabled] [ref=e53]
+          - status [ref=e57]: Couverture
+          - button "Ouvrir le livre" [ref=e58] [cursor=pointer]
+        - paragraph [ref=e62]: Tournez les pages au clic ou en faisant glisser un coin.
+        - paragraph [ref=e63]: Prototype — les illustrations existantes servent d’exemples de mise en page.
+      - generic [ref=e64]:
+        - paragraph [ref=e65]: Nos styles
+        - heading [level=2] [ref=e66]:
+          - text: Une direction,
+          - emphasis [ref=e67]: votre empreinte.
+        - paragraph [ref=e68]: Du motif personnel à une création proposée par le tatoueur, chaque projet peut prendre une forme différente. Le style final se discute pendant le rendez-vous.
+      - generic [ref=e69]:
+        - article [ref=e70]:
+          - heading "Votre motif" [level=3] [ref=e71]
+          - paragraph [ref=e72]: Partez d’un dessin ou d’une idée que vous apportez.
+        - article [ref=e73]:
+          - heading "Création unique" [level=3] [ref=e74]
+          - paragraph [ref=e75]: Laissez le tatoueur vous proposer une pièce originale.
+        - article [ref=e76]:
+          - heading "À imaginer ensemble" [level=3] [ref=e77]
+          - paragraph [ref=e78]: Affinez le motif, l’emplacement et la taille avec le tatoueur.
+    - region "Un univers à part, une idée à vous." [ref=e79]:
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - paragraph [ref=e82]: Le salon
+          - heading [level=2] [ref=e83]:
+            - text: Un univers à part,
+            - emphasis [ref=e84]: une idée à vous.
+          - paragraph [ref=e85]: "Bloodline Tattoo donne une place centrale à votre projet. Explorez l’univers du salon, puis racontez ce que vous imaginez : le motif, son emplacement et les détails qui comptent pour vous."
+          - link "Préparer mon projet" [ref=e86] [cursor=pointer]:
+            - /url: "#sur-mesure"
+            - text: Préparer mon projet ↗
+        - img "Livre illustré Bloodline Tattoo avec un loup gravé"
+    - region "Une rencontre avant la première ligne." [ref=e87]:
+      - generic [ref=e88]:
+        - paragraph [ref=e89]: Nos artistes
+        - heading [level=2] [ref=e90]:
+          - text: Une rencontre avant
+          - emphasis [ref=e91]: la première ligne.
+        - paragraph [ref=e92]: Découvrez les artistes du salon. Leurs photos, noms et présentations seront ajoutés ici.
+    - region "Des projets qui portent une histoire." [ref=e93]:
+      - generic [ref=e94]:
+        - paragraph [ref=e95]: Réalisations
+        - heading [level=2] [ref=e96]:
+          - text: Des projets qui portent
+          - emphasis [ref=e97]: une histoire.
+        - paragraph [ref=e98]: Cette section accueillera les photographies des tatouages réalisés au salon. Les visuels ci-dessous présentent uniquement la direction artistique du site.
+      - generic "Aperçu de la direction artistique" [ref=e99]:
+        - generic [ref=e100]: Univers Bloodline
+        - generic [ref=e101]: Le salon
+        - generic [ref=e102]: L’encre et le geste
+    - region "Votre tatouage, votre choix." [ref=e103]:
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - paragraph [ref=e106]: Rendez-vous
+          - heading [level=2] [ref=e107]:
+            - text: Votre tatouage,
+            - emphasis [ref=e108]: votre choix.
+          - paragraph [ref=e109]: Pour un projet personnel, de groupe ou d’entreprise, vous pouvez choisir la taille, l’emplacement et le motif. Apportez votre propre idée de tatouage ou laissez le tatoueur vous proposer une création unique.
+          - paragraph [ref=e110]: Ce formulaire prépare le rendez-vous. Vous discuterez des détails et des possibilités avec le tatoueur pendant le rendez-vous.
+          - img "Croquis de loup et de rose sur papier vieilli"
+        - generic [ref=e111]:
+          - paragraph [ref=e112]: Préparez votre demande de rendez-vous. Le projet sera discuté avec le tatoueur pendant ce rendez-vous.
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - text: Votre nom
+              - textbox "Votre nom" [ref=e115]
+            - generic [ref=e116]:
+              - text: Votre numéro
+              - textbox "Votre numéro" [ref=e117]
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - text: Type de projet
+              - combobox "Type de projet" [ref=e120]:
+                - option "Choisir une option" [selected]
+                - option "Projet personnel"
+                - option "Projet de groupe"
+            - generic [ref=e121]:
+              - text: Quel type de création souhaitez-vous ?
+              - combobox "Quel type de création souhaitez-vous ?" [ref=e122]:
+                - option "Choisir une option" [selected]
+                - option "Mon propre tatouage ou motif"
+                - option "Une création unique proposée par le tatoueur"
+                - option "À décider avec le tatoueur"
+          - generic [ref=e123]: Motif ou idée de départ (facultatif)
+          - textbox "Motif ou idée de départ (facultatif)" [ref=e124]:
+            - /placeholder: Décrivez votre idée si vous en avez une ; sinon, vous en parlerez pendant le rendez-vous.
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - text: Emplacement
+              - textbox "Emplacement" [ref=e127]:
+                - /placeholder: Ex. avant-bras
+            - generic [ref=e128]:
+              - generic [ref=e129]: Vos disponibilités (facultatif)
+              - textbox "Vos disponibilités (facultatif)" [ref=e130]:
+                - /placeholder: Ex. vendredi soir, après 20 h
+          - generic [aria-hidden] [ref=e131]:
+            - text: Site web
+            - textbox [ref=e132]
+          - button "Copier ma demande de rendez-vous" [ref=e133]: Copier ma demande de rendez-vous ↗
+          - status [ref=e134]: "La demande est préparée sur votre appareil : aucun rendez-vous n’est réservé ni confirmé ici."
+  - contentinfo [ref=e135]:
+    - generic [ref=e136]:
+      - link "Bloodline Tattoo" [ref=e137] [cursor=pointer]:
+        - /url: "#accueil"
+      - paragraph [ref=e138]: L’art du tatouage sur-mesure
+      - generic [ref=e139]:
+        - link "Atelier visuel" [ref=e140] [cursor=pointer]:
+          - /url: editor.html
+        - link "Retour en haut ↑" [ref=e141] [cursor=pointer]:
+          - /url: "#haut"

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relief et lueur rouge — Bloodline Tattoo</title>
+  <style>
+    @font-face { font-family:Cinzel; src:url('../assets/fonts/cinzel.woff2') format('woff2'); font-display:swap }
+    @font-face { font-family:Manrope; src:url('../assets/fonts/manrope.woff2') format('woff2'); font-display:swap }
+    * { box-sizing:border-box }
+    html { color-scheme:dark; -webkit-font-smoothing:antialiased }
+    body { min-width:320px; min-height:100vh; margin:0; padding:clamp(20px,4vw,56px); color:#fff; font-family:Manrope,Arial,sans-serif; background:linear-gradient(#050305bc,#050305dd),url('../assets/management-marble-scene.webp') center/cover fixed }
+    main { max-width:1220px; margin:auto }
+    h1 { margin:0 0 12px; font:500 clamp(28px,3vw,42px)/1.15 Cinzel,Georgia,serif }
+    .intro { margin:0 0 34px; color:#ddd3d1; font-size:14px; line-height:1.6 }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px }
+    .option { min-width:0 }
+    h2 { margin:0 0 8px; font:500 20px/1.25 Cinzel,Georgia,serif }
+    .description { min-height:40px; margin:0 0 18px; color:#d5c9c7; font-size:13px; line-height:1.5 }
+    .frame { --rise:-2px; --light:5px; --strength:1.12; position:relative; isolation:isolate; display:grid; place-items:center; width:100%; min-height:210px; padding:40px 45px; border:0; background:none; color:#fff; text-align:center; cursor:pointer; transform:translateY(0); transition:transform .22s cubic-bezier(.2,.8,.2,1) }
+    .frame::before { content:''; position:absolute; z-index:2; inset:0; background:url('../assets/bloodline-gold-rose-frame.png') center/100% 100% no-repeat; pointer-events:none; filter:none; transition:filter .22s ease-out }
+    .frame::after { content:''; position:absolute; z-index:0; inset:12px; border-radius:15px; background:linear-gradient(#080406e8,#080406f0),url('../assets/management-marble-texture.webp') center/700px auto; pointer-events:none; transition:background-color .22s ease-out }
+    .frame span { position:relative; z-index:3 }
+    .frame strong { display:block; font:500 clamp(16px,1.4vw,21px)/1.35 Cinzel,Georgia,serif }
+    .frame small { display:block; margin-top:9px; color:#e2d6d3; font-size:12px }
+    .frame:hover,.frame:focus-visible { transform:translateY(var(--rise)) }
+    .frame:hover::before,.frame:focus-visible::before { filter:drop-shadow(0 0 var(--light) rgba(223,28,49,.72)) brightness(var(--strength)) }
+    .frame:focus-visible { outline:2px solid #f14b5a; outline-offset:5px }
+    .frame:active { transform:scale(.96) }
+    .soft { --rise:-2px; --light:3px; --strength:1.07 }
+    .balanced { --rise:-3px; --light:6px; --strength:1.16 }
+    .dramatic { --rise:-4px; --light:10px; --strength:1.27 }
+    .dramatic:hover::before,.dramatic:focus-visible::before { filter:drop-shadow(0 0 4px rgba(255,47,64,.95)) drop-shadow(0 0 10px rgba(177,4,24,.62)) brightness(1.27) }
+    .note { margin:30px 0 0; color:#cbbfbd; font-size:13px; line-height:1.55 }
+    @media (max-width:940px) { .grid { grid-template-columns:1fr; max-width:580px }; .description { min-height:0 }; .frame { min-height:220px } }
+    @media (prefers-reduced-motion:reduce) { .frame,.frame::before,.frame::after { transition:none }; .frame:hover,.frame:focus-visible { transform:none } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Relief + lueur rouge</h1>
+    <p class="intro">Trois intensités du même effet. Passe la souris sur les cadres ou utilise Tab pour les voir. La gestion réelle n'est pas modifiée.</p>
+    <div class="grid">
+      <section class="option"><h2>A. Discret</h2><p class="description">Le cadre monte de 2 px, avec une lumière rouge légère sur les roses.</p><button type="button" class="frame soft"><span><strong>Dernières demandes</strong><small>Relief doux</small></span></button></section>
+      <section class="option"><h2>B. Équilibré</h2><p class="description">Le cadre monte de 3 px, la lueur rouge suit davantage le métal.</p><button type="button" class="frame balanced"><span><strong>Dernières demandes</strong><small>Relief et lueur visibles</small></span></button></section>
+      <section class="option"><h2>C. Intense</h2><p class="description">Le cadre monte de 4 px, les roses et les lignes rayonnent davantage.</p><button type="button" class="frame dramatic"><span><strong>Dernières demandes</strong><small>Accent spectaculaire</small></span></button></section>
+    </div>
+    <p class="note">La comparaison porte uniquement sur l'effet au survol ; les cadres, couleurs et proportions restent identiques.</p>
+  </main>
+</body>
+</html>

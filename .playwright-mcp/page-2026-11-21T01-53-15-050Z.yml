@@ -1,0 +1,21 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Bloodline Tattoo, ouvrir le site vitrine" [ref=e3] [cursor=pointer]:
+      - /url: ./#accueil
+      - text: Bloodline
+      - generic [ref=e4]: Tattoo
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - heading [level=1] [ref=e7]:
+        - text: Le salon,
+        - emphasis [ref=e8]: en main.
+      - paragraph [ref=e9]: Suivez les demandes, préparez les rendez-vous et retrouvez vos heures de service au même endroit.
+    - region "Connexion" [ref=e11]:
+      - heading "Connexion" [level=2] [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e14]: Nom de compte
+        - textbox "Nom de compte" [ref=e15]
+        - generic [ref=e16]: Mot de passe ou code d’activation
+        - textbox "Mot de passe ou code d’activation" [ref=e17]
+        - paragraph [ref=e18]: "Première connexion : utilisez votre code d’activation. Vous choisirez ensuite votre mot de passe."
+        - button "Continuer" [ref=e19] [cursor=pointer]

@@ -13,6 +13,7 @@
   const place = (element, item) => {
     Object.assign(element.style, { left: `${item.x}%`, top: `${item.y}%`, width: `${item.w}%`, height: `${item.h}%` });
   };
+  const handles = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
   const render = (container, page, resolve = assetUrl, editable = false) => {
     container.replaceChildren();
     for (const item of page.items) {
@@ -23,7 +24,17 @@
       if (typeof source === 'string') img.src = source;
       else source.then(url => { img.src = url; }).catch(() => { box.classList.add('image-unavailable'); });
       img.draggable = false; img.decoding = 'async'; box.append(img);
-      if (editable) { box.tabIndex = 0; box.setAttribute('role', 'button'); box.setAttribute('aria-label', `${img.alt} — déplacer avec les flèches`); }
+      if (editable) {
+        box.classList.add('is-editable'); box.tabIndex = 0; box.setAttribute('role', 'button');
+        box.setAttribute('aria-label', `${img.alt} — déplacer avec les flèches, redimensionner avec les poignées`);
+        // Editor-only handles. The published book renders the same box without them.
+        for (const direction of handles) {
+          const handle = document.createElement('span');
+          handle.className = `sketch-handle sketch-handle-${direction}`;
+          handle.dataset.handle = direction; handle.setAttribute('aria-hidden', 'true');
+          box.append(handle);
+        }
+      }
       container.append(box);
     }
   };
